@@ -668,3 +668,30 @@ CD_TIDES = 0.0018               !   [nondim] default = 1.0E-04
                                 ! The drag coefficient that applies to the tides.
 
 ! === module MOM_restart ===
+! === Sponge options ===
+
+SPONGE = True                   !   [Boolean] default = False
+                                ! If true, sponges may be applied anywhere in the domain. The exact location and
+                                ! properties of those sponges are specified via SPONGE_CONFIG.
+SPONGE_UV = True
+SPONGE_DAMPING_FILE = "ETP_damping.nc" !
+                                ! The name of the file with the sponge damping rates.
+SPONGE_IDAMP_VAR = "Idamp"
+SPONGE_UV_DAMPING_FILE = "ETP_damping_uv.nc" !
+                                ! The name of the file with the sponge damping rates.
+SPONGE_IDAMP_U_var = "Idamp_u"
+SPONGE_IDAMP_V_var = "Idamp_v"
+SPONGE_STATE_FILE = "ETP_sponge.nc" ! default = "sponge.nc"
+                                ! The name of the file with the state to damp toward.
+SPONGE_PTEMP_VAR = "PTMP"       ! default = "PTEMP"
+                                ! The name of the potential temperature variable in SPONGE_STATE_FILE.
+SPONGE_SALT_VAR = "SALT"        ! default = "SALT"
+                                ! The name of the salinity variable in SPONGE_STATE_FILE.
+SPONGE_U_VAR = "UVEL"
+SPONGE_V_VAR = "VVEL"
+NEW_SPONGES = True              !   [of sponge restoring data.] default = False
+                                ! Set True if using the newer sponging code which performs on-the-fly regridding
+                                ! in lat-lon-time.
+! === module MOM_sponge ===
+SPONGE_DATA_ONGRID = True       !   [Boolean] default = False
+                                ! When defined, the incoming sponge data are assumed to be on the model grid

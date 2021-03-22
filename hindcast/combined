@@ -1,0 +1,43 @@
+  rm 19800104.ocean_Barrow.nc
+  mppnccombine 19800104.ocean_Barrow.nc 19800104.ocean_Barrow.nc.*
+  rm 19800104.ocean_Barrow.nc.*
+
+  rm 19800104.ocean_Beaufort.nc
+  mppnccombine 19800104.ocean_Beaufort.nc 19800104.ocean_Beaufort.nc.*
+  rm 19800104.ocean_Beaufort.nc.*
+
+  rm 19800104.ocean_Bering_Strait.nc
+  mppnccombine 19800104.ocean_Bering_Strait.nc 19800104.ocean_Bering_Strait.nc.*
+  rm 19800104.ocean_Bering_Strait.nc.*
+
+  rm 19800104.ocean_CEO.nc
+  mppnccombine 19800104.ocean_CEO.nc 19800104.ocean_CEO.nc.*
+  rm 19800104.ocean_CEO.nc.*
+
+  rm 19800104.ocean_Fram_Strait.nc
+  mppnccombine 19800104.ocean_Fram_Strait.nc 19800104.ocean_Fram_Strait.nc.*
+  rm 19800104.ocean_Fram_Strait.nc.*
+
+  rm 19800104.ocean_GAK.nc
+  mppnccombine 19800104.ocean_GAK.nc 19800104.ocean_GAK.nc.*
+  rm 19800104.ocean_GAK.nc.*
+
+# rm 19800104.ocean_Unimak.nc
+# mppnccombine 19800104.ocean_Unimak.nc 19800104.ocean_Unimak.nc.*
+# rm 19800104.ocean_Unimak.nc.*
+
+# rm 19800104.ocean_Fury.nc
+# mppnccombine 19800104.ocean_Fury.nc 19800104.ocean_Fury.nc.*
+# rm 19800104.ocean_Fury.nc.*
+
+# rm 19800104.ocean_Parry.nc
+# mppnccombine 19800104.ocean_Parry.nc 19800104.ocean_Parry.nc.*
+# rm 19800104.ocean_Parry.nc.*
+
+# rm 19800104.ocean_Cardigan.nc
+# mppnccombine 19800104.ocean_Cardigan.nc 19800104.ocean_Cardigan.nc.*
+# rm 19800104.ocean_Cardigan.nc.*
+
+# rm 19800104.ocean_Robeson.nc
+# mppnccombine 19800104.ocean_Robeson.nc 19800104.ocean_Robeson.nc.*
+# rm 19800104.ocean_Robeson.nc.*

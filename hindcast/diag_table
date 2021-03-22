@@ -8,14 +8,15 @@ Arctic 50 vertical levels
 "ocean_daily_ts",            1, "days",   1, "hours", "time"
 "ocean_model_z",             1, "days",   1, "hours", "time"
 "ocean_monthly",             1, "months", 1, "hours", "time"
-#"ocean_Bering_Strait",       1, "hours",   1, "days", "time"
-#"ocean_Fram_Strait",         1, "hours",   1, "days", "time"
-#"ocean_CEO",                 1, "hours",   1, "days", "time"
-#"ocean_Beaufort_Section",    1, "hours",   1, "days", "time"
-#"ocean_Barrow_1",            1, "hours",   1, "days", "time"
-#"ocean_Barrow_2",            1, "hours",   1, "days", "time"
-#"ocean_GAK",                 1, "hours",   1, "days", "time"
-#"ocean_Unimak",              1, "hours",   1, "days", "time"
+"ocean_Bering_Strait",       1, "hours",   1, "days", "time"
+"ocean_Fram_Strait",         1, "hours",   1, "days", "time"
+"ocean_Beaufort",            1, "hours",   1, "days", "time"
+"ocean_Anadyr",              1, "hours",   1, "days", "time"
+"ocean_CEO",                 1, "hours",   1, "days", "time"
+"ocean_Beaufort_Section",    1, "hours",   1, "days", "time"
+"ocean_Barrow",              1, "hours",   1, "days", "time"
+"ocean_GAK",                 1, "hours",   1, "days", "time"
+"ocean_Unimak",              1, "hours",   1, "days", "time"
 #"ocean_Fury",                1, "hours",   1, "days", "time"
 #"ocean_Parry",               1, "hours",   1, "days", "time"
 #"ocean_Cardigan",            1, "hours",   1, "days", "time"
@@ -30,55 +31,62 @@ Arctic 50 vertical levels
 "ocean_model", "vbt",          "vbt",              "ocean_hourly", "all", .false., "none",2
 #"ice_model",  "SWDN",       "swdn",      "ocean_hourly", "all", ".false.", "none",2
 
-## Bering Strait (east-west section)
-#"ocean_model_z", "volcello", "volcello", "ocean_Bering_Strait",    "all", "mean", "369 391  358 358 -1 -1",2
-#"ocean_model_z", "thetao","thetao",      "ocean_Bering_Strait",    "all", "mean", "369 391  358 358 -1 -1",2
-#"ocean_model_z", "so",   "so",           "ocean_Bering_Strait",    "all", "mean", "369 391  358 358 -1 -1",2
-#"ocean_model_z", "vmo",  "vmo",          "ocean_Bering_Strait",    "all", "mean", "369 391  358 358 -1 -1",2
-#"ocean_model_z", "vo",   "vo",           "ocean_Bering_Strait",    "all", "mean", "369 391  358 358 -1 -1",2
-#
-## Fram Strait east-west section for flow moving north/south
-#"ocean_model_z", "volcello", "volcello", "ocean_Fram_Strait",  "all", "mean", "226 318  893 893 -1 -1",2
-#"ocean_model_z", "thetao","thetao",      "ocean_Fram_Strait",  "all", "mean", "226 318  893 893 -1 -1",2
-#"ocean_model_z", "so",   "so",           "ocean_Fram_Strait",  "all", "mean", "226 318  893 893 -1 -1",2
-#"ocean_model_z", "vmo",  "vmo",          "ocean_Fram_Strait",  "all", "mean", "226 318  893 893 -1 -1",2
-#"ocean_model_z", "vo",   "vo",           "ocean_Fram_Strait",  "all", "mean", "226 318  893 893 -1 -1",2
-#
-## CEO mooring to the north section for flow moving east/west
-#"ocean_model_z", "volcello", "volcello", "ocean_CEO",  "all", "mean", "395 395  480 580 -1 -1",2
-#"ocean_model_z", "thetao","thetao",      "ocean_CEO",  "all", "mean", "395 395  480 580 -1 -1",2
-#"ocean_model_z", "so",   "so",           "ocean_CEO",  "all", "mean", "395 395  480 580 -1 -1",2
-#"ocean_model_z", "umo",  "umo",          "ocean_CEO",  "all", "mean", "395 395  480 580 -1 -1",2
-#"ocean_model_z", "uo",   "uo",           "ocean_CEO",  "all", "mean", "395 395  480 580 -1 -1",2
-#
-## Barrow Canoyon Strait east-west section for flow moving north/south
-#"ocean_model_z", "volcello", "volcello", "ocean_Barrow_1",  "all", "mean", "406 425  487 487 -1 -1",2
-#"ocean_model_z", "thetao","thetao",      "ocean_Barrow_1",  "all", "mean", "406 425  487 487 -1 -1",2
-#"ocean_model_z", "so",   "so",           "ocean_Barrow_1",  "all", "mean", "406 425  487 487 -1 -1",2
-#"ocean_model_z", "vmo",  "vmo",          "ocean_Barrow_1",  "all", "mean", "406 425  487 487 -1 -1",2
-#"ocean_model_z", "vo",   "vo",           "ocean_Barrow_1",  "all", "mean", "406 425  487 487 -1 -1",2
-#
-## Barrow Canoyon north-south section for flow moving east/west
-#"ocean_model_z", "volcello", "volcello", "ocean_Barrow_2",  "all", "mean", "421 421  474 525 -1 -1",2
-#"ocean_model_z", "thetao","thetao",      "ocean_Barrow_2",  "all", "mean", "421 421  474 525 -1 -1",2
-#"ocean_model_z", "so",   "so",           "ocean_Barrow_2",  "all", "mean", "421 421  474 525 -1 -1",2
-#"ocean_model_z", "umo",  "umo",          "ocean_Barrow_2",  "all", "mean", "421 421  474 525 -1 -1",2
-#"ocean_model_z", "uo",   "uo",           "ocean_Barrow_2",  "all", "mean", "421 421  474 525 -1 -1",2
+# Bering Strait (east-west section)
+"ocean_model_z", "volcello", "volcello", "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
+"ocean_model_z", "vmo",  "vmo",          "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
+"ocean_model_z", "vo",   "vo",           "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
 
-## GAK Line (tilted) east-west section for flow moving north/south
-#"ocean_model_z", "volcello", "volcello", "ocean_GAK",  "all", "mean", "600 636  330 330 -1 -1",2
-#"ocean_model_z", "thetao","thetao",      "ocean_GAK",  "all", "mean", "600 636  330 330 -1 -1",2
-#"ocean_model_z", "so",   "so",           "ocean_GAK",  "all", "mean", "600 636  330 330 -1 -1",2
-#"ocean_model_z", "vmo",  "vmo",          "ocean_GAK",  "all", "mean", "600 636  330 330 -1 -1",2
-#"ocean_model_z", "vo",   "vo",           "ocean_GAK",  "all", "mean", "600 636  330 330 -1 -1",2
-#
-## Unimak Pass north-south section for flow moving east/west
-#"ocean_model_z", "volcello", "volcello", "ocean_Unimak",  "all", "mean", "498 498  135 142 -1 -1",2
-#"ocean_model_z", "thetao","thetao",      "ocean_Unimak",  "all", "mean", "498 498  135 142 -1 -1",2
-#"ocean_model_z", "so",   "so",           "ocean_Unimak",  "all", "mean", "498 498  135 142 -1 -1",2
-#"ocean_model_z", "umo",  "umo",          "ocean_Unimak",  "all", "mean", "498 498  135 142 -1 -1",2
-#"ocean_model_z", "uo",   "uo",           "ocean_Unimak",  "all", "mean", "498 498  135 142 -1 -1",2
-#
+# Fram Strait east-west section for flow moving north/south
+"ocean_model_z", "volcello", "volcello", "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
+"ocean_model_z", "vmo",  "vmo",          "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
+"ocean_model_z", "vo",   "vo",           "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
+
+# DBO6 moorings to the NE section for flow moving east/west
+"ocean_model_z", "volcello", "volcello", "ocean_Beaufort",  "all", "mean", "685 685  521 559 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_Beaufort",  "all", "mean", "685 685  521 559 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_Beaufort",  "all", "mean", "685 685  521 559 -1 -1",2
+"ocean_model_z", "umo",  "umo",          "ocean_Beaufort",  "all", "mean", "685 685  521 559 -1 -1",2
+"ocean_model_z", "uo",   "uo",           "ocean_Beaufort",  "all", "mean", "685 685  521 559 -1 -1",2
+
+# Anadyr Strait east-west section for flow moving north/south
+"ocean_model_z", "volcello", "volcello", "ocean_Anadyr",  "all", "mean", "638 665  327 327 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_Anadyr",  "all", "mean", "638 665  327 327 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_Anadyr",  "all", "mean", "638 665  327 327 -1 -1",2
+"ocean_model_z", "vmo",  "vmo",          "ocean_Anadyr",  "all", "mean", "638 665  327 327 -1 -1",2
+"ocean_model_z", "vo",   "vo",           "ocean_Anadyr",  "all", "mean", "638 665  327 327 -1 -1",2
+
+# CEO mooring to the north section for flow moving east/west
+"ocean_model_z", "volcello", "volcello", "ocean_CEO",  "all", "mean", "633 633  494 559 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_CEO",  "all", "mean", "633 633  494 559 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_CEO",  "all", "mean", "633 633  494 559 -1 -1",2
+"ocean_model_z", "umo",  "umo",          "ocean_CEO",  "all", "mean", "633 633  494 559 -1 -1",2
+"ocean_model_z", "uo",   "uo",           "ocean_CEO",  "all", "mean", "633 633  494 559 -1 -1",2
+
+# Barrow Canyon east-west section for flow moving north/south
+"ocean_model_z", "volcello", "volcello", "ocean_Barrow",  "all", "mean", "637 660  508 508 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_Barrow",  "all", "mean", "637 660  508 508 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_Barrow",  "all", "mean", "637 660  508 508 -1 -1",2
+"ocean_model_z", "vmo",  "vmo",          "ocean_Barrow",  "all", "mean", "637 660  508 508 -1 -1",2
+"ocean_model_z", "vo",   "vo",           "ocean_Barrow",  "all", "mean", "637 660  508 508 -1 -1",2
+
+# GAK Line (tilted) east-west section for flow moving north/south
+"ocean_model_z", "volcello", "volcello", "ocean_GAK",  "all", "mean", "864 900  396 396 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_GAK",  "all", "mean", "864 900  396 396 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_GAK",  "all", "mean", "864 900  396 396 -1 -1",2
+"ocean_model_z", "vmo",  "vmo",          "ocean_GAK",  "all", "mean", "864 900  396 396 -1 -1",2
+"ocean_model_z", "vo",   "vo",           "ocean_GAK",  "all", "mean", "864 900  396 396 -1 -1",2
+
+# Unimak Pass north-south section for flow moving east/west
+"ocean_model_z", "volcello", "volcello", "ocean_Unimak",  "all", "mean", "817 817  192 200 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_Unimak",  "all", "mean", "817 817  192 200 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_Unimak",  "all", "mean", "817 817  192 200 -1 -1",2
+"ocean_model_z", "umo",  "umo",          "ocean_Unimak",  "all", "mean", "817 817  192 200 -1 -1",2
+"ocean_model_z", "uo",   "uo",           "ocean_Unimak",  "all", "mean", "817 817  192 200 -1 -1",2
+
 ## Fury and Hecla Strait east-west section for flow moving north/south
 #"ocean_model_z", "volcello", "volcello", "ocean_Fury",  "all", "mean", "587 591  830 830 -1 -1",2
 #"ocean_model_z", "thetao","thetao",      "ocean_Fury",  "all", "mean", "587 591  830 830 -1 -1",2
