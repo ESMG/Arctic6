@@ -1,8 +1,13 @@
 ! This file was written by the model and records the non-default parameters used at run-time.
 
 ! === module ice_model ===
-DO_RIDGING = True               !   [Boolean] default = False
-                                ! If true, call the ridging routines.
+SPECIFIED_ICE = True            !   [Boolean] default = False
+                                ! If true, the ice is specified and there is no dynamics.
+USE_SLAB_ICE = True             !   [Boolean]
+                                ! Use the very old slab-style ice.  With SPECIFIED_ICE, USE_SLAB_ICE is always
+                                ! true.
+NK_ICE = 1                      !   [nondim] default = 4
+                                ! The number of layers within the sea ice.
 
 ! === module MOM_domains ===
 REENTRANT_X = False             !   [Boolean] default = True
@@ -59,13 +64,13 @@ ICE_THICKNESS_INIT_CONFIG = "file" ! default = "data_override"
                                 !     data_override - use the data_override capability or zero everywhere
                                 !     uniform - sea ice has uniform thickness where the concentration is
                                 !       nonzero.
-ICE_CONCENTRATION_FILE = "ice_mass.nc" !
+ICE_CONCENTRATION_FILE = "arctic6_init_2016_07_SODA3.nc" !
                                 ! The name of the sea ice concentration file.
-ICE_CONCENTRATION_IC_VAR = "aice" ! default = "conc_ice"
+ICE_CONCENTRATION_IC_VAR = "ci" ! default = "conc_ice"
                                 ! The initial condition variable for ice mass per unit area.
-ICE_THICKNESS_FILE = "ice_mass.nc" !
+ICE_THICKNESS_FILE = "arctic6_init_2016_07_SODA3.nc" !
                                 ! The name of the sea ice thickness file.
-ICE_THICKNESS_IC_VAR = "hm"     ! default = "mH_ice"
+ICE_THICKNESS_IC_VAR = "mi"     ! default = "mH_ice"
                                 ! The initial condition variable for ice mass per unit area.
 ICE_SALINITY_IC = 3.0           !   [g kg-1] default = 0.0
                                 ! The uniform sea ice salinity used for the initial condition
@@ -77,62 +82,12 @@ ICE_BULK_SALINITY = 0.0         !   [g/kg] default = 4.0
 ICE_RELATIVE_SALINITY = 0.1     !   [nondim] default = 0.0
                                 ! The initial salinity of sea ice as a fraction of the salinity of the seawater
                                 ! from which it formed.
-TRANSMUTE_SEA_ICE = True        !   [Boolean] default = False
-                                ! If true, allow ice to be transmuted directly into seawater with a spatially
-                                ! varying rate as a form of outflow open boundary condition.
-TRANSMUTATION_RATE_FILE = "ice_outflow.nc" !
-                                ! The file from which the transmutation rate should be read.
-TRANSMUTATION_RATE_VAR = "rate" ! default = "transmute_rate"
-                                ! The variable with the map of sea-ice transmutation rate.  No transmutation
-                                ! occurs where this field is 0.
 
 ! === module SIS2_ice_thm (updates) ===
 ! This sub-module does updates of the sea-ice due to thermodynamic changes.
 
-! === module SIS_dyn_trans ===
+! === module specified_ice ===
 ! This module updates the ice momentum and does ice transport.
-DT_ICE_DYNAMICS = 300.0         !   [seconds] default = -1.0
-                                ! The time step used for the slow ice dynamics, including stepping the
-                                ! continuity equation and interactions between the ice mass field and
-                                ! velocities.  If 0 or negative the coupling time step will be used.
-ICE_COVER_DISCARD = 1.0E-30     !   [nondim] default = -1.0
-                                ! A tiny fractional ice coverage which if positive causes the mass in categories
-                                ! with less than this coverage to be discarded.
-SIS_THICKNESS_ADVECTION_SCHEME = "PPM:H3" ! default = "UPWIND_2D"
-                                ! The horizontal transport scheme for thickness:
-                                !   UPWIND_2D - Non-directionally split upwind
-                                !   PCM    - Directionally split piecewise constant
-                                !   PLM    - Piecewise Linear Method
-                                !   PPM:H3 - Piecewise Parabolic Method (Huyhn 3rd order)
-SIS_CONTINUITY_SCHEME = "PPM:C2PD" ! default = "UPWIND_2D"
-                                ! The horizontal transport scheme used in continuity:
-                                !   UPWIND_2D - Non-directionally split upwind
-                                !   PCM       - Directionally split piecewise constant
-                                !   PPM:C2PD  - Positive definite PPM with 2nd order edge values
-                                !   PPM:C2MO  - Monotonic PPM with 2nd order edge values
-CONTINUITY_H_NEGLECT = 1.0E-28  !   [kg m-2] default = 0.0
-                                ! The category ice mass per ocean cell area below which the transport within
-                                ! this thickness category of out of a cell is set to zero.  A suggested
-                                ! non-default value might be of order 3e-32 kg m-2, which is one molecule of ice
-                                ! per square kilometer.
-CONTINUITY_FRAC_NEGLECT = 1.0E-20 !   [nondim] default = 0.0
-                                ! When the total fluxes are distributed between categories with
-                                ! MERGED_CONTINUITY, any category whose ice is less than this fraction of the
-                                ! total mass contributes no flux.  Without MERGED_CONTINUITY, any snow or melt
-                                ! pond transport that is less than this fraction of the ice transport is zeroed
-                                ! out.  A suggested non-default value might be of order 1e-20.
-
-! === module SIS_tracer_advect ===
-SIS_TRACER_ADVECTION_SCHEME = "PPM:H3" ! default = "UPWIND_2D"
-                                ! The horizontal transport scheme for tracers:
-                                !   UPWIND_2D - Non-directionally split upwind
-                                !   PCM    - Directionally split piecewise constant
-                                !   PLM    - Piecewise Linear Method
-                                !   PPM:H3 - Piecewise Parabolic Method (Huyhn 3rd order)
-ADCROFT_ADVECTIVE_CFL = True    !   [Boolean] default = False
-                                ! If true use the Adcroft reciprocal of the cell mass when calculating the
-                                ! advective CFL numbers used in PPM tracer advection schemes, rather than adding
-                                ! a small mass in the denominator of the advective CFL ratio.
 
 ! === module SIS_sum_output ===
 MAXTRUNC = 200                  !   [truncations save_interval-1] default = 0
@@ -152,13 +107,5 @@ MAXTRUNC = 200                  !   [truncations save_interval-1] default = 0
 
 ! === module SIS_optics ===
 ! This module calculates the albedo and absorption profiles for shortwave radiation.
-ICE_DELTA_EDD_R_ICE = 1.0       !   [nondimensional] default = 0.0
-                                ! A dreadfully documented tuning parameter for the radiative propeties of sea
-                                ! ice with the delta-Eddington radiative transfer calculation.
-ICE_DELTA_EDD_R_SNOW = 1.0      !   [nondimensional] default = 0.0
-                                ! A dreadfully documented tuning parameter for the radiative propeties of snow
-                                ! on sea ice with the delta-Eddington radiative transfer calculation.
-ICE_DELTA_EDD_R_POND = 1.0      !   [nondimensional] default = 0.0
-                                ! A dreadfully documented tuning parameter for the radiative propeties of
-                                ! meltwater ponds on sea ice with the delta-Eddington radiative transfer
-                                ! calculation.
+! USE_SLAB_ICE_OPTICS = True    !   [Boolean]
+                                ! Using the very old slab-style ice optics.

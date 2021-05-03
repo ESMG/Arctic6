@@ -8,4 +8,4 @@
 !#override ICE_YIELD_ELLIPTICITY = 1.5
 !#override LEMIEUX_LANDFAST = True
 !#override MERGED_CONTINUITY = True
-!DEBUG = True
+SPECIFIED_ICE = True

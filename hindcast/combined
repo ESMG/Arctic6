@@ -1,3 +1,7 @@
+  rm 19800104.ocean_Anadyr.nc
+  mppnccombine 19800104.ocean_Anadyr.nc 19800104.ocean_Anadyr.nc.*
+  rm 19800104.ocean_Anadyr.nc.*
+
   rm 19800104.ocean_Barrow.nc
   mppnccombine 19800104.ocean_Barrow.nc 19800104.ocean_Barrow.nc.*
   rm 19800104.ocean_Barrow.nc.*
