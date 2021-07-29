@@ -130,7 +130,7 @@ PARALLEL_RESTARTFILES = False   !   [Boolean] default = False
                                 ! restart file is generated
 MAX_FIELDS = 100                ! default = 100
                                 ! The maximum number of restart fields that can be used.
-RESTART_CHECKSUMS_REQUIRED = True !   [Boolean] default = True
+RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
                                 ! If true, require the restart checksums to match and error out otherwise. Users
                                 ! may want to avoid this comparison if for example the restarts are made from a
                                 ! run with a different mask_table than the current run, in which case the
@@ -182,7 +182,7 @@ MINIMUM_DEPTH = 0.0             !   [m] default = 0.0
                                 ! MASKING_DEPTH are rounded to MINIMUM_DEPTH.
 MASKING_DEPTH = -9999.0         !   [m] default = -9999.0
                                 ! The depth below which to mask points as land points, for which all fluxes are
-                                ! zeroed out. MASKING_DEPTH is ignored if negative.
+                                ! zeroed out. MASKING_DEPTH needs to be smaller than MINIMUM_DEPTH
 CHANNEL_CONFIG = "none"         ! default = "none"
                                 ! A parameter that determines which set of channels are restricted to specific
                                 ! widths.  Options are:
@@ -249,61 +249,6 @@ USE_ICE_AGE_TRACER = False      !   [Boolean] default = False
 SIS_FAST_AVAILABLE_DIAGS_FILE = "SIS_fast.available_diags" ! default = "SIS_fast.available_diags"
                                 ! A file into which to write a list of all available sea ice diagnostics that
                                 ! can be included in a diag_table.
-CONCENTRATION_INIT_CONFIG = "file" ! default = "data_override"
-                                ! A string that determines how the initial total sea ice concentration is
-                                ! initialized for a new run:
-                                !     file - read sea ice concentrations from a specified file
-                                !     data_override - use the data_override capability or zero everywhere
-                                !     zero - there is no sea ice anywhere
-                                !     latitudes - initial sea ice concentration is a function of latitude.
-ICE_THICKNESS_INIT_CONFIG = "file" ! default = "data_override"
-                                ! A string that determines how the initial sea ice thickness is initialized for
-                                ! a new run:
-                                !     file - read sea ice thickesses from a specified file
-                                !     data_override - use the data_override capability or zero everywhere
-                                !     uniform - sea ice has uniform thickness where the concentration is
-                                !       nonzero.
-SNOW_THICKNESS_INIT_CONFIG = "data_override" ! default = "data_override"
-                                ! A string that determines how the initial total snow thickness is initialized
-                                ! for a new run:
-                                !     file - read sea ice concentrations from a specified file
-                                !     data_override - use the data_override capability or zero everywhere
-                                !     uniform - snow has uniform thickness where the concentration is nonzero.
-ICE_CONCENTRATION_FILE = "ice_mass.nc" !
-                                ! The name of the sea ice concentration file.
-ICE_CONCENTRATION_IC_VAR = "aice" ! default = "conc_ice"
-                                ! The initial condition variable for ice mass per unit area.
-ICE_THICKNESS_FILE = "ice_mass.nc" !
-                                ! The name of the sea ice thickness file.
-ICE_THICKNESS_IC_VAR = "hm"     ! default = "mH_ice"
-                                ! The initial condition variable for ice mass per unit area.
-ICE_SALINITY_INIT_CONFIG = "uniform" ! default = "uniform"
-                                ! A string that determines how the sea ice salinity is initialized for a new
-                                ! run:
-                                !     uniform -  Use a constant ice salinity initial condition
-                                !     file - Read sea ice salinities from a specified file
-                                !     data_override - use the data_override capability or zero everywhere.
-ICE_ENTHALPY_INIT_CONFIG = "uniform_temp" ! default = "uniform_temp"
-                                ! A string that determines how the sea ice enthalpy is initialized for a new
-                                ! run:
-                                !     uniform_temp - Use a constant ice temperature initial condition
-                                !     relative_temp - Use an ice temperature initial condition with a
-                                !       specified depression below the bulk ice freezing point
-                                !     file - Read sea ice temperatures or enthalpies from a specified file
-                                !     data_override - use the data_override capability or freezing enthalpy
-                                !       everywhere.
-SNOW_ENTHALPY_INIT_CONFIG = "uniform_temp" ! default = "uniform_temp"
-                                ! A string that determines how the snow enthalpy is initialized for a new run:
-                                !     uniform_temp - Use a constant ice temperature initial condition
-                                !     relative_temp - Use an ice temperature initial condition with a
-                                !       specified depression below the bulk ice freezing point
-                                !     file - Read sea ice temperatures or enthalpies from a specified file
-                                !     data_override - use the data_override capability or freezing enthalpy
-                                !       everywhere.
-ICE_SALINITY_IC = 3.0           !   [g kg-1] default = 0.0
-                                ! The uniform sea ice salinity used for the initial condition
-ICE_TEMPERATURE_IC = -4.0       !   [degC] default = -4.0
-                                ! The uniform sea ice and snow temperature used for the initial condition
 
 ! === module SIS_slow_thermo ===
 ! This module calculates the slow evolution of the ice mass, heat, and salt budgets.
@@ -414,7 +359,7 @@ PROJECT_ICE_DRAG_VEL = True     !   [Boolean] default = True
                                 ! If true, project forward the ice velocity used in the drag calculation to
                                 ! avoid an instability that can occur when a finite stress is applied to thin
                                 ! ice moving with the velocity of the ocean.
-ICE_YIELD_ELLIPTICITY = 2.0     !   [Nondim] default = 2.0
+ICE_YIELD_ELLIPTICITY = 1.5     !   [Nondim] default = 2.0
                                 ! The ellipticity coefficient for the plastic yield curve in the sea-ice
                                 ! rheology.  For an infinite ellipticity (i.e., a cavitating fluid rheology),
                                 ! use 0.
@@ -442,8 +387,18 @@ CFL_TRUNCATE = 0.5              !   [nondim] default = 0.5
 CFL_TRUNC_DYN_ITS = False       !   [Boolean] default = False
                                 ! If true, check the CFL number for every iteration of the rheology solver;
                                 ! otherwise only the final velocities that are used for transport are checked.
-LEMIEUX_LANDFAST = False        !   [Boolean] default = False
+LEMIEUX_LANDFAST = True         !   [Boolean] default = False
                                 ! If true, turn on Lemieux landfast ice parameterization.
+LEMIEUX_K1 = 8.0                !   [Nondim] default = 8.0
+                                ! The value of the first Lemieux landfast ice tuneable parameter.
+LEMIEUX_K2 = 15.0               !   [N m-3] default = 15.0
+                                ! The value of the second Lemieux landfast ice tuneable parameter.
+LEMIEUX_ALPHA_B = 20.0          !   [Nondim] default = 20.0
+                                ! The value of a third Lemieux landfast ice tuneable parameter.
+LEMIEUX_THRESHOLD_HW = 30.0     !   [m] default = 30.0
+                                ! Maximum water depth for grounding in Lemieux landfast ice.
+LEMIEUX_U0 = 5.0E-05            !   [m s-1] default = 5.0E-05
+                                ! Velocity for Lemieux landfast ice.
 RECATEGORIZE_ICE = True         !   [Boolean] default = True
                                 ! If true, readjust the distribution into ice thickness categories after
                                 ! advection.

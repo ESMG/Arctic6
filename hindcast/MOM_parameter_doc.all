@@ -214,7 +214,7 @@ ALLOW_LANDMASK_CHANGES = False  !   [Boolean] default = False
                                 ! If true, allow topography overrides to change land mask.
 MAXIMUM_DEPTH = 6500.0          !   [m]
                                 ! The maximum depth of the ocean.
-MINIMUM_DEPTH = 1.0             !   [m] default = 0.0
+MINIMUM_DEPTH = 4.0             !   [m] default = 0.0
                                 ! If MASKING_DEPTH is unspecified, then anything shallower than MINIMUM_DEPTH is
                                 ! assumed to be land and all fluxes are masked out. If MASKING_DEPTH is
                                 ! specified, then all depths shallower than MINIMUM_DEPTH but deeper than
@@ -356,7 +356,7 @@ TIDE_MF_FREQ = 5.3234E-06       !   [s-1] default = 5.3234E-06
                                 ! OBC_TIDE_CONSTITUENTS.
 MASKING_DEPTH = 1.0             !   [m] default = -9999.0
                                 ! The depth below which to mask points as land points, for which all fluxes are
-                                ! zeroed out. MASKING_DEPTH is ignored if negative.
+                                ! zeroed out. MASKING_DEPTH needs to be smaller than MINIMUM_DEPTH
 CHANNEL_CONFIG = "none"         ! default = "none"
                                 ! A parameter that determines which set of channels are
                                 ! restricted to specific  widths.  Options are:
@@ -436,7 +436,7 @@ DTFREEZE_DP = -7.75E-08         !   [deg C Pa-1] default = 0.0
                                 ! temperature with pressure.
 
 ! === module MOM_restart ===
-PARALLEL_RESTARTFILES = True    !   [Boolean] default = False
+PARALLEL_RESTARTFILES = False   !   [Boolean] default = False
                                 ! If true, each processor writes its own restart file, otherwise a single
                                 ! restart file is generated
 RESTARTFILE = "MOM.res"         ! default = "MOM.res"
@@ -446,7 +446,7 @@ LARGE_FILE_SUPPORT = True       !   [Boolean] default = True
                                 ! otherwise the limit is 2Gb.
 MAX_FIELDS = 100                ! default = 100
                                 ! The maximum number of restart fields that can be used.
-RESTART_CHECKSUMS_REQUIRED = True !   [Boolean] default = True
+RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
                                 ! If true, require the restart checksums to match and error out otherwise. Users
                                 ! may want to avoid this comparison if for example the restarts are made from a
                                 ! run with a different mask_table than the current run, in which case the
@@ -586,99 +586,69 @@ REGRID_FILTER_DEEP_DEPTH = 0.0  !   [m] default = 0.0
                                 ! REGRID_FILTER_SHALLOW_DEPTH the filter weights adopt a cubic profile.
 
 ! === module MOM_state_initialization ===
-INIT_LAYERS_FROM_Z_FILE = False !   [Boolean] default = False
-                                ! If true, initialize the layer thicknesses, temperatures, and salinities from a
-                                ! Z-space file on a latitude-longitude grid.
-THICKNESS_CONFIG = "coord"      ! default = "uniform"
-                                ! A string that determines how the initial layer thicknesses are specified for a
-                                ! new run:
-                                !     file - read interface heights from the file specified
-                                !     thickness_file - read thicknesses from the file specified
-                                !       by (THICKNESS_FILE).
-                                !     coord - determined by ALE coordinate.
-                                !     uniform - uniform thickness layers evenly distributed
-                                !       between the surface and MAXIMUM_DEPTH.
-                                !     list - read a list of positive interface depths.
-                                !     DOME - use a slope and channel configuration for the
-                                !       DOME sill-overflow test case.
-                                !     ISOMIP - use a configuration for the
-                                !       ISOMIP test case.
-                                !     benchmark - use the benchmark test case thicknesses.
-                                !     Neverworld - use the Neverworld test case thicknesses.
-                                !     search - search a density profile for the interface
-                                !       densities. This is not yet implemented.
-                                !     circle_obcs - the circle_obcs test case is used.
-                                !     DOME2D - 2D version of DOME initialization.
-                                !     adjustment2d - 2D lock exchange thickness ICs.
-                                !     sloshing - sloshing gravity thickness ICs.
-                                !     seamount - no motion test with seamount ICs.
-                                !     dumbbell - sloshing channel ICs.
-                                !     soliton - Equatorial Rossby soliton.
-                                !     rossby_front - a mixed layer front in thermal wind balance.
-                                !     USER - call a user modified routine.
-TS_CONFIG = "file"              !
-                                ! A string that determines how the initial tempertures and salinities are
-                                ! specified for a new run:
-                                !     file - read velocities from the file specified
-                                !       by (TS_FILE).
-                                !     fit - find the temperatures that are consistent with
-                                !       the layer densities and salinity S_REF.
-                                !     TS_profile - use temperature and salinity profiles
-                                !       (read from TS_FILE) to set layer densities.
-                                !     benchmark - use the benchmark test case T & S.
-                                !     linear - linear in logical layer space.
-                                !     DOME2D - 2D DOME initialization.
-                                !     ISOMIP - ISOMIP initialization.
-                                !     adjustment2d - 2d lock exchange T/S ICs.
-                                !     sloshing - sloshing mode T/S ICs.
-                                !     seamount - no motion test with seamount ICs.
-                                !     dumbbell - sloshing channel ICs.
-                                !     rossby_front - a mixed layer front in thermal wind balance.
-                                !     SCM_CVMix_tests - used in the SCM CVMix tests.
-                                !     USER - call a user modified routine.
-TS_FILE = "initial_condition_SODA3_1980-01-03.nc" !
-                                ! The initial condition file for temperature.
-TEMP_IC_VAR = "temp"            ! default = "PTEMP"
-                                ! The initial condition variable for potential temperature.
-SALT_IC_VAR = "salt"            ! default = "SALT"
-                                ! The initial condition variable for salinity.
-SALT_FILE = "initial_condition_SODA3_1980-01-03.nc" ! default = "initial_condition_SODA3_1980-01-03.nc"
-                                ! The initial condition file for salinity.
-VELOCITY_CONFIG = "zero"        ! default = "zero"
-                                ! A string that determines how the initial velocities are specified for a new
-                                ! run:
-                                !     file - read velocities from the file specified
-                                !       by (VELOCITY_FILE).
-                                !     zero - the fluid is initially at rest.
-                                !     uniform - the flow is uniform (determined by
-                                !       parameters INITIAL_U_CONST and INITIAL_V_CONST).
-                                !     rossby_front - a mixed layer front in thermal wind balance.
-                                !     soliton - Equatorial Rossby soliton.
-                                !     USER - call a user modified routine.
-CONVERT_THICKNESS_UNITS = False !   [Boolean] default = False
-                                ! If true,  convert the thickness initial conditions from units of m to kg m-2
-                                ! or vice versa, depending on whether BOUSSINESQ is defined. This does not apply
-                                ! if a restart file is read.
-DEPRESS_INITIAL_SURFACE = True  !   [Boolean] default = False
-                                ! If true,  depress the initial surface to avoid huge tsunamis when a large
-                                ! surface pressure is applied.
-TRIM_IC_FOR_P_SURF = False      !   [Boolean] default = False
-                                ! If true, cuts way the top of the column for initial conditions at the depth
-                                ! where the hydrostatic pressure matches the imposed surface pressure which is
-                                ! read from file.
-SURFACE_HEIGHT_IC_FILE = "initial_condition_SODA3_1980-01-03.nc" !
-                                ! The initial condition file for the surface height.
-SURFACE_HEIGHT_IC_VAR = "ssh"   ! default = "SSH"
-                                ! The initial condition variable for the surface height.
-SURFACE_HEIGHT_IC_SCALE = 1.0   !   [variable] default = 1.0
-                                ! A scaling factor to convert SURFACE_HEIGHT_IC_VAR into units of m
-REGRID_ACCELERATE_INIT = False  !   [Boolean] default = False
-                                ! If true, runs REGRID_ACCELERATE_ITERATIONS iterations of the regridding
-                                ! algorithm to push the initial grid to be consistent with the initial
-                                ! condition. Useful only for state-based and iterative coordinates.
-SPONGE = False                  !   [Boolean] default = False
+SPONGE = True                   !   [Boolean] default = False
                                 ! If true, sponges may be applied anywhere in the domain. The exact location and
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
+SPONGE_CONFIG = "file"          ! default = "file"
+                                ! A string that sets how the sponges are configured:
+                                !     file - read sponge properties from the file
+                                !       specified by (SPONGE_FILE).
+                                !     ISOMIP - apply ale sponge in the ISOMIP case
+                                !     RGC - apply sponge in the rotating_gravity_current case
+                                !     DOME - use a slope and channel configuration for the
+                                !       DOME sill-overflow test case.
+                                !     BFB - Sponge at the southern boundary of the domain
+                                !       for buoyancy-forced basin case.
+                                !     USER - call a user modified routine.
+SPONGE_DAMPING_FILE = "Arctic6_idamp.nc" !
+                                ! The name of the file with the sponge damping rates.
+SPONGE_STATE_FILE = "arctic6_SODA3_1981_clim.nc" ! default = "Arctic6_idamp.nc"
+                                ! The name of the file with the state to damp toward.
+SPONGE_PTEMP_VAR = "temp"       ! default = "PTEMP"
+                                ! The name of the potential temperature variable in SPONGE_STATE_FILE.
+SPONGE_SALT_VAR = "salt"        ! default = "SALT"
+                                ! The name of the salinity variable in SPONGE_STATE_FILE.
+SPONGE_UV = True                !   [Boolean] default = False
+                                ! Apply sponges in u and v, in addition to tracers.
+SPONGE_UV_STATE_FILE = "arctic6_SODA3_1981_clim.nc" ! default = "Arctic6_idamp.nc"
+                                ! The name of the file with the state to damp UV toward.
+SPONGE_U_VAR = "u"              ! default = "UVEL"
+                                ! The name of the zonal velocity variable in SPONGE_UV_STATE_FILE.
+SPONGE_V_VAR = "v"              ! default = "VVEL"
+                                ! The name of the vertical velocity variable in SPONGE_UV_STATE_FILE.
+SPONGE_ETA_VAR = "ETA"          ! default = "ETA"
+                                ! The name of the interface height variable in SPONGE_STATE_FILE.
+SPONGE_IDAMP_VAR = "Idamp"      ! default = "Idamp"
+                                ! The name of the inverse damping rate variable in SPONGE_DAMPING_FILE.
+SPONGE_UV_DAMPING_FILE = "Arctic6_idamp.nc" ! default = "Arctic6_idamp.nc"
+                                ! The name of the file with sponge damping rates for the velocity variables.
+SPONGE_IDAMP_U_var = "Idamp_u"  ! default = "Idamp"
+                                ! The name of the inverse damping rate variable in SPONGE_UV_DAMPING_FILE for
+                                ! the velocities.
+SPONGE_IDAMP_V_var = "Idamp_v"  ! default = "Idamp"
+                                ! The name of the inverse damping rate variable in SPONGE_UV_DAMPING_FILE for
+                                ! the velocities.
+NEW_SPONGES = False             !   [of sponge restoring data.] default = False
+                                ! Set True if using the newer sponging code which performs on-the-fly regridding
+                                ! in lat-lon-time.
+INTERPOLATE_SPONGE_TIME_SPACE = True !   [of sponge restoring data.] default = True
+                                ! Set True if using the newer sponging code which performs on-the-fly regridding
+                                ! in lat-lon-time.
+
+! === module MOM_sponge ===
+HOR_REGRID_2018_ANSWERS = False !   [Boolean] default = False
+                                ! If true, use the order of arithmetic for horizonal regridding that recovers
+                                ! the answers from the end of 2018 and retain a bug in the 3-dimensional mask
+                                ! returned in certain cases.  Otherwise, use rotationally symmetric forms of the
+                                ! same expressions and initialize the mask properly.
+SPONGE_DATA_ONGRID = True       !   [Boolean] default = False
+                                ! When defined, the incoming sponge data are assumed to be on the model grid
+!Total sponge columns at h points = 22419 !
+                                ! The total number of columns where sponges are applied at h points.
+!Total sponge columns at u points = 22165 !
+                                ! The total number of columns where sponges are applied at u points.
+!Total sponge columns at v points = 22336 !
+                                ! The total number of columns where sponges are applied at v points.
 OBC_SEGMENT_001_DATA = "U=file:OBC.nc(u),V=file:OBC.nc(v),SSH=file:OBC.nc(zeta),TEMP=file:OBC.nc(temp),SALT=file:OBC.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
 OBC_SEGMENT_002_DATA = "U=file:OBC.nc(u),V=file:OBC.nc(v),SSH=file:OBC.nc(zeta),TEMP=file:OBC.nc(temp),SALT=file:OBC.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
@@ -943,9 +913,9 @@ GILL_EQUATORIAL_LD = True       !   [Boolean] default = True
                                 ! is the more appropriate definition.
 INTERNAL_WAVE_SPEED_TOL = 0.001 !   [nondim] default = 0.001
                                 ! The fractional tolerance for finding the wave speeds.
-INTERNAL_WAVE_SPEED_MIN = 0.0   !   [m s-1] default = 0.0
+INTERNAL_WAVE_SPEED_MIN = 1.0E-06 !   [m s-1] default = 0.0
                                 ! A floor in the first mode speed below which 0 used instead.
-INTERNAL_WAVE_SPEED_BETTER_EST = False !   [Boolean] default = False
+INTERNAL_WAVE_SPEED_BETTER_EST = True !   [Boolean] default = False
                                 ! If true, use a more robust estimate of the first mode wave speed as the
                                 ! starting point for iterations.
 USE_QG_LEITH_GM = False         !   [Boolean] default = False

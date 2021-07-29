@@ -16,3 +16,7 @@ DEBUG_BT = False
 #override RIVERMIX_DEPTH = 10
 #override USE_LA_LI2016 = True
 #override DOUBLE_DIFFUSION = True        !   [Boolean] default = False
+#override RESTART_CHECKSUMS_REQUIRED = False
+#override INTERNAL_WAVE_SPEED_BETTER_EST = True
+#override INTERNAL_WAVE_SPEED_MIN = 1.e-6
+#override PARALLEL_RESTARTFILES = False
