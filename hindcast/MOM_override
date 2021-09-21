@@ -2,8 +2,7 @@
 #override KH_RES_FN_POWER = 100
 #override VISC_RES_FN_POWER = 100
 #override MIN_THICKNESS = 1.e-6
-SAVE_INITIAL_CONDS = True
-LIQUID_RUNOFF_FROM_DATA = True
+!SAVE_INITIAL_CONDS = True
 DEBUG = False
 DEBUG_BT = False
 !VERBOSITY = 9
@@ -16,7 +15,11 @@ DEBUG_BT = False
 #override RIVERMIX_DEPTH = 10
 #override USE_LA_LI2016 = True
 #override DOUBLE_DIFFUSION = True        !   [Boolean] default = False
-#override RESTART_CHECKSUMS_REQUIRED = False
+#override INT_TIDE_DISSIPATION = True    !   [Boolean] default = False
+#override INT_TIDE_PROFILE = "POLZIN_09" ! default = "STLAURENT_02"
+#override INT_TIDE_DECAY_SCALE = 300.0   !   [m] default = 500.0
+#override H2_FILE = "ocean_topog.nc"
 #override INTERNAL_WAVE_SPEED_BETTER_EST = True
 #override INTERNAL_WAVE_SPEED_MIN = 1.e-6
 #override PARALLEL_RESTARTFILES = False
+#override USE_LEGACY_DIABATIC_DRIVER = False

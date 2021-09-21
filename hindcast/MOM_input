@@ -12,7 +12,7 @@ THICKNESSDIFFUSE = True         !   [Boolean] default = False
 THICKNESSDIFFUSE_FIRST = True   !   [Boolean] default = False
                                 ! If true, do thickness diffusion before dynamics. This is only used if
                                 ! THICKNESSDIFFUSE is true.
-DT = 300.0                      !   [s]
+DT = 360.0                      !   [s]
                                 ! The (baroclinic) dynamics time step.  The time-step that is actually used will
                                 ! be an integer fraction of the forcing time-step (DT_FORCING in ocean-only mode
                                 ! or the coupling timestep in coupled mode.)
@@ -160,7 +160,7 @@ OBC_TIDE_REF_DATE = 1980, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
 OBC_TIDE_NODAL_REF_DATE = 1980, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
-MASKING_DEPTH = 1.0            !   [m] default = -9999.0
+MASKING_DEPTH = 1.0             !   [m] default = -9999.0
                                 ! The depth below which to mask points as land points, for which all fluxes are
                                 ! zeroed out. MASKING_DEPTH is ignored if negative.
 
@@ -681,9 +681,9 @@ SPONGE_UV_DAMPING_FILE = "Arctic6_idamp.nc" !
                                 ! The name of the file with the sponge damping rates.
 SPONGE_IDAMP_U_var = "Idamp_u"
 SPONGE_IDAMP_V_var = "Idamp_v"
-SPONGE_STATE_FILE = "arctic6_SODA3_1981_clim.nc" ! default = "sponge.nc"
+SPONGE_STATE_FILE = "arctic6_SODA3_1982_clim.nc" ! default = "sponge.nc"
                                 ! The name of the file with the state to damp toward.
-SPONGE_UV_STATE_FILE = "arctic6_SODA3_1981_clim.nc" ! default = "sponge.nc"
+SPONGE_UV_STATE_FILE = "arctic6_SODA3_1982_clim.nc" ! default = "sponge.nc"
 !SPONGE_UV_STATE_FILE = "clim_uv_1980.nc" ! default = "sponge.nc"
 SPONGE_PTEMP_VAR = "temp"       ! default = "PTEMP"
                                 ! The name of the potential temperature variable in SPONGE_STATE_FILE.

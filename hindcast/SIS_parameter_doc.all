@@ -130,7 +130,7 @@ PARALLEL_RESTARTFILES = False   !   [Boolean] default = False
                                 ! restart file is generated
 MAX_FIELDS = 100                ! default = 100
                                 ! The maximum number of restart fields that can be used.
-RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
+RESTART_CHECKSUMS_REQUIRED = True !   [Boolean] default = True
                                 ! If true, require the restart checksums to match and error out otherwise. Users
                                 ! may want to avoid this comparison if for example the restarts are made from a
                                 ! run with a different mask_table than the current run, in which case the
@@ -173,16 +173,16 @@ TOPO_EDITS_FILE = ""            ! default = ""
                                 ! The file from which to read a list of i,j,z topography overrides.
 ALLOW_LANDMASK_CHANGES = False  !   [Boolean] default = False
                                 ! If true, allow topography overrides to change land mask.
-!MAXIMUM_DEPTH = 7906.0673828125 !   [m]
-                                ! The (diagnosed) maximum depth of the ocean.
-MINIMUM_DEPTH = 0.0             !   [m] default = 0.0
+MINIMUM_DEPTH = 4.0             !   [m] default = 0.0
                                 ! If MASKING_DEPTH is unspecified, then anything shallower than MINIMUM_DEPTH is
                                 ! assumed to be land and all fluxes are masked out. If MASKING_DEPTH is
                                 ! specified, then all depths shallower than MINIMUM_DEPTH but deeper than
                                 ! MASKING_DEPTH are rounded to MINIMUM_DEPTH.
-MASKING_DEPTH = -9999.0         !   [m] default = -9999.0
+MASKING_DEPTH = 1.0             !   [m] default = -9999.0
                                 ! The depth below which to mask points as land points, for which all fluxes are
                                 ! zeroed out. MASKING_DEPTH needs to be smaller than MINIMUM_DEPTH
+!MAXIMUM_DEPTH = 7889.68359375  !   [m]
+                                ! The (diagnosed) maximum depth of the ocean.
 CHANNEL_CONFIG = "none"         ! default = "none"
                                 ! A parameter that determines which set of channels are restricted to specific
                                 ! widths.  Options are:
@@ -318,7 +318,7 @@ ICE_TEMP_RANGE_ESTIMATE = 40.0  !   [degC] default = 40.0
 
 ! === module SIS_dyn_trans ===
 ! This module updates the ice momentum and does ice transport.
-DT_ICE_DYNAMICS = 300.0         !   [seconds] default = -1.0
+DT_ICE_DYNAMICS = 360.0         !   [seconds] default = -1.0
                                 ! The time step used for the slow ice dynamics, including stepping the
                                 ! continuity equation and interactions between the ice mass field and
                                 ! velocities.  If 0 or negative the coupling time step will be used.
