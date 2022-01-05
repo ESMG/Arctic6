@@ -1,17 +1,14 @@
 ! This file was written by the model and records the non-default parameters used at run-time.
 
 ! === module MOM ===
-DIABATIC_FIRST = True           !   [Boolean] default = False
-                                ! If true, apply diabatic and thermodynamic processes, including buoyancy
-                                ! forcing and mass gain or loss, before stepping the dynamics forward.
 USE_REGRIDDING = True           !   [Boolean] default = False
                                 ! If True, use the ALE algorithm (regridding/remapping). If False, use the
                                 ! layered isopycnal algorithm.
-DT = 300.0                      !   [s]
+DT = 900.0                      !   [s]
                                 ! The (baroclinic) dynamics time step.  The time-step that is actually used will
                                 ! be an integer fraction of the forcing time-step (DT_FORCING in ocean-only mode
                                 ! or the coupling timestep in coupled mode.)
-DT_THERM = 1200.0               !   [s] default = 300.0
+DT_THERM = 3600.0               !   [s] default = 900.0
                                 ! The thermodynamic and tracer advection time step. Ideally DT_THERM should be
                                 ! an integer multiple of DT and less than the forcing or coupling time-step,
                                 ! unless THERMO_SPANS_COUPLING is true, in which case DT_THERM can be an integer
@@ -37,10 +34,10 @@ WRITE_GEOM = 0                  ! default = 1
 ! === module MOM_domains ===
 REENTRANT_X = False             !   [Boolean] default = True
                                 ! If true, the domain is zonally reentrant.
-NIGLOBAL = 1080                 !
+NIGLOBAL = 360                  !
                                 ! The total number of thickness grid points in the x-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in MOM_memory.h at compile time.
-NJGLOBAL = 1392                 !
+NJGLOBAL = 464                  !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in MOM_memory.h at compile time.
 
@@ -165,9 +162,9 @@ OBC_TIDE_ADD_EQ_PHASE = True    !   [Boolean] default = False
                                 ! If true, add the equilibrium phase argument to the specified tidal phases.
 OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
-OBC_TIDE_REF_DATE = 1980, 1, 1  !
+OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 1982, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 2017, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 
 ! === module MOM_verticalGrid ===
@@ -253,7 +250,7 @@ SPONGE = True                   !   [Boolean] default = False
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
 SPONGE_DAMPING_FILE = "Arctic6_idamp.nc" !
                                 ! The name of the file with the sponge damping rates.
-SPONGE_STATE_FILE = "arctic6_SODA3_1982_clim.nc" ! default = "Arctic6_idamp.nc"
+SPONGE_STATE_FILE = "arctic6_SODA3_2017_clim.nc" ! default = "Arctic6_idamp.nc"
                                 ! The name of the file with the state to damp toward.
 SPONGE_PTEMP_VAR = "temp"       ! default = "PTEMP"
                                 ! The name of the potential temperature variable in SPONGE_STATE_FILE.
@@ -261,7 +258,7 @@ SPONGE_SALT_VAR = "salt"        ! default = "SALT"
                                 ! The name of the salinity variable in SPONGE_STATE_FILE.
 SPONGE_UV = True                !   [Boolean] default = False
                                 ! Apply sponges in u and v, in addition to tracers.
-SPONGE_UV_STATE_FILE = "arctic6_SODA3_1982_clim.nc" ! default = "Arctic6_idamp.nc"
+SPONGE_UV_STATE_FILE = "arctic6_SODA3_2017_clim.nc" ! default = "Arctic6_idamp.nc"
                                 ! The name of the file with the state to damp UV toward.
 SPONGE_U_VAR = "u"              ! default = "UVEL"
                                 ! The name of the zonal velocity variable in SPONGE_UV_STATE_FILE.
@@ -409,7 +406,7 @@ TIDE_SAL_SCALAR_VALUE = 0.094   !   [m m-1]
                                 ! The constant of proportionality between sea surface height (really it should
                                 ! be bottom pressure) anomalies and bottom geopotential anomalies. This is only
                                 ! used if TIDES and TIDE_USE_SAL_SCALAR are true.
-TIDE_REF_DATE = 1980, 1, 1      ! default = 0
+TIDE_REF_DATE = 2010, 1, 1      ! default = 0
                                 ! Year,month,day to use as reference date for tidal forcing. If not specified,
                                 ! defaults to 0.
 TIDE_USE_EQ_PHASE = True        !   [Boolean] default = False

@@ -23,8 +23,7 @@ INPUT
 runmpi.chinook*
 CCS1.*
 CCS2.*
-ARCTIC5.*
-ARCTIC6.*
+ARCTIC*
 nodes
 movie*
 *.png
