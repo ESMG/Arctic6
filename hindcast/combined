@@ -1,47 +1,47 @@
-  rm -f 19820101.ocean_Anadyr.nc
-  mppnccombine 19820101.ocean_Anadyr.nc 19820101.ocean_Anadyr.nc.*
-  rm 19820101.ocean_Anadyr.nc.*
+  rm -f 19830701.ocean_Anadyr.nc
+  mppnccombine 19830701.ocean_Anadyr.nc 19830701.ocean_Anadyr.nc.*
+  rm 19830701.ocean_Anadyr.nc.*
 
-  rm -f 19820101.ocean_Barrow.nc
-  mppnccombine 19820101.ocean_Barrow.nc 19820101.ocean_Barrow.nc.*
-  rm 19820101.ocean_Barrow.nc.*
+  rm -f 19830701.ocean_Barrow.nc
+  mppnccombine 19830701.ocean_Barrow.nc 19830701.ocean_Barrow.nc.*
+  rm 19830701.ocean_Barrow.nc.*
 
-  rm -f 19820101.ocean_Beaufort.nc
-  mppnccombine 19820101.ocean_Beaufort.nc 19820101.ocean_Beaufort.nc.*
-  rm 19820101.ocean_Beaufort.nc.*
+  rm -f 19830701.ocean_Beaufort.nc
+  mppnccombine 19830701.ocean_Beaufort.nc 19830701.ocean_Beaufort.nc.*
+  rm 19830701.ocean_Beaufort.nc.*
 
-  rm -f 19820101.ocean_Bering_Strait.nc
-  mppnccombine 19820101.ocean_Bering_Strait.nc 19820101.ocean_Bering_Strait.nc.*
-  rm 19820101.ocean_Bering_Strait.nc.*
+  rm -f 19830701.ocean_Bering_Strait.nc
+  mppnccombine 19830701.ocean_Bering_Strait.nc 19830701.ocean_Bering_Strait.nc.*
+  rm 19830701.ocean_Bering_Strait.nc.*
 
-  rm -f 19820101.ocean_CEO.nc
-  mppnccombine 19820101.ocean_CEO.nc 19820101.ocean_CEO.nc.*
-  rm 19820101.ocean_CEO.nc.*
+  rm -f 19830701.ocean_CEO.nc
+  mppnccombine 19830701.ocean_CEO.nc 19830701.ocean_CEO.nc.*
+  rm 19830701.ocean_CEO.nc.*
 
-  rm -f 19820101.ocean_Fram_Strait.nc
-  mppnccombine 19820101.ocean_Fram_Strait.nc 19820101.ocean_Fram_Strait.nc.*
-  rm 19820101.ocean_Fram_Strait.nc.*
+  rm -f 19830701.ocean_Fram_Strait.nc
+  mppnccombine 19830701.ocean_Fram_Strait.nc 19830701.ocean_Fram_Strait.nc.*
+  rm 19830701.ocean_Fram_Strait.nc.*
 
-  rm -f 19820101.ocean_GAK.nc
-  mppnccombine 19820101.ocean_GAK.nc 19820101.ocean_GAK.nc.*
-  rm 19820101.ocean_GAK.nc.*
+  rm -f 19830701.ocean_GAK.nc
+  mppnccombine 19830701.ocean_GAK.nc 19830701.ocean_GAK.nc.*
+  rm 19830701.ocean_GAK.nc.*
 
-  rm -f 19820101.ocean_Unimak.nc
-  mppnccombine 19820101.ocean_Unimak.nc 19820101.ocean_Unimak.nc.*
-  rm 19820101.ocean_Unimak.nc.*
+  rm -f 19830701.ocean_Unimak.nc
+  mppnccombine 19830701.ocean_Unimak.nc 19830701.ocean_Unimak.nc.*
+  rm 19830701.ocean_Unimak.nc.*
 
-# rm -f 19820101.ocean_Fury.nc
-# mppnccombine 19820101.ocean_Fury.nc 19820101.ocean_Fury.nc.*
-# rm 19820101.ocean_Fury.nc.*
+# rm -f 19830701.ocean_Fury.nc
+# mppnccombine 19830701.ocean_Fury.nc 19830701.ocean_Fury.nc.*
+# rm 19830701.ocean_Fury.nc.*
 
-# rm -f 19820101.ocean_Parry.nc
-# mppnccombine 19820101.ocean_Parry.nc 19820101.ocean_Parry.nc.*
-# rm 19820101.ocean_Parry.nc.*
+# rm -f 19830701.ocean_Parry.nc
+# mppnccombine 19830701.ocean_Parry.nc 19830701.ocean_Parry.nc.*
+# rm 19830701.ocean_Parry.nc.*
 
-# rm -f 19820101.ocean_Cardigan.nc
-# mppnccombine 19820101.ocean_Cardigan.nc 19820101.ocean_Cardigan.nc.*
-# rm 19820101.ocean_Cardigan.nc.*
+# rm -f 19830701.ocean_Cardigan.nc
+# mppnccombine 19830701.ocean_Cardigan.nc 19830701.ocean_Cardigan.nc.*
+# rm 19830701.ocean_Cardigan.nc.*
 
-# rm -f 19820101.ocean_Robeson.nc
-# mppnccombine 19820101.ocean_Robeson.nc 19820101.ocean_Robeson.nc.*
-# rm 19820101.ocean_Robeson.nc.*
+# rm -f 19830701.ocean_Robeson.nc
+# mppnccombine 19830701.ocean_Robeson.nc 19830701.ocean_Robeson.nc.*
+# rm 19830701.ocean_Robeson.nc.*

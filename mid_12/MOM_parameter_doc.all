@@ -49,11 +49,11 @@ BATHYMETRY_AT_VEL = False       !   [Boolean] default = False
                                 ! If true, there are separate values for the basin depths at velocity points.
                                 ! Otherwise the effects of topography are entirely determined from thickness
                                 ! points.
-DT = 900.0                      !   [s]
+DT = 600.0                      !   [s]
                                 ! The (baroclinic) dynamics time step.  The time-step that is actually used will
                                 ! be an integer fraction of the forcing time-step (DT_FORCING in ocean-only mode
                                 ! or the coupling timestep in coupled mode.)
-DT_THERM = 3600.0               !   [s] default = 900.0
+DT_THERM = 3600.0               !   [s] default = 600.0
                                 ! The thermodynamic and tracer advection time step. Ideally DT_THERM should be
                                 ! an integer multiple of DT and less than the forcing or coupling time-step,
                                 ! unless THERMO_SPANS_COUPLING is true, in which case DT_THERM can be an integer
@@ -152,10 +152,10 @@ REENTRANT_Y = False             !   [Boolean] default = False
 TRIPOLAR_N = False              !   [Boolean] default = False
                                 ! Use tripolar connectivity at the northern edge of the domain.  With
                                 ! TRIPOLAR_N, NIGLOBAL must be even.
-NIGLOBAL = 360                  !
+NIGLOBAL = 540                  !
                                 ! The total number of thickness grid points in the x-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in MOM_memory.h at compile time.
-NJGLOBAL = 464                  !
+NJGLOBAL = 696                  !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in MOM_memory.h at compile time.
 NIHALO = 4                      ! default = 4
@@ -335,7 +335,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 2010, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 2011, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 TIDE_M2_FREQ = 1.405189E-04     !   [s-1] default = 1.405189E-04
                                 ! Frequency of the M2 tidal constituent. This is only used if TIDES and TIDE_M2
@@ -536,6 +536,7 @@ REGRIDDING_COORDINATE_MODE = "Z*" ! default = "LAYER"
                                 !  SIGMA - terrain following coordinates
                                 !  RHO   - continuous isopycnal
                                 !  HYCOM1 - HyCOM-like hybrid coordinate
+                                !  HYBGEN - Hybrid coordinate from the Hycom hybgen code
                                 !  SLIGHT - stretched coordinates above continuous isopycnal
                                 !  ADAPTIVE - optimize for smooth neutral density surfaces
 REGRIDDING_COORDINATE_UNITS = "m" ! default = "m"
@@ -1217,7 +1218,7 @@ AH_TIME_SCALE = 0.0             !   [s] default = 0.0
                                 ! A time scale whose inverse is multiplied by the fourth power of the grid
                                 ! spacing to calculate biharmonic viscosity. The final viscosity is the largest
                                 ! of all viscosity formulations in use. 0.0 means that it's not used.
-SMAGORINSKY_AH = True           !   [Boolean] default = False
+SMAGORINSKY_AH = False          !   [Boolean] default = False
                                 ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
 LEITH_AH = False                !   [Boolean] default = False
                                 ! If true, use a biharmonic Leith nonlinear eddy viscosity.
@@ -1229,18 +1230,6 @@ BETTER_BOUND_AH = True          !   [Boolean] default = True
 RE_AH = 0.0                     !   [nondim] default = 0.0
                                 ! If nonzero, the biharmonic coefficient is scaled so that the biharmonic
                                 ! Reynolds number is equal to this.
-SMAG_BI_CONST = 0.03            !   [nondim] default = 0.0
-                                ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
-BOUND_CORIOLIS_BIHARM = True    !   [Boolean] default = True
-                                ! If true use a viscosity that increases with the square of the velocity shears,
-                                ! so that the resulting viscous drag is of comparable magnitude to the Coriolis
-                                ! terms when the velocity differences between adjacent grid points is
-                                ! 0.5*BOUND_CORIOLIS_VEL.  The default is the value of BOUND_CORIOLIS (or
-                                ! false).
-BOUND_CORIOLIS_VEL = 6.0        !   [m s-1] default = 6.0
-                                ! The velocity scale at which BOUND_CORIOLIS_BIHARM causes the biharmonic drag
-                                ! to have comparable magnitude to the Coriolis acceleration.  The default is set
-                                ! by MAXVEL.
 USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = True
                                 ! If true, use the land mask for the computation of thicknesses at velocity
                                 ! locations. This eliminates the dependence on arbitrary values over land or

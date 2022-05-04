@@ -6,8 +6,8 @@
 "ATM" , "v_bot"         , "Vwind"    , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Vwind_2010.nc"     , "bicubic",   1.0
 "ATM" , "z_bot"         , ""            , ""                             , "bilinear" , 10.0
 "ATM" , "gust"          , ""            , ""                             , "bilinear" ,  1.0e-4
-"ICE" , "runoff"        , "runoff"      , "/import/c1/AKWATERS/kate/ESMG/ESMG-configs/Arctic6/coarse_18/INPUT/runoff/glofas_runoff_2010.nc"     , "none",   1.0
-#"OCN" , "runoff_hflx"   , "runoff_hflx" , "/import/c1/AKWATERS/kate/ESMG/ESMG-configs/Arctic6/coarse_18/INPUT/runoff/glofas_runoff_2010.nc"     , "none",   1.0
+"ICE" , "runoff"        , "friver"      , "./INPUT/runoff_file.nc"     , "none",   1.0
+#"OCN" , "runoff_hflx"   , "runoff_hflx" , "./INPUT/runoff_file.nc"     , "none",   1.0
 "ICE" , "lw_flux_dn"    , "lwrad_down"  , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_lwrad_down_2010.nc"     , "bilinear" ,  1.0
 "ICE" , "sw_flux_vis_dir_dn", "swrad", "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_2010.nc"     , "bilinear" ,  0.285
 "ICE" , "sw_flux_vis_dif_dn", "swrad", "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_2010.nc"     , "bilinear" ,  0.285

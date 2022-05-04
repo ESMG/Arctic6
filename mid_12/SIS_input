@@ -13,10 +13,10 @@ DO_RIDGING = True               !   [Boolean] default = False
 ! === module MOM_domains ===
 REENTRANT_X = False             !   [Boolean] default = True
                                 ! If true, the domain is zonally reentrant.
-NIGLOBAL = 1080                 !
+NIGLOBAL = 540                  !
                                 ! The total number of thickness grid points in the x-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
-NJGLOBAL = 1392                 !
+NJGLOBAL = 696                  !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
 
@@ -82,11 +82,11 @@ ICE_THICKNESS_INIT_CONFIG = "file" ! default = "data_override"
                                 !     data_override - use the data_override capability or zero everywhere
                                 !     uniform - sea ice has uniform thickness where the concentration is
                                 !       nonzero.
-ICE_CONCENTRATION_FILE = "ice_mass.nc" !
+ICE_CONCENTRATION_FILE = "ice_mass_12k.nc" !
                                 ! The name of the sea ice concentration file.
 ICE_CONCENTRATION_IC_VAR = "aice" ! default = "conc_ice"
                                 ! The initial condition variable for ice mass per unit area.
-ICE_THICKNESS_FILE = "ice_mass.nc" !
+ICE_THICKNESS_FILE = "ice_mass_12k.nc" !
                                 ! The name of the sea ice thickness file.
 ICE_THICKNESS_IC_VAR = "hm"     ! default = "mH_ice"
                                 ! The initial condition variable for ice mass per unit area.
@@ -114,7 +114,7 @@ TRANSMUTATION_RATE_VAR = "rate" ! default = "transmute_rate"
 
 ! === module SIS_dyn_trans ===
 ! This module updates the ice momentum and does ice transport.
-DT_ICE_DYNAMICS = 300.0         !   [seconds] default = -1.0
+DT_ICE_DYNAMICS = 900.0         !   [seconds] default = -1.0
                                 ! The time step used for the slow ice dynamics, including stepping the
                                 ! continuity equation and interactions between the ice mass field and
                                 ! velocities.  If 0 or negative the coupling time step will be used.
@@ -185,3 +185,10 @@ TRACER_ADV_REFILL_MASSLESS=True
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with INT_TIDE_DISSIPATION.
+! === module SIS_open_boundary ===
+OBC_NUMBER_OF_SEGMENTS = 4      ! default = 0
+                                ! The number of open boundary segments.
+OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
+OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
+OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
+OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !

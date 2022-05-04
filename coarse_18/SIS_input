@@ -182,3 +182,6 @@ DOCUMENT_FILE = "SIS_parameter_doc" ! default = "MOM_parameter_doc"
                                 ! The basename for files where run-time parameters, their settings, units and
                                 ! defaults are documented. Blank will disable all parameter documentation.
 TRACER_ADV_REFILL_MASSLESS=True
+H2_FILE = "ocean_topog.nc"      !
+                                ! The path to the file containing the sub-grid-scale topographic roughness
+                                ! amplitude with INT_TIDE_DISSIPATION.

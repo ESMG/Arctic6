@@ -108,10 +108,10 @@ REENTRANT_Y = False             !   [Boolean] default = False
 TRIPOLAR_N = False              !   [Boolean] default = False
                                 ! Use tripolar connectivity at the northern edge of the domain.  With
                                 ! TRIPOLAR_N, NIGLOBAL must be even.
-NIGLOBAL = 360                  !
+NIGLOBAL = 540                  !
                                 ! The total number of thickness grid points in the x-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
-NJGLOBAL = 464                  !
+NJGLOBAL = 696                  !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
 NIHALO = 4                      ! default = 4
@@ -183,6 +183,61 @@ MASKING_DEPTH = 1.0             !   [m] default = -9999.0
                                 ! zeroed out. MASKING_DEPTH is ignored if it has the special default value.
 MAXIMUM_DEPTH = 6500.0          !   [m]
                                 ! The maximum depth of the ocean.
+
+! === module SIS_open_boundary ===
+! Controls where open boundaries are located, what kind of boundary condition to impose, and what data to apply,
+! if any.
+OBC_NUMBER_OF_SEGMENTS = 4      ! default = 0
+                                ! The number of open boundary segments.
+OBC_ZERO_VORTICITY = False      !   [Boolean] default = False
+                                ! If true, sets relative vorticity to zero on open boundaries.
+OBC_FREESLIP_VORTICITY = True   !   [Boolean] default = True
+                                ! If true, sets the normal gradient of tangential velocity to zero in the
+                                ! relative vorticity on open boundaries. This cannot be true if another
+                                ! OBC_XXX_VORTICITY option is True.
+OBC_COMPUTED_VORTICITY = False  !   [Boolean] default = False
+                                ! If true, uses the external values of tangential velocity in the relative
+                                ! vorticity on open boundaries. This cannot be true if another OBC_XXX_VORTICITY
+                                ! option is True.
+OBC_SPECIFIED_VORTICITY = False !   [Boolean] default = False
+                                ! If true, uses the external values of tangential velocity in the relative
+                                ! vorticity on open boundaries. This cannot be true if another OBC_XXX_VORTICITY
+                                ! option is True.
+OBC_ZERO_STRAIN = False         !   [Boolean] default = False
+                                ! If true, sets the strain used in the stress tensor to zero on open boundaries.
+OBC_FREESLIP_STRAIN = True      !   [Boolean] default = True
+                                ! If true, sets the normal gradient of tangential velocity to zero in the strain
+                                ! use in the stress tensor on open boundaries. This cannot be true if another
+                                ! OBC_XXX_STRAIN option is True.
+OBC_COMPUTED_STRAIN = False     !   [Boolean] default = False
+                                ! If true, sets the normal gradient of tangential velocity to zero in the strain
+                                ! use in the stress tensor on open boundaries. This cannot be true if another
+                                ! OBC_XXX_STRAIN option is True.
+OBC_SPECIFIED_STRAIN = False    !   [Boolean] default = False
+                                ! If true, sets the normal gradient of tangential velocity to zero in the strain
+                                ! use in the stress tensor on open boundaries. This cannot be true if another
+                                ! OBC_XXX_STRAIN option is True.
+OBC_ZERO_BIHARMONIC = False     !   [Boolean] default = False
+                                ! If true, zeros the Laplacian of flow on open boundaries in the biharmonic
+                                ! viscosity term.
+MASK_OUTSIDE_OBCS = False       !   [Boolean] default = False
+                                ! If true, set the areas outside open boundaries to be land.
+OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
+                                ! Documentation needs to be dynamic?????
+OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
+                                ! Documentation needs to be dynamic?????
+OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
+                                ! Documentation needs to be dynamic?????
+OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
+                                ! Documentation needs to be dynamic?????
+OBC_TRACER_RESERVOIR_LENGTH_SCALE_OUT = 0.0 !   [m] default = 0.0
+                                ! An effective length scale for restoring the tracer concentration at the
+                                ! boundaries to externally imposed values when the flow is exiting the domain.
+OBC_TRACER_RESERVOIR_LENGTH_SCALE_IN = 0.0 !   [m] default = 0.0
+                                ! An effective length scale for restoring the tracer concentration at the
+                                ! boundaries to values from the interior when the flow is entering the domain.
+BRUSHCUTTER_MODE = False        !   [Boolean] default = False
+                                ! If true, read external OBC data on the supergrid.
 CHANNEL_CONFIG = "none"         ! default = "none"
                                 ! A parameter that determines which set of channels are restricted to specific
                                 ! widths.  Options are:
@@ -269,13 +324,13 @@ SNOW_THICKNESS_INIT_CONFIG = "data_override" ! default = "data_override"
                                 !     file - read sea ice concentrations from a specified file
                                 !     data_override - use the data_override capability or zero everywhere
                                 !     uniform - snow has uniform thickness where the concentration is nonzero.
-ICE_CONCENTRATION_FILE = "arctic6_SODA3_init_2010_01_05.nc" !
+ICE_CONCENTRATION_FILE = "ice_mass_12k.nc" !
                                 ! The name of the sea ice concentration file.
 ICE_CONCENTRATION_IC_VAR = "aice" ! default = "conc_ice"
                                 ! The initial condition variable for ice mass per unit area.
-ICE_THICKNESS_FILE = "arctic6_SODA3_init_2010_01_05.nc" !
+ICE_THICKNESS_FILE = "ice_mass_12k.nc" !
                                 ! The name of the sea ice thickness file.
-ICE_THICKNESS_IC_VAR = "mi"     ! default = "mH_ice"
+ICE_THICKNESS_IC_VAR = "hm"     ! default = "mH_ice"
                                 ! The initial condition variable for ice mass per unit area.
 ICE_SALINITY_INIT_CONFIG = "uniform" ! default = "uniform"
                                 ! A string that determines how the sea ice salinity is initialized for a new
@@ -377,20 +432,20 @@ DT_ICE_DYNAMICS = 900.0         !   [seconds] default = -1.0
                                 ! The time step used for the slow ice dynamics, including stepping the
                                 ! continuity equation and interactions between the ice mass field and
                                 ! velocities.  If 0 or negative the coupling time step will be used.
-MERGED_CONTINUITY = False       !   [Boolean] default = False
+MERGED_CONTINUITY = True        !   [Boolean] default = False
                                 ! If true, update the continuity equations for the ice, snow, and melt pond
                                 ! water together summed across categories, with proportionate fluxes for each
                                 ! part. Otherwise the media are updated separately.
+DT_ICE_ADVECT = -1.0            !   [seconds] default = -1.0
+                                ! The time step used for the advecting tracers and masses as partitioned by
+                                ! thickness categories when merged_cont it true. If 0 or negative, the coupling
+                                ! time step will be used.
 NSTEPS_ADV = 1                  ! default = 1
                                 ! The number of advective iterations for each slow dynamics time step.
 ICEBERG_WINDSTRESS_BUG = False  !   [Boolean] default = False
                                 ! If true, use older code that applied an old ice-ocean stress to the icebergs
                                 ! in place of the current air-ocean stress.  This option is here for backward
                                 ! compatibility, but should be avoided.
-WARSAW_SUM_ORDER = True         !   [Boolean] default = True
-                                ! If true, use the order of sums in the Warsaw version of SIS2. The default is
-                                ! the opposite of MERGED_CONTINUITY. This option exists for backward
-                                ! compatibilty but may eventually be obsoleted.
 TIMEUNIT = 8.64E+04             !   [s] default = 8.64E+04
                                 ! The time unit for ICE_STATS_INTERVAL.
 ICE_STATS_INTERVAL = 1.0        !   [days] default = 1.0
@@ -459,7 +514,7 @@ BASAL_STRESS_MU_S = 0.1         !   [nondim] default = 0.1
 BASAL_STRESS_PUNY = 1.0E-20     !   [nondim] default = 1.0E-20
                                 ! Small number in ITD landfast ice.
 BASAL_STRESS_SCALE = 1.0        !   [m] default = 1.0
-                                ! Scale factor in ITD landfast ice.
+                                ! Parameter to make units work in landfast ice.
 BASAL_STRESS_CUTOFF = 1.943     !   [nondim] default = 1.943
                                 ! Scale factor in ITD landfast ice.
 H2_FILE = "ocean_topog.nc"      !
@@ -472,6 +527,8 @@ BATHY_ROUGHNESS_MAX = 2.5       !   [m] default = 2.5
 BASAL_STRESS_NCAT_B = 100       ! default = 100
                                 ! Number of bathymetric depth categories in landfast ice computation.
 BASAL_STRESS_NCAT_I = 100       ! default = 100
+                                ! Number of ice thickness categories in landfast ice computation.
+BASAL_STRESS_EXTRA_DEPTH = ""   !
                                 ! Number of ice thickness categories in landfast ice computation.
 RECATEGORIZE_ICE = True         !   [Boolean] default = True
                                 ! If true, readjust the distribution into ice thickness categories after
@@ -490,9 +547,6 @@ SIS_THICKNESS_ADVECTION_SCHEME = "PPM:H3" ! default = "UPWIND_2D"
                                 !   PCM    - Directionally split piecewise constant
                                 !   PLM    - Piecewise Linear Method
                                 !   PPM:H3 - Piecewise Parabolic Method (Huyhn 3rd order)
-INCONSISTENT_COVER_BUG = False  !   [Boolean] default = False
-                                ! If true, omit a recalculation of the fractional ice-free areal coverage after
-                                ! the adjustment of the ice categories.
 SIS_CONTINUITY_SCHEME = "PPM:C2PD" ! default = "UPWIND_2D"
                                 ! The horizontal transport scheme used in continuity:
                                 !   UPWIND_2D - Non-directionally split upwind
@@ -513,6 +567,15 @@ CONTINUITY_FRAC_NEGLECT = 1.0E-20 !   [nondim] default = 0.0
                                 ! total mass contributes no flux.  Without MERGED_CONTINUITY, any snow or melt
                                 ! pond transport that is less than this fraction of the ice transport is zeroed
                                 ! out.  A suggested non-default value might be of order 1e-20.
+SIS_COVER_TRANSPORT_SCHEME = "UPWIND_2D" ! default = "UPWIND_2D"
+                                ! The horizontal transport scheme used for projections of ice cover:
+                                !   UPWIND_2D - Non-directionally split upwind
+                                !   PCM       - Directionally split piecewise constant
+                                !   PPM:C2PD  - Positive definite PPM with 2nd order edge values
+                                !   PPM:C2MO  - Monotonic PPM with 2nd order edge values
+COVER_PPM_VOLUME_BASED_CFL = False !   [Boolean] default = False
+                                ! If true, use the ratio of the open face lengths to the cell areas when
+                                ! estimating CFL numbers in ice cover transport.
 
 ! === module SIS_tracer_advect ===
 SIS_TRACER_ADVECTION_SCHEME = "PPM:H3" ! default = "UPWIND_2D"

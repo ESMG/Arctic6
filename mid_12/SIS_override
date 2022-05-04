@@ -11,5 +11,5 @@
 !DEBUG = True
 #override NEW_RIDGE_PARTICIPATION = True
 #override NEW_RIDGE_REDISTRIBUTION = False
-!#override MERGED_CONTINUITY = True
+#override MERGED_CONTINUITY = True
 #override NCAT_ICE = 10
