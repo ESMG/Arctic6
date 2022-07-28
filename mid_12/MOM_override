@@ -1,4 +1,4 @@
-DEBUG = False
+!DEBUG = True
 DEBUG_BT = False
 !VERBOSITY = 9
 !#override LINEARIZED_BT_CORIOLIS = False

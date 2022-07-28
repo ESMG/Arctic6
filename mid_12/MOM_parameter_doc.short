@@ -24,8 +24,20 @@ C_P = 3992.0                    !   [J kg-1 K-1] default = 3991.86795711963
                                 ! The heat capacity of sea water, approximated as a constant. This is only used
                                 ! if ENABLE_THERMODYNAMICS is true. The default value is from the TEOS-10
                                 ! definition of conservative temperature.
-SAVE_INITIAL_CONDS = True       !   [Boolean] default = False
-                                ! If true, write the initial conditions to a file given by IC_OUTPUT_FILE.
+CHECK_BAD_SURFACE_VALS = True   !   [Boolean] default = False
+                                ! If true, check the surface state for ridiculous values.
+BAD_VAL_SSH_MAX = 50.0          !   [m] default = 20.0
+                                ! The value of SSH above which a bad value message is triggered, if
+                                ! CHECK_BAD_SURFACE_VALS is true.
+BAD_VAL_SSS_MAX = 75.0          !   [PPT] default = 45.0
+                                ! The value of SSS above which a bad value message is triggered, if
+                                ! CHECK_BAD_SURFACE_VALS is true.
+BAD_VAL_SST_MAX = 55.0          !   [deg C] default = 45.0
+                                ! The value of SST above which a bad value message is triggered, if
+                                ! CHECK_BAD_SURFACE_VALS is true.
+BAD_VAL_SST_MIN = -3.0          !   [deg C] default = -2.1
+                                ! The value of SST below which a bad value message is triggered, if
+                                ! CHECK_BAD_SURFACE_VALS is true.
 WRITE_GEOM = 0                  ! default = 1
                                 ! If =0, never write the geometry and vertical grid files. If =1, write the
                                 ! geometry and vertical grid files only for a new simulation. If =2, always
@@ -164,7 +176,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 2011, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 2000, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 
 ! === module MOM_verticalGrid ===
@@ -249,73 +261,13 @@ REMAPPING_SCHEME = "PPM_H4"     ! default = "PLM"
                                 ! PQM_IH6IH5  (5th-order accurate)
 
 ! === module MOM_state_initialization ===
-THICKNESS_CONFIG = "coord"      ! default = "uniform"
-                                ! A string that determines how the initial layer thicknesses are specified for a
-                                ! new run:
-                                !     file - read interface heights from the file specified
-                                !     thickness_file - read thicknesses from the file specified
-                                !       by (THICKNESS_FILE).
-                                !     coord - determined by ALE coordinate.
-                                !     uniform - uniform thickness layers evenly distributed
-                                !       between the surface and MAXIMUM_DEPTH.
-                                !     list - read a list of positive interface depths.
-                                !     DOME - use a slope and channel configuration for the
-                                !       DOME sill-overflow test case.
-                                !     ISOMIP - use a configuration for the
-                                !       ISOMIP test case.
-                                !     benchmark - use the benchmark test case thicknesses.
-                                !     Neverworld - use the Neverworld test case thicknesses.
-                                !     search - search a density profile for the interface
-                                !       densities. This is not yet implemented.
-                                !     circle_obcs - the circle_obcs test case is used.
-                                !     DOME2D - 2D version of DOME initialization.
-                                !     adjustment2d - 2D lock exchange thickness ICs.
-                                !     sloshing - sloshing gravity thickness ICs.
-                                !     seamount - no motion test with seamount ICs.
-                                !     dumbbell - sloshing channel ICs.
-                                !     soliton - Equatorial Rossby soliton.
-                                !     rossby_front - a mixed layer front in thermal wind balance.
-                                !     USER - call a user modified routine.
-TS_CONFIG = "file"              !
-                                ! A string that determines how the initial tempertures and salinities are
-                                ! specified for a new run:
-                                !     file - read velocities from the file specified
-                                !       by (TS_FILE).
-                                !     fit - find the temperatures that are consistent with
-                                !       the layer densities and salinity S_REF.
-                                !     TS_profile - use temperature and salinity profiles
-                                !       (read from TS_FILE) to set layer densities.
-                                !     benchmark - use the benchmark test case T & S.
-                                !     linear - linear in logical layer space.
-                                !     DOME2D - 2D DOME initialization.
-                                !     ISOMIP - ISOMIP initialization.
-                                !     adjustment2d - 2d lock exchange T/S ICs.
-                                !     sloshing - sloshing mode T/S ICs.
-                                !     seamount - no motion test with seamount ICs.
-                                !     dumbbell - sloshing channel ICs.
-                                !     rossby_front - a mixed layer front in thermal wind balance.
-                                !     SCM_CVMix_tests - used in the SCM CVMix tests.
-                                !     USER - call a user modified routine.
-TS_FILE = "arctic6_SODA3_init_2010_01_05.nc" !
-                                ! The initial condition file for temperature.
-TEMP_IC_VAR = "temp"            ! default = "PTEMP"
-                                ! The initial condition variable for potential temperature.
-SALT_IC_VAR = "salt"            ! default = "SALT"
-                                ! The initial condition variable for salinity.
-DEPRESS_INITIAL_SURFACE = True  !   [Boolean] default = False
-                                ! If true,  depress the initial surface to avoid huge tsunamis when a large
-                                ! surface pressure is applied.
-SURFACE_HEIGHT_IC_FILE = "arctic6_SODA3_init_2010_01_05.nc" !
-                                ! The initial condition file for the surface height.
-SURFACE_HEIGHT_IC_VAR = "ssh"   ! default = "SSH"
-                                ! The initial condition variable for the surface height.
-OBC_SEGMENT_001_DATA = "U=file:OBC.nc(u),V=file:OBC.nc(v),SSH=file:OBC.nc(zeta),TEMP=file:OBC.nc(temp),SALT=file:OBC.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
+OBC_SEGMENT_001_DATA = "U=file:obc/2000/uv_001.nc(u),V=file:obc/2000/uv_001.nc(v),SSH=file:obc/2000/zeta_001.nc(zeta),TEMP=file:obc/2000/temp_001.nc(temp),SALT=file:obc/2000/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_002_DATA = "U=file:OBC.nc(u),V=file:OBC.nc(v),SSH=file:OBC.nc(zeta),TEMP=file:OBC.nc(temp),SALT=file:OBC.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
+OBC_SEGMENT_002_DATA = "U=file:obc/2000/uv_002.nc(u),V=file:obc/2000/uv_002.nc(v),SSH=file:obc/2000/zeta_002.nc(zeta),TEMP=file:obc/2000/temp_002.nc(temp),SALT=file:obc/2000/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_003_DATA = "U=file:OBC.nc(u),V=file:OBC.nc(v),SSH=file:OBC.nc(zeta),TEMP=file:OBC.nc(temp),SALT=file:OBC.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
+OBC_SEGMENT_003_DATA = "U=file:obc/2000/uv_003.nc(u),V=file:obc/2000/uv_003.nc(v),SSH=file:obc/2000/zeta_003.nc(zeta),TEMP=file:obc/2000/temp_003.nc(temp),SALT=file:obc/2000/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_004_DATA = "U=file:OBC.nc(u),V=file:OBC.nc(v),SSH=file:OBC.nc(zeta),TEMP=file:OBC.nc(temp),SALT=file:OBC.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+OBC_SEGMENT_004_DATA = "U=file:obc/2000/uv_004.nc(u),V=file:obc/2000/uv_004.nc(v),SSH=file:obc/2000/zeta_004.nc(zeta),TEMP=file:obc/2000/temp_004.nc(temp),SALT=file:obc/2000/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
                                 ! OBC segment docs
 
 ! === module MOM_diag_mediator ===
@@ -400,20 +352,11 @@ CORIOLIS_EN_DIS = True          !   [Boolean] default = False
                                 ! If true, two estimates of the thickness fluxes are used to estimate the
                                 ! Coriolis term, and the one that dissipates energy relative to the other one is
                                 ! used.
-CORIOLIS_SCHEME = "ARAKAWA_HSU90" ! default = "SADOURNY75_ENERGY"
-                                ! CORIOLIS_SCHEME selects the discretization for the Coriolis terms. Valid
-                                ! values are:
-                                !    SADOURNY75_ENERGY - Sadourny, 1975; energy cons.
-                                !    ARAKAWA_HSU90     - Arakawa & Hsu, 1990
-                                !    SADOURNY75_ENSTRO - Sadourny, 1975; enstrophy cons.
-                                !    ARAKAWA_LAMB81    - Arakawa & Lamb, 1981; En. + Enst.
-                                !    ARAKAWA_LAMB_BLEND - A blend of Arakawa & Lamb with
-                                !                         Arakawa & Hsu and Sadourny energy
 BOUND_CORIOLIS = True           !   [Boolean] default = False
                                 ! If true, the Coriolis terms at u-points are bounded by the four estimates of
                                 ! (f+rv)v from the four neighboring v-points, and similarly at v-points.  This
-                                ! option would have no effect on the SADOURNY Coriolis scheme if it were
-                                ! possible to use centered difference thickness fluxes.
+                                ! option is always effectively false with CORIOLIS_EN_DIS defined and
+                                ! CORIOLIS_SCHEME set to SADOURNY75_ENERGY.
 
 ! === module MOM_tidal_forcing ===
 TIDE_M2 = True                  !   [Boolean] default = False
@@ -464,10 +407,10 @@ MASS_WEIGHT_IN_PRESSURE_GRADIENT = True !   [Boolean] default = False
                                 ! bathymetry in FV pressure gradient calculations.
 
 ! === module MOM_hor_visc ===
-AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
-                                ! The velocity scale which is multiplied by the cube of the grid spacing to
-                                ! calculate the biharmonic viscosity. The final viscosity is the largest of this
-                                ! scaled viscosity, the Smagorinsky and Leith viscosities, and AH.
+SMAGORINSKY_AH = True           !   [Boolean] default = False
+                                ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
+SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
+                                ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
 
 ! === module MOM_vert_friction ===
 DIRECT_STRESS = True            !   [Boolean] default = False
@@ -534,7 +477,7 @@ FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
                                 ! energy to the large-scale geostrophic kinetic energy or 1 plus the square of
                                 ! the grid spacing over the deformation radius, as detailed by Fox-Kemper et al.
                                 ! (2010)
-MLE_FRONT_LENGTH = 1000.0       !   [m] default = 0.0
+MLE_FRONT_LENGTH = 6000.0       !   [m] default = 0.0
                                 ! If non-zero, is the frontal-length scale used to calculate the upscaling of
                                 ! buoyancy gradients that is otherwise represented by the parameter
                                 ! FOX_KEMPER_ML_RESTRAT_COEF. If MLE_FRONT_LENGTH is non-zero, it is recommended

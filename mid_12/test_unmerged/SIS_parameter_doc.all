@@ -6,6 +6,8 @@ SPECIFIED_ICE = False           !   [Boolean] default = False
 CGRID_ICE_DYNAMICS = True       !   [Boolean] default = True
                                 ! If true, use a C-grid discretization of the sea-ice dynamics; if false use a
                                 ! B-grid discretization.
+DO_DYNAMICS = True              !   [Boolean] default = True
+                                ! If False, skips the dynamics calls that update u & v.
 USE_SLAB_ICE = False            !   [Boolean] default = False
                                 ! If true, use the very old slab-style ice.
 SINGLE_ICE_STATE_TYPE = True    !   [Boolean] default = True
@@ -130,7 +132,7 @@ PARALLEL_RESTARTFILES = False   !   [Boolean] default = False
                                 ! restart file is generated
 MAX_FIELDS = 100                ! default = 100
                                 ! The maximum number of restart fields that can be used.
-RESTART_CHECKSUMS_REQUIRED = True !   [Boolean] default = True
+RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
                                 ! If true, require the restart checksums to match and error out otherwise. Users
                                 ! may want to avoid this comparison if for example the restarts are made from a
                                 ! run with a different mask_table than the current run, in which case the
@@ -189,57 +191,8 @@ MAXIMUM_DEPTH = 6500.0          !   [m]
 ! === module SIS_open_boundary ===
 ! Controls where open boundaries are located, what kind of boundary condition to impose, and what data to apply,
 ! if any.
-OBC_NUMBER_OF_SEGMENTS = 4      ! default = 0
+OBC_NUMBER_OF_SEGMENTS = 0      ! default = 0
                                 ! The number of open boundary segments.
-OBC_ZERO_VORTICITY = False      !   [Boolean] default = False
-                                ! If true, sets relative vorticity to zero on open boundaries.
-OBC_FREESLIP_VORTICITY = True   !   [Boolean] default = True
-                                ! If true, sets the normal gradient of tangential velocity to zero in the
-                                ! relative vorticity on open boundaries. This cannot be true if another
-                                ! OBC_XXX_VORTICITY option is True.
-OBC_COMPUTED_VORTICITY = False  !   [Boolean] default = False
-                                ! If true, uses the external values of tangential velocity in the relative
-                                ! vorticity on open boundaries. This cannot be true if another OBC_XXX_VORTICITY
-                                ! option is True.
-OBC_SPECIFIED_VORTICITY = False !   [Boolean] default = False
-                                ! If true, uses the external values of tangential velocity in the relative
-                                ! vorticity on open boundaries. This cannot be true if another OBC_XXX_VORTICITY
-                                ! option is True.
-OBC_ZERO_STRAIN = False         !   [Boolean] default = False
-                                ! If true, sets the strain used in the stress tensor to zero on open boundaries.
-OBC_FREESLIP_STRAIN = True      !   [Boolean] default = True
-                                ! If true, sets the normal gradient of tangential velocity to zero in the strain
-                                ! use in the stress tensor on open boundaries. This cannot be true if another
-                                ! OBC_XXX_STRAIN option is True.
-OBC_COMPUTED_STRAIN = False     !   [Boolean] default = False
-                                ! If true, sets the normal gradient of tangential velocity to zero in the strain
-                                ! use in the stress tensor on open boundaries. This cannot be true if another
-                                ! OBC_XXX_STRAIN option is True.
-OBC_SPECIFIED_STRAIN = False    !   [Boolean] default = False
-                                ! If true, sets the normal gradient of tangential velocity to zero in the strain
-                                ! use in the stress tensor on open boundaries. This cannot be true if another
-                                ! OBC_XXX_STRAIN option is True.
-OBC_ZERO_BIHARMONIC = False     !   [Boolean] default = False
-                                ! If true, zeros the Laplacian of flow on open boundaries in the biharmonic
-                                ! viscosity term.
-MASK_OUTSIDE_OBCS = False       !   [Boolean] default = False
-                                ! If true, set the areas outside open boundaries to be land.
-OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
-                                ! Documentation needs to be dynamic?????
-OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
-                                ! Documentation needs to be dynamic?????
-OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
-                                ! Documentation needs to be dynamic?????
-OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
-                                ! Documentation needs to be dynamic?????
-OBC_TRACER_RESERVOIR_LENGTH_SCALE_OUT = 0.0 !   [m] default = 0.0
-                                ! An effective length scale for restoring the tracer concentration at the
-                                ! boundaries to externally imposed values when the flow is exiting the domain.
-OBC_TRACER_RESERVOIR_LENGTH_SCALE_IN = 0.0 !   [m] default = 0.0
-                                ! An effective length scale for restoring the tracer concentration at the
-                                ! boundaries to values from the interior when the flow is entering the domain.
-BRUSHCUTTER_MODE = False        !   [Boolean] default = False
-                                ! If true, read external OBC data on the supergrid.
 CHANNEL_CONFIG = "none"         ! default = "none"
                                 ! A parameter that determines which set of channels are restricted to specific
                                 ! widths.  Options are:
@@ -412,6 +365,9 @@ WEAK_LOW_SHEAR_ICE = False      !   [Boolean] default = False
                                 ! If true, the divergent stresses go toward 0 in the C-grid dynamics when the
                                 ! shear magnitudes are very weak. Otherwise they go to -P_ice.  This setting is
                                 ! temporary.
+WEAK_COAST_STRESS = False       !   [Boolean] default = False
+                                ! If true, do not use land masks in determining the area for stress convergence,
+                                ! which acts to weaken the stress-driven acceleration in coastal points.
 PROJECT_ICE_DRAG_VEL = True     !   [Boolean] default = True
                                 ! If true, project forward the ice velocity used in the drag calculation to
                                 ! avoid an instability that can occur when a finite stress is applied to thin
@@ -461,7 +417,7 @@ BASAL_STRESS_MU_S = 0.1         !   [nondim] default = 0.1
 BASAL_STRESS_PUNY = 1.0E-20     !   [nondim] default = 1.0E-20
                                 ! Small number in ITD landfast ice.
 BASAL_STRESS_SCALE = 1.0        !   [m] default = 1.0
-                                ! Scale factor in ITD landfast ice.
+                                ! Parameter to make units work in landfast ice.
 BASAL_STRESS_CUTOFF = 1.943     !   [nondim] default = 1.943
                                 ! Scale factor in ITD landfast ice.
 H2_FILE = "ocean_topog.nc"      !
@@ -474,6 +430,8 @@ BATHY_ROUGHNESS_MAX = 2.5       !   [m] default = 2.5
 BASAL_STRESS_NCAT_B = 100       ! default = 100
                                 ! Number of bathymetric depth categories in landfast ice computation.
 BASAL_STRESS_NCAT_I = 100       ! default = 100
+                                ! Number of ice thickness categories in landfast ice computation.
+BASAL_STRESS_EXTRA_DEPTH = ""   !
                                 ! Number of ice thickness categories in landfast ice computation.
 RECATEGORIZE_ICE = True         !   [Boolean] default = True
                                 ! If true, readjust the distribution into ice thickness categories after

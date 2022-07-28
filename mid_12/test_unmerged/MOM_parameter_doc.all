@@ -120,23 +120,8 @@ ALTERNATE_FIRST_DIRECTION = False !   [Boolean] default = False
                                 ! updates occur first in directionally split parts of the calculation. If this
                                 ! is true, FIRST_DIRECTION applies at the start of a new run or if the next
                                 ! first direction can not be found in the restart file.
-CHECK_BAD_SURFACE_VALS = True   !   [Boolean] default = False
+CHECK_BAD_SURFACE_VALS = False  !   [Boolean] default = False
                                 ! If true, check the surface state for ridiculous values.
-BAD_VAL_SSH_MAX = 50.0          !   [m] default = 20.0
-                                ! The value of SSH above which a bad value message is triggered, if
-                                ! CHECK_BAD_SURFACE_VALS is true.
-BAD_VAL_SSS_MAX = 75.0          !   [PPT] default = 45.0
-                                ! The value of SSS above which a bad value message is triggered, if
-                                ! CHECK_BAD_SURFACE_VALS is true.
-BAD_VAL_SST_MAX = 55.0          !   [deg C] default = 45.0
-                                ! The value of SST above which a bad value message is triggered, if
-                                ! CHECK_BAD_SURFACE_VALS is true.
-BAD_VAL_SST_MIN = -3.0          !   [deg C] default = -2.1
-                                ! The value of SST below which a bad value message is triggered, if
-                                ! CHECK_BAD_SURFACE_VALS is true.
-BAD_VAL_COLUMN_THICKNESS = 0.0  !   [m] default = 0.0
-                                ! The value of column thickness below which a bad value message is triggered, if
-                                ! CHECK_BAD_SURFACE_VALS is true.
 DEFAULT_2018_ANSWERS = False    !   [Boolean] default = False
                                 ! This sets the default value for the various _2018_ANSWERS parameters.
 SURFACE_2018_ANSWERS = False    !   [Boolean] default = False
@@ -146,7 +131,7 @@ SURFACE_2018_ANSWERS = False    !   [Boolean] default = False
 USE_DIABATIC_TIME_BUG = False   !   [Boolean] default = False
                                 ! If true, uses the wrong calendar time for diabatic processes, as was done in
                                 ! MOM6 versions prior to February 2018. This is not recommended.
-SAVE_INITIAL_CONDS = False      !   [Boolean] default = False
+SAVE_INITIAL_CONDS = True       !   [Boolean] default = False
                                 ! If true, write the initial conditions to a file given by IC_OUTPUT_FILE.
 IC_OUTPUT_FILE = "MOM_IC"       ! default = "MOM_IC"
                                 ! The file into which to write the initial conditions.
@@ -357,7 +342,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 2000, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 2011, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 TIDE_M2_FREQ = 1.405189E-04     !   [s-1] default = 1.405189E-04
                                 ! Frequency of the M2 tidal constituent. This is only used if TIDES and TIDE_M2
@@ -472,7 +457,7 @@ RESTARTFILE = "MOM.res"         ! default = "MOM.res"
                                 ! The name-root of the restart file.
 MAX_FIELDS = 100                ! default = 100
                                 ! The maximum number of restart fields that can be used.
-RESTART_CHECKSUMS_REQUIRED = True !   [Boolean] default = True
+RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
                                 ! If true, require the restart checksums to match and error out otherwise. Users
                                 ! may want to avoid this comparison if for example the restarts are made from a
                                 ! run with a different mask_table than the current run, in which case the
@@ -656,13 +641,13 @@ ODA_INCUPD = False              !   [Boolean] default = False
 SPONGE = False                  !   [Boolean] default = False
                                 ! If true, sponges may be applied anywhere in the domain. The exact location and
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
-OBC_SEGMENT_001_DATA = "U=file:obc/2000/uv_001.nc(u),V=file:obc/2000/uv_001.nc(v),SSH=file:obc/2000/zeta_001.nc(zeta),TEMP=file:obc/2000/temp_001.nc(temp),SALT=file:obc/2000/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
+OBC_SEGMENT_001_DATA = "U=file:obc/1996/uv_001.nc(u),V=file:obc/1996/uv_001.nc(v),SSH=file:obc/1996/zeta_001.nc(zeta),TEMP=file:obc/1996/temp_001.nc(temp),SALT=file:obc/1996/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_002_DATA = "U=file:obc/2000/uv_002.nc(u),V=file:obc/2000/uv_002.nc(v),SSH=file:obc/2000/zeta_002.nc(zeta),TEMP=file:obc/2000/temp_002.nc(temp),SALT=file:obc/2000/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
+OBC_SEGMENT_002_DATA = "U=file:obc/1996/uv_002.nc(u),V=file:obc/1996/uv_002.nc(v),SSH=file:obc/1996/zeta_002.nc(zeta),TEMP=file:obc/1996/temp_002.nc(temp),SALT=file:obc/1996/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_003_DATA = "U=file:obc/2000/uv_003.nc(u),V=file:obc/2000/uv_003.nc(v),SSH=file:obc/2000/zeta_003.nc(zeta),TEMP=file:obc/2000/temp_003.nc(temp),SALT=file:obc/2000/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
+OBC_SEGMENT_003_DATA = "U=file:obc/1996/uv_003.nc(u),V=file:obc/1996/uv_003.nc(v),SSH=file:obc/1996/zeta_003.nc(zeta),TEMP=file:obc/1996/temp_003.nc(temp),SALT=file:obc/1996/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_004_DATA = "U=file:obc/2000/uv_004.nc(u),V=file:obc/2000/uv_004.nc(v),SSH=file:obc/2000/zeta_004.nc(zeta),TEMP=file:obc/2000/temp_004.nc(temp),SALT=file:obc/2000/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+OBC_SEGMENT_004_DATA = "U=file:obc/1996/uv_004.nc(u),V=file:obc/1996/uv_004.nc(v),SSH=file:obc/1996/zeta_004.nc(zeta),TEMP=file:obc/1996/temp_004.nc(temp),SALT=file:obc/1996/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
                                 ! OBC segment docs
 OBC_USER_CONFIG = "none"        ! default = "none"
                                 ! A string that sets how the user code is invoked to set open boundary data:
@@ -755,6 +740,9 @@ USE_STORED_SLOPES = True        !   [Boolean] default = False
 VERY_SMALL_FREQUENCY = 1.0E-17  !   [s-1] default = 1.0E-17
                                 ! A miniscule frequency that is used to avoid division by 0.  The default value
                                 ! is roughly (pi / (the age of the universe)).
+USE_STANLEY_ISO = False         !   [Boolean] default = False
+                                ! If true, turn on Stanley SGS T variance parameterization in isopycnal slope
+                                ! code.
 KD_SMOOTH = 1.0E-06             !   [m2 s-1] default = 1.0E-06
                                 ! A diapycnal diffusivity that is used to interpolate more sensible values of T
                                 ! & S into thin layers.
@@ -777,6 +765,10 @@ BOTTOMDRAGLAW = True            !   [Boolean] default = True
                                 ! If true, the bottom stress is calculated with a drag law of the form
                                 ! c_drag*|u|*u. The velocity magnitude may be an assumed value or it may be
                                 ! based on the actual velocity in the bottommost HBBL, depending on LINEAR_DRAG.
+DRAG_AS_BODY_FORCE = False      !   [Boolean] default = False
+                                ! If true, the bottom stress is imposed as an explicit body force applied over a
+                                ! fixed distance from the bottom, rather than as an implicit calculation based
+                                ! on an enhanced near-bottom viscosity
 CHANNEL_DRAG = True             !   [Boolean] default = False
                                 ! If true, the bottom drag is exerted directly on each layer proportional to the
                                 ! fraction of the bottom it overlies.
@@ -830,7 +822,7 @@ KV_TBL_MIN = 1.0E-06            !   [m2 s-1] default = 1.0E-06
 CORRECT_BBL_BOUNDS = False      !   [Boolean] default = False
                                 ! If true, uses the correct bounds on the BBL thickness and viscosity so that
                                 ! the bottom layer feels the intended drag.
-SMAG_CONST_CHANNEL = 2.0        !   [nondim] default = 2.0
+SMAG_CONST_CHANNEL = 0.15       !   [nondim] default = 0.15
                                 ! The nondimensional Laplacian Smagorinsky constant used in calculating the
                                 ! channel drag if it is enabled.  The default is to use the same value as
                                 ! SMAG_LAP_CONST if it is defined, or 0.15 if it is not. The value used is also
@@ -866,10 +858,8 @@ KHTH_SLOPE_MAX = 0.01           !   [nondim] default = 0.01
 KHTH_USE_FGNV_STREAMFUNCTION = False !   [Boolean] default = False
                                 ! If true, use the streamfunction formulation of Ferrari et al., 2010, which
                                 ! effectively emphasizes graver vertical modes by smoothing in the vertical.
-STANLEY_PRM_DET_COEFF = -1.0    !   [nondim] default = -1.0
-                                ! The coefficient correlating SGS temperature variance with the mean temperature
-                                ! gradient in the deterministic part of the Stanley parameterization. Negative
-                                ! values disable the scheme.
+USE_STANLEY_GM = False          !   [Boolean] default = False
+                                ! If true, turn on Stanley SGS T variance parameterization in GM code.
 MEKE_GM_SRC_ALT = False         !   [Boolean] default = False
                                 ! If true, use the GM energy conversion form S^2*N^2*kappa rather than the
                                 ! streamfunction for the GM source term.
@@ -884,6 +874,13 @@ USE_GME = False                 !   [Boolean] default = False
 USE_GM_WORK_BUG = False         !   [Boolean] default = False
                                 ! If true, compute the top-layer work tendency on the u-grid with the incorrect
                                 ! sign, for legacy reproducibility.
+STOCH_EOS = False               !   [Boolean] default = False
+                                ! If true, stochastic perturbations are applied to the EOS in the PGF.
+STANLEY_COEFF = -1.0            !   [not defined] default = -1.0
+                                ! Coefficient correlating the temperature gradient and SGS T variance.
+STANLEY_A = 1.0                 !   [not defined] default = 1.0
+                                ! Coefficient a which scales chi in stochastic perturbation of the SGS T
+                                ! variance.
 
 ! === module MOM_dynamics_split_RK2 ===
 TIDES = True                    !   [Boolean] default = False
@@ -964,7 +961,7 @@ CORIOLIS_EN_DIS = True          !   [Boolean] default = False
                                 ! If true, two estimates of the thickness fluxes are used to estimate the
                                 ! Coriolis term, and the one that dissipates energy relative to the other one is
                                 ! used.
-CORIOLIS_SCHEME = "SADOURNY75_ENERGY" ! default = "SADOURNY75_ENERGY"
+CORIOLIS_SCHEME = "ARAKAWA_HSU90" ! default = "SADOURNY75_ENERGY"
                                 ! CORIOLIS_SCHEME selects the discretization for the Coriolis terms. Valid
                                 ! values are:
                                 !    SADOURNY75_ENERGY - Sadourny, 1975; energy cons.
@@ -976,8 +973,8 @@ CORIOLIS_SCHEME = "SADOURNY75_ENERGY" ! default = "SADOURNY75_ENERGY"
 BOUND_CORIOLIS = True           !   [Boolean] default = False
                                 ! If true, the Coriolis terms at u-points are bounded by the four estimates of
                                 ! (f+rv)v from the four neighboring v-points, and similarly at v-points.  This
-                                ! option is always effectively false with CORIOLIS_EN_DIS defined and
-                                ! CORIOLIS_SCHEME set to SADOURNY75_ENERGY.
+                                ! option would have no effect on the SADOURNY Coriolis scheme if it were
+                                ! possible to use centered difference thickness fluxes.
 KE_SCHEME = "KE_ARAKAWA"        ! default = "KE_ARAKAWA"
                                 ! KE_SCHEME selects the discretization for acceleration due to the kinetic
                                 ! energy gradient. Valid values are:
@@ -1125,10 +1122,8 @@ BOUNDARY_EXTRAPOLATION_PRESSURE = True !   [Boolean] default = True
                                 ! If true, the reconstruction of T & S for pressure in boundary cells is
                                 ! extrapolated, rather than using PCM in these cells. If true, the same order
                                 ! polynomial is used as is used for the interior cells.
-PGF_STANLEY_T2_DET_COEFF = -1.0 !   [nondim] default = -1.0
-                                ! The coefficient correlating SGS temperature variance with the mean temperature
-                                ! gradient in the deterministic part of the Stanley form of the Brankart
-                                ! correction. Negative values disable the scheme.
+USE_STANLEY_PGF = False         !   [Boolean] default = False
+                                ! If true, turn on Stanley SGS T variance parameterization in PGF code.
 
 ! === module MOM_hor_visc ===
 HOR_VISC_2018_ANSWERS = False   !   [Boolean] default = False
@@ -1142,7 +1137,7 @@ BIHARMONIC = True               !   [Boolean] default = True
                                 ! LAPLACIAN.
 AH = 0.0                        !   [m4 s-1] default = 0.0
                                 ! The background biharmonic horizontal viscosity.
-AH_VEL_SCALE = 0.0              !   [m s-1] default = 0.0
+AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
                                 ! The velocity scale which is multiplied by the cube of the grid spacing to
                                 ! calculate the biharmonic viscosity. The final viscosity is the largest of this
                                 ! scaled viscosity, the Smagorinsky and Leith viscosities, and AH.
@@ -1150,7 +1145,7 @@ AH_TIME_SCALE = 0.0             !   [s] default = 0.0
                                 ! A time scale whose inverse is multiplied by the fourth power of the grid
                                 ! spacing to calculate biharmonic viscosity. The final viscosity is the largest
                                 ! of all viscosity formulations in use. 0.0 means that it's not used.
-SMAGORINSKY_AH = True           !   [Boolean] default = False
+SMAGORINSKY_AH = False          !   [Boolean] default = False
                                 ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
 LEITH_AH = False                !   [Boolean] default = False
                                 ! If true, use a biharmonic Leith nonlinear eddy viscosity.
@@ -1162,18 +1157,6 @@ BETTER_BOUND_AH = True          !   [Boolean] default = True
 RE_AH = 0.0                     !   [nondim] default = 0.0
                                 ! If nonzero, the biharmonic coefficient is scaled so that the biharmonic
                                 ! Reynolds number is equal to this.
-SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
-                                ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
-BOUND_CORIOLIS_BIHARM = True    !   [Boolean] default = True
-                                ! If true use a viscosity that increases with the square of the velocity shears,
-                                ! so that the resulting viscous drag is of comparable magnitude to the Coriolis
-                                ! terms when the velocity differences between adjacent grid points is
-                                ! 0.5*BOUND_CORIOLIS_VEL.  The default is the value of BOUND_CORIOLIS (or
-                                ! false).
-BOUND_CORIOLIS_VEL = 6.0        !   [m s-1] default = 6.0
-                                ! The velocity scale at which BOUND_CORIOLIS_BIHARM causes the biharmonic drag
-                                ! to have comparable magnitude to the Coriolis acceleration.  The default is set
-                                ! by MAXVEL.
 USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = True
                                 ! If true, use the land mask for the computation of thicknesses at velocity
                                 ! locations. This eliminates the dependence on arbitrary values over land or
@@ -1362,6 +1345,8 @@ FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
                                 ! energy to the large-scale geostrophic kinetic energy or 1 plus the square of
                                 ! the grid spacing over the deformation radius, as detailed by Fox-Kemper et al.
                                 ! (2010)
+USE_STANLEY_ML = False          !   [Boolean] default = False
+                                ! If true, turn on Stanley SGS T variance parameterization in ML restrat code.
 FOX_KEMPER_ML_RESTRAT_COEF2 = 0.0 !   [nondim] default = 0.0
                                 ! As for FOX_KEMPER_ML_RESTRAT_COEF but used in a second application of the MLE
                                 ! restratification parameterization.

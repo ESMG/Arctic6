@@ -16,6 +16,13 @@ NJGLOBAL = 696                  !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
 
+! === module SIS_restart ===
+RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
+                                ! If true, require the restart checksums to match and error out otherwise. Users
+                                ! may want to avoid this comparison if for example the restarts are made from a
+                                ! run with a different mask_table than the current run, in which case the
+                                ! checksums will not match.
+
 ! === module SIS_initialize_fixed ===
 INPUTDIR = "INPUT"              ! default = "."
                                 ! The directory in which input files are found.
@@ -43,20 +50,6 @@ MASKING_DEPTH = 1.0             !   [m] default = -9999.0
                                 ! zeroed out. MASKING_DEPTH is ignored if it has the special default value.
 MAXIMUM_DEPTH = 6500.0          !   [m]
                                 ! The maximum depth of the ocean.
-
-! === module SIS_open_boundary ===
-! Controls where open boundaries are located, what kind of boundary condition to impose, and what data to apply,
-! if any.
-OBC_NUMBER_OF_SEGMENTS = 4      ! default = 0
-                                ! The number of open boundary segments.
-OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
-                                ! Documentation needs to be dynamic?????
-OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
-                                ! Documentation needs to be dynamic?????
-OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
-                                ! Documentation needs to be dynamic?????
-OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
-                                ! Documentation needs to be dynamic?????
 OMEGA = 7.292E-05               !   [s-1] default = 7.2921E-05
                                 ! The rotation rate of the earth.
 
@@ -104,6 +97,8 @@ ITD_LANDFAST = True             !   [Boolean] default = False
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with ITD_LANDFAST.
+BASAL_STRESS_EXTRA_DEPTH = ""   !
+                                ! Number of ice thickness categories in landfast ice computation.
 ICE_COVER_DISCARD = 1.0E-30     !   [nondim] default = -1.0
                                 ! A tiny fractional ice coverage which if positive causes the mass in categories
                                 ! with less than this coverage to be discarded.
