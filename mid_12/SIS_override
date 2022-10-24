@@ -12,3 +12,5 @@
 #override NEW_RIDGE_REDISTRIBUTION = False
 !#override MERGED_CONTINUITY = True
 #override NCAT_ICE = 10
+#override ADJUST_DEPTH = True
+#override H_ADJ_FILE = "depth_add.nc"

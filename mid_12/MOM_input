@@ -180,7 +180,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 2000, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 1993, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 
 ! === module MOM_verticalGrid ===
@@ -357,17 +357,17 @@ INTERPOLATE_SPONGE_TIME_SPACE = True
 ! === module MOM_sponge ===
 SPONGE_DATA_ONGRID = True       !   [Boolean] default = False
                                 ! When defined, the incoming sponge data are assumed to be on the model grid
-OBC_SEGMENT_001_DATA = "U=file:obc/2000/uv_001.nc(u),V=file:obc/2000/uv_001.nc(v),SSH=file:obc/2000/zeta_001.nc(zeta),TEMP=file:obc/2000/temp_001.nc(temp),SALT=file:obc/2000/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
+OBC_SEGMENT_001_DATA = "U=file:obc/1993/uv_001.nc(u),V=file:obc/1993/uv_001.nc(v),SSH=file:obc/1993/zeta_001.nc(zeta),TEMP=file:obc/1993/temp_001.nc(temp),SALT=file:obc/1993/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_002_DATA = "U=file:obc/2000/uv_002.nc(u),V=file:obc/2000/uv_002.nc(v),SSH=file:obc/2000/zeta_002.nc(zeta),TEMP=file:obc/2000/temp_002.nc(temp),SALT=file:obc/2000/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
+OBC_SEGMENT_002_DATA = "U=file:obc/1993/uv_002.nc(u),V=file:obc/1993/uv_002.nc(v),SSH=file:obc/1993/zeta_002.nc(zeta),TEMP=file:obc/1993/temp_002.nc(temp),SALT=file:obc/1993/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_003_DATA = "U=file:obc/2000/uv_003.nc(u),V=file:obc/2000/uv_003.nc(v),SSH=file:obc/2000/zeta_003.nc(zeta),TEMP=file:obc/2000/temp_003.nc(temp),SALT=file:obc/2000/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
+OBC_SEGMENT_003_DATA = "U=file:obc/1993/uv_003.nc(u),V=file:obc/1993/uv_003.nc(v),SSH=file:obc/1993/zeta_003.nc(zeta),TEMP=file:obc/1993/temp_003.nc(temp),SALT=file:obc/1993/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_004_DATA = "U=file:obc/2000/uv_004.nc(u),V=file:obc/2000/uv_004.nc(v),SSH=file:obc/2000/zeta_004.nc(zeta),TEMP=file:obc/2000/temp_004.nc(temp),SALT=file:obc/2000/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+OBC_SEGMENT_004_DATA = "U=file:obc/1993/uv_004.nc(u),V=file:obc/1993/uv_004.nc(v),SSH=file:obc/1993/zeta_004.nc(zeta),TEMP=file:obc/1993/temp_004.nc(temp),SALT=file:obc/1993/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
                                 ! OBC segment docs
 
 ! === module MOM_diag_mediator ===
-USE_GRID_SPACE_DIAGNOSTIC_AXES = True !   [Boolean] default = False
+USE_GRID_SPACE_DIAGNOSTIC_AXES = False !   [Boolean] default = False
                                 ! If true, use a grid index coordinate convention for diagnostic axes.
 DIAG_COORD_DEF_Z = "FILE:vgrid_75_2m.nc,dz" ! default = "WOA09"
                                 ! Determines how to specify the coordinate resolution. Valid options are:
