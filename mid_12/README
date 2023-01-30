@@ -1,0 +1,9 @@
+Rob's files:
+
+/import/AKWATERS/jrcermakiii/configs/Arctic12/OBC/obc_gen/xxxx
+
+/import/AKWATERS/jrcermakiii/data/ERA5_periodic_subset
+
+/import/AKWATERS/jrcermakiii/configs/Arctic12/IC/glorys_ic_75z_1993.nc
+
+ flux_exchange_nml: partition_fprec_from_lprec=.true.

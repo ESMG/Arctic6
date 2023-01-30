@@ -3,7 +3,7 @@ import os.path
 import netCDF4
 
 num = input("Restart number? ")
-file_path = "$AKDRIVE/Arctic_12k/run11/restart_" + num
+file_path = "$AKDRIVE/Arctic6/run11/restart_" + num
 if os.path.exists(file_path):
     print("directory exists already:", file_path)
     exit()
@@ -13,7 +13,7 @@ else:
 
 cmd = "cp RESTART/* " + file_path
 subprocess.call([cmd], shell=True)
-cmd = "mv RESTART/* INPUT"
+cmd = "cp RESTART/* INPUT"
 subprocess.call([cmd], shell=True)
 #vi ocean_arctic4.in
-#mv 201*.nc $AKDRIVE/Arctic_12k/run11
+#mv 201*.nc $AKDRIVE/Arctic6/run11

@@ -166,7 +166,7 @@ SAVE_INITIAL_CONDS = False      !   [Boolean] default = False
                                 ! If true, write the initial conditions to a file given by IC_OUTPUT_FILE.
 IC_OUTPUT_FILE = "MOM_IC"       ! default = "MOM_IC"
                                 ! The file into which to write the initial conditions.
-WRITE_GEOM = 0                  ! default = 1
+WRITE_GEOM = 1                  ! default = 1
                                 ! If =0, never write the geometry and vertical grid files. If =1, write the
                                 ! geometry and vertical grid files only for a new simulation. If =2, always
                                 ! write the geometry and vertical grid files. Other values are invalid.
@@ -385,7 +385,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 2018, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 1993, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 TIDE_M2_FREQ = 1.405189E-04     !   [s-1] default = 1.405189E-04
                                 ! Frequency of the M2 tidal constituent. This is only used if TIDES and TIDE_M2
@@ -681,18 +681,108 @@ FATAL_INCONSISTENT_RESTART_TIME = False !   [Boolean] default = False
                                 ! If true and a time_in value is provided to MOM_initialize_state, verify that
                                 ! the time read from a restart file is the same as time_in, and issue a fatal
                                 ! error if it is not.  Otherwise, simply set the time to time_in if present.
+INIT_LAYERS_FROM_Z_FILE = False !   [Boolean] default = False
+                                ! If true, initialize the layer thicknesses, temperatures, and salinities from a
+                                ! Z-space file on a latitude-longitude grid.
+THICKNESS_CONFIG = "coord"      ! default = "uniform"
+                                ! A string that determines how the initial layer thicknesses are specified for a
+                                ! new run:
+                                !     file - read interface heights from the file specified
+                                !     thickness_file - read thicknesses from the file specified
+                                !       by (THICKNESS_FILE).
+                                !     coord - determined by ALE coordinate.
+                                !     uniform - uniform thickness layers evenly distributed
+                                !       between the surface and MAXIMUM_DEPTH.
+                                !     list - read a list of positive interface depths.
+                                !     DOME - use a slope and channel configuration for the
+                                !       DOME sill-overflow test case.
+                                !     ISOMIP - use a configuration for the
+                                !       ISOMIP test case.
+                                !     benchmark - use the benchmark test case thicknesses.
+                                !     Neverworld - use the Neverworld test case thicknesses.
+                                !     search - search a density profile for the interface
+                                !       densities. This is not yet implemented.
+                                !     circle_obcs - the circle_obcs test case is used.
+                                !     DOME2D - 2D version of DOME initialization.
+                                !     adjustment2d - 2D lock exchange thickness ICs.
+                                !     sloshing - sloshing gravity thickness ICs.
+                                !     seamount - no motion test with seamount ICs.
+                                !     dumbbell - sloshing channel ICs.
+                                !     soliton - Equatorial Rossby soliton.
+                                !     rossby_front - a mixed layer front in thermal wind balance.
+                                !     USER - call a user modified routine.
+TS_CONFIG = "file"              !
+                                ! A string that determines how the initial temperatures and salinities are
+                                ! specified for a new run:
+                                !     file - read velocities from the file specified
+                                !       by (TS_FILE).
+                                !     fit - find the temperatures that are consistent with
+                                !       the layer densities and salinity S_REF.
+                                !     TS_profile - use temperature and salinity profiles
+                                !       (read from TS_FILE) to set layer densities.
+                                !     benchmark - use the benchmark test case T & S.
+                                !     linear - linear in logical layer space.
+                                !     DOME2D - 2D DOME initialization.
+                                !     ISOMIP - ISOMIP initialization.
+                                !     adjustment2d - 2d lock exchange T/S ICs.
+                                !     sloshing - sloshing mode T/S ICs.
+                                !     seamount - no motion test with seamount ICs.
+                                !     dumbbell - sloshing channel ICs.
+                                !     rossby_front - a mixed layer front in thermal wind balance.
+                                !     SCM_CVMix_tests - used in the SCM CVMix tests.
+                                !     USER - call a user modified routine.
+TS_FILE = "glorys_ic_75z_1993.nc" !
+                                ! The initial condition file for temperature.
+TEMP_IC_VAR = "temp"            ! default = "PTEMP"
+                                ! The initial condition variable for potential temperature.
+SALT_IC_VAR = "salt"            ! default = "SALT"
+                                ! The initial condition variable for salinity.
+SALT_FILE = "glorys_ic_75z_1993.nc" ! default = "glorys_ic_75z_1993.nc"
+                                ! The initial condition file for salinity.
+DEPRESS_INITIAL_SURFACE = True  !   [Boolean] default = False
+                                ! If true,  depress the initial surface to avoid huge tsunamis when a large
+                                ! surface pressure is applied.
+TRIM_IC_FOR_P_SURF = False      !   [Boolean] default = False
+                                ! If true, cuts way the top of the column for initial conditions at the depth
+                                ! where the hydrostatic pressure matches the imposed surface pressure which is
+                                ! read from file.
+VELOCITY_CONFIG = "zero"        ! default = "zero"
+                                ! A string that determines how the initial velocities are specified for a new
+                                ! run:
+                                !     file - read velocities from the file specified
+                                !       by (VELOCITY_FILE).
+                                !     zero - the fluid is initially at rest.
+                                !     uniform - the flow is uniform (determined by
+                                !       parameters INITIAL_U_CONST and INITIAL_V_CONST).
+                                !     rossby_front - a mixed layer front in thermal wind balance.
+                                !     soliton - Equatorial Rossby soliton.
+                                !     USER - call a user modified routine.
+CONVERT_THICKNESS_UNITS = False !   [Boolean] default = False
+                                ! If true,  convert the thickness initial conditions from units of m to kg m-2
+                                ! or vice versa, depending on whether BOUSSINESQ is defined. This does not apply
+                                ! if a restart file is read.
+SURFACE_HEIGHT_IC_FILE = "glorys_ic_75z_1993.nc" !
+                                ! The initial condition file for the surface height.
+SURFACE_HEIGHT_IC_VAR = "ssh"   ! default = "SSH"
+                                ! The initial condition variable for the surface height.
+SURFACE_HEIGHT_IC_SCALE = 1.0   !   [variable] default = 1.0
+                                ! A scaling factor to convert SURFACE_HEIGHT_IC_VAR into units of m
+REGRID_ACCELERATE_INIT = False  !   [Boolean] default = False
+                                ! If true, runs REGRID_ACCELERATE_ITERATIONS iterations of the regridding
+                                ! algorithm to push the initial grid to be consistent with the initial
+                                ! condition. Useful only for state-based and iterative coordinates.
 ODA_INCUPD = False              !   [Boolean] default = False
                                 ! If true, oda incremental updates will be applied everywhere in the domain.
 SPONGE = False                  !   [Boolean] default = False
                                 ! If true, sponges may be applied anywhere in the domain. The exact location and
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
-OBC_SEGMENT_001_DATA = "U=file:obc/2018/uv_001.nc(u),V=file:obc/2018/uv_001.nc(v),SSH=file:obc/2018/zeta_001.nc(zeta),TEMP=file:obc/2018/temp_001.nc(temp),SALT=file:obc/2018/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
+OBC_SEGMENT_001_DATA = "U=file:obc/1993/uv_001.nc(u),V=file:obc/1993/uv_001.nc(v),SSH=file:obc/1993/zeta_001.nc(zeta),TEMP=file:obc/1993/temp_001.nc(temp),SALT=file:obc/1993/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_002_DATA = "U=file:obc/2018/uv_002.nc(u),V=file:obc/2018/uv_002.nc(v),SSH=file:obc/2018/zeta_002.nc(zeta),TEMP=file:obc/2018/temp_002.nc(temp),SALT=file:obc/2018/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
+OBC_SEGMENT_002_DATA = "U=file:obc/1993/uv_002.nc(u),V=file:obc/1993/uv_002.nc(v),SSH=file:obc/1993/zeta_002.nc(zeta),TEMP=file:obc/1993/temp_002.nc(temp),SALT=file:obc/1993/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_003_DATA = "U=file:obc/2018/uv_003.nc(u),V=file:obc/2018/uv_003.nc(v),SSH=file:obc/2018/zeta_003.nc(zeta),TEMP=file:obc/2018/temp_003.nc(temp),SALT=file:obc/2018/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
+OBC_SEGMENT_003_DATA = "U=file:obc/1993/uv_003.nc(u),V=file:obc/1993/uv_003.nc(v),SSH=file:obc/1993/zeta_003.nc(zeta),TEMP=file:obc/1993/temp_003.nc(temp),SALT=file:obc/1993/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_004_DATA = "U=file:obc/2018/uv_004.nc(u),V=file:obc/2018/uv_004.nc(v),SSH=file:obc/2018/zeta_004.nc(zeta),TEMP=file:obc/2018/temp_004.nc(temp),SALT=file:obc/2018/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+OBC_SEGMENT_004_DATA = "U=file:obc/1993/uv_004.nc(u),V=file:obc/1993/uv_004.nc(v),SSH=file:obc/1993/zeta_004.nc(zeta),TEMP=file:obc/1993/temp_004.nc(temp),SALT=file:obc/1993/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
                                 ! OBC segment docs
 OBC_USER_CONFIG = "none"        ! default = "none"
                                 ! A string that sets how the user code is invoked to set open boundary data:
@@ -715,7 +805,7 @@ DIAG_COORDS = "z Z ZSTAR"       ! default = "z Z ZSTAR"
                                 ! A list of string tuples associating diag_table modules to a coordinate
                                 ! definition used for diagnostics. Each string is of the form "MODULE_SUFFIX
                                 ! PARAMETER_SUFFIX COORDINATE_NAME".
-DIAG_MISVAL = 1.0E+20           !   [not defined] default = 1.0E+20
+DIAG_MISVAL = 1.0E+20           !   [various] default = 1.0E+20
                                 ! Set the default missing value to use for diagnostics.
 DIAG_AS_CHKSUM = False          !   [Boolean] default = False
                                 ! Instead of writing diagnostics to the diag manager, write a text file
@@ -772,6 +862,9 @@ RESOLN_USE_EBT = False          !   [Boolean] default = False
 KHTH_USE_EBT_STRUCT = False     !   [Boolean] default = False
                                 ! If true, uses the equivalent barotropic structure as the vertical structure of
                                 ! thickness diffusivity.
+KD_GL90_USE_EBT_STRUCT = False  !   [Boolean] default = False
+                                ! If true, uses the equivalent barotropic structure as the vertical structure of
+                                ! diffusivity in the GL90 scheme.
 KHTH_SLOPE_CFF = 0.0            !   [nondim] default = 0.0
                                 ! The nondimensional coefficient in the Visbeck formula for the interface depth
                                 ! diffusivity
@@ -936,11 +1029,8 @@ USE_GM_WORK_BUG = False         !   [Boolean] default = False
                                 ! sign, for legacy reproducibility.
 STOCH_EOS = False               !   [Boolean] default = False
                                 ! If true, stochastic perturbations are applied to the EOS in the PGF.
-STANLEY_COEFF = -1.0            !   [not defined] default = -1.0
+STANLEY_COEFF = -1.0            !   [nondim] default = -1.0
                                 ! Coefficient correlating the temperature gradient and SGS T variance.
-STANLEY_A = 1.0                 !   [not defined] default = 1.0
-                                ! Coefficient a which scales chi in stochastic perturbation of the SGS T
-                                ! variance.
 
 ! === module MOM_porous_barriers ===
 PORBAR_ANSWER_DATE = 99991231   ! default = 99991231
@@ -1306,6 +1396,9 @@ HMIX_FIXED = 0.9                !   [m]
                                 ! elevated when the bulk mixed layer is not used.
 HMIX_STRESS = 0.9               !   [m] default = 0.9
                                 ! The depth over which the wind stress is applied if DIRECT_STRESS is true.
+USE_GL90_IN_SSW = False         !   [Boolean] default = False
+                                ! If true, use simpler method to calculate 1/N^2 in GL90 vertical viscosity
+                                ! coefficient. This method is valid in stacked shallow water mode.
 KV_ML_INVZ2 = 0.01              !   [m2 s-1] default = 0.0
                                 ! An extra kinematic viscosity in a mixed layer of thickness HMIX_FIXED, with
                                 ! the actual viscosity scaling as 1/(z*HMIX_FIXED)^2, where z is the distance
@@ -1504,6 +1597,14 @@ MLE_TAIL_DH = 0.0               !   [nondim] default = 0.0
 MLE_MLD_STRETCH = 1.0           !   [nondim] default = 1.0
                                 ! A scaling coefficient for stretching/shrinking the MLD used in the MLE scheme.
                                 ! This simply multiplies MLD wherever used.
+KV_RESTRAT = 0.0                !   [m2 s-1] default = 0.0
+                                ! A small viscosity that sets a floor on the momentum mixing rate during
+                                ! restratification.  If this is positive, it will prevent some possible
+                                ! divisions by zero even if ustar, RESTRAT_USTAR_MIN, and f are all 0.
+RESTRAT_USTAR_MIN = 1.45842E-18 !   [m s-1] default = 1.45842E-18
+                                ! The minimum value of ustar that will be used by the mixed layer
+                                ! restratification module.  This can be tiny, but if this is greater than 0, it
+                                ! will prevent divisions by zero when f and KV_RESTRAT are zero.
 
 ! === module MOM_diagnostics ===
 DIAG_EBT_MONO_N2_COLUMN_FRACTION = 0.0 !   [nondim] default = 0.0
@@ -1781,13 +1882,17 @@ RINO_CRIT = 0.25                !   [nondim] default = 0.25
 SHEARMIX_RATE = 0.089           !   [nondim] default = 0.089
                                 ! A nondimensional rate scale for shear-driven entrainment. Jackson et al find
                                 ! values in the range of 0.085-0.089.
-MAX_RINO_IT = 25                ! default = 50
+MAX_RINO_IT = 25                !   [nondim] default = 50
                                 ! The maximum number of iterations that may be used to estimate the Richardson
                                 ! number driven mixing.
 KD_KAPPA_SHEAR_0 = 1.0E-05      !   [m2 s-1] default = 1.0E-05
                                 ! The background diffusivity that is used to smooth the density and shear
                                 ! profiles before solving for the diffusivities.  The default is the greater of
                                 ! KD and 1e-7 m2 s-1.
+KD_SEED_KAPPA_SHEAR = 1.0       !   [m2 s-1] default = 1.0
+                                ! A moderately large seed value of diapycnal diffusivity that is used as a
+                                ! starting turbulent diffusivity in the iterations to find an energetically
+                                ! constrained solution for the shear-driven diffusivity.
 KD_TRUNC_KAPPA_SHEAR = 1.0E-07  !   [m2 s-1] default = 1.0E-07
                                 ! The value of shear-driven diffusivity that is considered negligible and is
                                 ! rounded down to 0. The default is 1% of KD_KAPPA_SHEAR_0.
@@ -1862,6 +1967,9 @@ RECLAIM_FRAZIL = True           !   [Boolean] default = True
                                 ! If true, try to use any frazil heat deficit to cool any overlying layers down
                                 ! to the freezing point, thereby avoiding the creation of thin ice when the SST
                                 ! is above the freezing point.
+SALT_EXTRACTION_LIMIT = 0.9999  !   [nondim] default = 0.9999
+                                ! An upper limit on the fraction of the salt in a layer that can be lost to the
+                                ! net surface salt fluxes within a timestep.
 PRESSURE_DEPENDENT_FRAZIL = True !   [Boolean] default = False
                                 ! If true, use a pressure dependent freezing temperature when making frazil. The
                                 ! default is false, which will be faster but is inappropriate with ice-shelf
@@ -2265,9 +2373,42 @@ ALLOW_FLUX_ADJUSTMENTS = False  !   [Boolean] default = False
 ! === module MOM_restart ===
 USE_WAVES = False               !   [Boolean] default = False
                                 ! If true, enables surface wave modules.
+WAVE_INTERFACE_ANSWER_DATE = 20221231 ! default = 20221231
+                                ! The vintage of the order of arithmetic and expressions in the surface wave
+                                ! calculations.  Values below 20230101 recover the answers from the end of 2022,
+                                ! while higher values use updated and more robust forms of the same expressions:
+                                !    <  20230101 - Original answers for wave interface routines
+                                !    >= 20230101 - More robust expressions for Update_Stokes_Drift
+                                !    >= 20230102 - More robust expressions for get_StokesSL_LiFoxKemper
+                                !    >= 20230103 - More robust expressions for ust_2_u10_coare3p5
 LA_DEPTH_RATIO = 0.04           !   [nondim] default = 0.04
                                 ! The depth (normalized by BLD) to average Stokes drift over in Langmuir number
                                 ! calculation, where La = sqrt(ust/Stokes).
+LA_DEPTH_MIN = 0.1              !   [m] default = 0.1
+                                ! The minimum depth over which to average the Stokes drift in the Langmuir
+                                ! number calculation.
+VISCOSITY_AIR = 1.0E-06         !   [m2 s-1] default = 1.0E-06
+                                ! A typical viscosity of air at sea level, as used in wave calculations
+VON_KARMAN_WAVES = 0.4          !   [nondim] default = 0.4
+                                ! The value the von Karman constant as used for surface wave calculations.
+RHO_AIR = 1.225                 !   [kg m-3] default = 1.225
+                                ! A typical density of air at sea level, as used in wave calculations
+WAVE_HEIGHT_SCALE_FACTOR = 0.0246 !   [s m-2] default = 0.0246
+                                ! A factor relating the square of the 10 m wind speed to the significant wave
+                                ! height, with a default value based on the Pierson-Moskowitz spectrum.
+CHARNOCK_MIN = 0.028            !   [nondim] default = 0.028
+                                ! The minimum value of the Charnock coefficient, which relates the square of the
+                                ! air friction velocity divided by the gravitational acceleration to the wave
+                                ! roughness length.
+CHARNOCK_SLOPE_U10 = 0.0017     !   [s m-1] default = 0.0017
+                                ! The partial derivative of the Charnock coefficient with the 10 m wind speed.
+                                ! Note that in eq. 13 of the Edson et al. 2013 describing the COARE 3.5 bulk
+                                ! flux algorithm, this slope is given as 0.017.  However, 0.0017 reproduces the
+                                ! curve in their figure 6, so that is the default value used in MOM6.
+CHARNOCK_0_WIND_INTERCEPT = -0.005 !   [nondim] default = -0.005
+                                ! The intercept of the fit for the Charnock coefficient in the limit of no wind.
+                                ! Note that this can be negative because CHARNOCK_MIN will keep the final value
+                                ! for the Charnock coefficient from being from being negative.
 
 ! === module MOM_file_parser ===
 SEND_LOG_TO_STDOUT = False      !   [Boolean] default = False

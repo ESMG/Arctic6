@@ -7,6 +7,7 @@
 #override ADCROFT_ADVECTIVE_CFL = True
 #override ICE_YIELD_ELLIPTICITY = 1.5
 #override ITD_LANDFAST = True
+#override ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
 !DEBUG = True
 #override NEW_RIDGE_PARTICIPATION = False
 #override NEW_RIDGE_REDISTRIBUTION = False

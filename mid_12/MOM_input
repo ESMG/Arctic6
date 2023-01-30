@@ -42,7 +42,7 @@ BAD_VAL_SST_MAX = 55.0          !   [deg C] default = 45.0
 BAD_VAL_SST_MIN = -3.0          !   [deg C] default = -2.1
                                 ! The value of SST below which a bad value message is
                                 ! triggered, if CHECK_BAD_SURFACE_VALS is true.
-WRITE_GEOM = 0                  ! default = 1
+WRITE_GEOM = 1                  ! default = 1
                                 ! If =0, never write the geometry and vertical grid files. If =1, write the
                                 ! geometry and vertical grid files only for a new simulation. If =2, always
                                 ! write the geometry and vertical grid files. Other values are invalid.
@@ -180,7 +180,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 1993, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 2018, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 
 ! === module MOM_verticalGrid ===
@@ -357,13 +357,13 @@ INTERPOLATE_SPONGE_TIME_SPACE = True
 ! === module MOM_sponge ===
 SPONGE_DATA_ONGRID = True       !   [Boolean] default = False
                                 ! When defined, the incoming sponge data are assumed to be on the model grid
-OBC_SEGMENT_001_DATA = "U=file:obc/1993/uv_001.nc(u),V=file:obc/1993/uv_001.nc(v),SSH=file:obc/1993/zeta_001.nc(zeta),TEMP=file:obc/1993/temp_001.nc(temp),SALT=file:obc/1993/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
+OBC_SEGMENT_001_DATA = "U=file:obc/2018/uv_001.nc(u),V=file:obc/2018/uv_001.nc(v),SSH=file:obc/2018/zeta_001.nc(zeta),TEMP=file:obc/2018/temp_001.nc(temp),SALT=file:obc/2018/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_002_DATA = "U=file:obc/1993/uv_002.nc(u),V=file:obc/1993/uv_002.nc(v),SSH=file:obc/1993/zeta_002.nc(zeta),TEMP=file:obc/1993/temp_002.nc(temp),SALT=file:obc/1993/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
+OBC_SEGMENT_002_DATA = "U=file:obc/2018/uv_002.nc(u),V=file:obc/2018/uv_002.nc(v),SSH=file:obc/2018/zeta_002.nc(zeta),TEMP=file:obc/2018/temp_002.nc(temp),SALT=file:obc/2018/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_003_DATA = "U=file:obc/1993/uv_003.nc(u),V=file:obc/1993/uv_003.nc(v),SSH=file:obc/1993/zeta_003.nc(zeta),TEMP=file:obc/1993/temp_003.nc(temp),SALT=file:obc/1993/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
+OBC_SEGMENT_003_DATA = "U=file:obc/2018/uv_003.nc(u),V=file:obc/2018/uv_003.nc(v),SSH=file:obc/2018/zeta_003.nc(zeta),TEMP=file:obc/2018/temp_003.nc(temp),SALT=file:obc/2018/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_004_DATA = "U=file:obc/1993/uv_004.nc(u),V=file:obc/1993/uv_004.nc(v),SSH=file:obc/1993/zeta_004.nc(zeta),TEMP=file:obc/1993/temp_004.nc(temp),SALT=file:obc/1993/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+OBC_SEGMENT_004_DATA = "U=file:obc/2018/uv_004.nc(u),V=file:obc/2018/uv_004.nc(v),SSH=file:obc/2018/zeta_004.nc(zeta),TEMP=file:obc/2018/temp_004.nc(temp),SALT=file:obc/2018/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
                                 ! OBC segment docs
 
 ! === module MOM_diag_mediator ===
@@ -557,16 +557,16 @@ USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = False
 ! === module MOM_vert_friction ===
 DIRECT_STRESS = True            !   [Boolean] default = False
                                 ! If true, the wind stress is distributed over the topmost HMIX_STRESS of fluid
-                                ! (like in HYCOM), and KVML may be set to a very small value.
+                                ! (like in HYCOM), and KV_ML_INVZ2 may be set to a very small value.
 HMIX_FIXED = 0.9                !   [m]
                                 ! The prescribed depth over which the near-surface viscosity and diffusivity are
                                 ! elevated when the bulk mixed layer is not used.
 HMIX_STRESS = 0.9               !   [m]
                                 ! The depth over which the wind stress is applied if
                                 ! DIRECT_STRESS is true.
-KVML = 0.01                     !   [m2 s-1] default = 1.0E-05
+KV_ML_INVZ2 = 0.01                     !   [m2 s-1] default = 1.0E-05
                                 ! The kinematic viscosity in the mixed layer.  A typical value is ~1e-2 m2 s-1.
-                                ! KVML is not used if BULKMIXEDLAYER is true.  The default is set by KV.
+                                ! KV_ML_INVZ2 is not used if BULKMIXEDLAYER is true.  The default is set by KV.
 MAXVEL = 6.0                    !   [m s-1] default = 3.0E+08
                                 ! The maximum velocity allowed before the velocity components are truncated.
 
@@ -709,6 +709,14 @@ PRESSURE_DEPENDENT_FRAZIL = True !   [Boolean] default = False
                                 ! If true, use a pressure dependent freezing temperature when making frazil. The
                                 ! default is false, which will be faster but is inappropriate with ice-shelf
                                 ! cavities.
+VAR_PEN_SW = True               !   [Boolean] default = False
+                                ! If true, use one of the CHL_A schemes specified by OPACITY_SCHEME to determine
+                                ! the e-folding depth of incoming short wave radiation.
+CHL_FROM_FILE = True
+CHL_FILE = "seawifs-clim-1997-2010.smoothed.nc"
+                                ! CHL_FILE is the file containing chl_a concentrations in the variable CHL_A. It
+                                ! is used when VAR_PEN_SW and CHL_FROM_FILE are true.
+CHL_VARNAME = "chlor_a"
 IGNORE_FLUXES_OVER_LAND = True  !   [Boolean] default = False
                                 ! If true, the model does not check if fluxes are being applied over land
                                 ! points. This is needed when the ocean is coupled with ice shelves and sea ice,
