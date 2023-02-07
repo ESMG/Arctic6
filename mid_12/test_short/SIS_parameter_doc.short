@@ -119,13 +119,16 @@ DT_ICE_DYNAMICS = 900.0         !   [seconds] default = -1.0
                                 ! The time step used for the slow ice dynamics, including stepping the
                                 ! continuity equation and interactions between the ice mass field and
                                 ! velocities.  If 0 or negative the coupling time step will be used.
+ICE_STATS_INTERVAL = 0.0416666666666667 !   [days] default = 1.0
+                                ! The interval in units of TIMEUNIT between writes of the globally summed ice
+                                ! statistics and conservation checks.
 ICE_YIELD_ELLIPTICITY = 1.5     !   [Nondim] default = 2.0
                                 ! The ellipticity coefficient for the plastic yield curve in the sea-ice
                                 ! rheology.  For an infinite ellipticity (i.e., a cavitating fluid rheology),
                                 ! use 0.
 ITD_LANDFAST = True             !   [Boolean] default = False
                                 ! If true, turn on probabilistic landfast ice parameterization.
-H_ADJ_FILE = "                                        oûÉ            Lg !            XKKÿ   KKKÿ  PâÏ             €WÁ                                         (                                             " !
+H_ADJ_FILE = "                        oûÉ            ì1l           °J`kþ  Ð=`kþ  PâÏ            4               à                                          (                                             " !
                                 ! The path to the file containing an adjustment to the bottom depth for the
                                 ! landfast ice.
 H2_FILE = "ocean_topog.nc"      !
