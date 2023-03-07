@@ -8,7 +8,7 @@ Arctic 50 vertical levels
 "ocean_daily_ts",            1, "days",   1, "hours", "time"
 "ocean_model_z",             1, "days",   1, "hours", "time"
 "ocean_monthly",             1, "months", 1, "hours", "time"
-#"ocean_Bering_Strait",       1, "hours",   1, "days", "time"
+"ocean_Bering_Strait",       1, "hours",   1, "days", "time"
 #"ocean_Fram_Strait",         1, "hours",   1, "days", "time"
 #"ocean_Beaufort",            1, "hours",   1, "days", "time"
 #"ocean_Anadyr",              1, "hours",   1, "days", "time"
@@ -35,13 +35,15 @@ Arctic 50 vertical levels
 "ice_model",   "VI",           "vice",             "ocean_hourly", "all", .false., "none",2
 #"ice_model",  "SWDN",       "swdn",      "ocean_hourly", "all", ".false.", "none",2
 
-## Bering Strait (east-west section)
-#"ocean_model_z", "volcello", "volcello", "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
-#"ocean_model_z", "temp", "temp",      "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
-#"ocean_model_z", "salt",   "salt",           "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
-#"ocean_model_z", "vmo",  "vmo",          "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
-#"ocean_model_z", "v",   "v",           "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
+# Bering Strait (east-west section)
+"ocean_model_z", "volcello", "volcello", "ocean_Bering_Strait",    "all", "mean", "214 221  124 124 -1 -1",2
+"ocean_model_z", "temp",   "temp",       "ocean_Bering_Strait",    "all", "mean", "214 221  124 124 -1 -1",2
+"ocean_model_z", "salt",   "salt",       "ocean_Bering_Strait",    "all", "mean", "214 221  124 124 -1 -1",2
+"ocean_model_z", "vmo",    "vmo",        "ocean_Bering_Strait",    "all", "mean", "214 221  124 124 -1 -1",2
+"ocean_model_z", "v",      "v",          "ocean_Bering_Strait",    "all", "mean", "214 221  124 124 -1 -1",2
+#"ocean_model_z", "e",      "e",          "ocean_Bering_Strait",    "all", "mean", "214 221  124 124 -1 -1",2
 #
+## Slices below are indices at 6 km resolution.
 ## Fram Strait east-west section for flow moving north/south
 #"ocean_model_z", "volcello", "volcello", "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
 #"ocean_model_z", "temp","temp",      "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2

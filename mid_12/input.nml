@@ -23,8 +23,8 @@
 /
 
  &coupler_nml
-        months = 11,
-        days   = 27,
+        months = 12,
+        days   = 0,
         hours  = 0,
         current_date = 1993,1,1,0,0,0,
         calendar = 'gregorian',

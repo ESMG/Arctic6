@@ -128,9 +128,6 @@ ICE_YIELD_ELLIPTICITY = 1.5     !   [Nondim] default = 2.0
                                 ! use 0.
 ITD_LANDFAST = True             !   [Boolean] default = False
                                 ! If true, turn on probabilistic landfast ice parameterization.
-H_ADJ_FILE = "                        oûÉ            ì1l           °J`kþ  Ð=`kþ  PâÏ            4               à                                          (                                             " !
-                                ! The path to the file containing an adjustment to the bottom depth for the
-                                ! landfast ice.
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with ITD_LANDFAST.

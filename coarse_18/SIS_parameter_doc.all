@@ -154,6 +154,8 @@ GRID_FILE = "ocean_hgrid.nc"    !
 USE_TRIPOLAR_GEOLONB_BUG = False !   [Boolean] default = False
                                 ! If true, use older code that incorrectly sets the longitude in some points
                                 ! along the tripolar fold to be off by 360 degrees.
+RAD_EARTH = 6.378E+06           !   [m] default = 6.378E+06
+                                ! The radius of the Earth.
 TOPO_CONFIG = "file"            ! default = "file"
                                 ! This specifies how bathymetry is specified:
                                 !     file - read bathymetric information from the file
@@ -183,6 +185,12 @@ MASKING_DEPTH = 1.0             !   [m] default = -9999.0
                                 ! zeroed out. MASKING_DEPTH is ignored if it has the special default value.
 MAXIMUM_DEPTH = 6500.0          !   [m]
                                 ! The maximum depth of the ocean.
+
+! === module SIS_open_boundary ===
+! Controls where open boundaries are located, what kind of boundary condition to impose, and what data to apply,
+! if any.
+OBC_NUMBER_OF_SEGMENTS = 0      ! default = 0
+                                ! The number of open boundary segments.
 CHANNEL_CONFIG = "none"         ! default = "none"
                                 ! A parameter that determines which set of channels are restricted to specific
                                 ! widths.  Options are:
@@ -436,6 +444,13 @@ ICE_DEL_SH_MIN_SCALE = 2.0      !   [nondim] default = 2.0
 PROJECT_ICE_CONCENTRATION = True !   [Boolean] default = True
                                 ! If true, project the evolution of the ice concentration due to the convergence
                                 ! or divergence of the ice flow.
+VEL_UNDERFLOW = 0.0             !   [m s-1] default = 0.0
+                                ! A negligibly small velocity magnitude below which velocity components are set
+                                ! to 0.  A reasonable value might be 1e-30 m/s, which is less than an Angstrom
+                                ! divided by the age of the universe.
+STRESS_UNDERFLOW = 0.0          !   [Pa m] default = 0.0
+                                ! A negligibly small magnitude below which ice stress tensor components are set
+                                ! to 0.  A reasonable value might be 1e-15 kg m-1 s-1 times vel_underflow.
 CFL_TRUNCATE = 0.5              !   [nondim] default = 0.5
                                 ! The value of the CFL number that will cause ice velocity components to be
                                 ! truncated; instability can occur past 0.5.
@@ -450,6 +465,11 @@ LEMIEUX_ALPHA_B = 20.0          !   [Nondim] default = 20.0
                                 ! The value of a third Lemieux landfast ice tuneable parameter.
 LEMIEUX_U0 = 5.0E-05            !   [m s-1] default = 5.0E-05
                                 ! Velocity for Lemieux landfast ice.
+H_ADJ_FILE = ""                 ! default = ""
+                                ! The path to the file containing an adjustment to the bottom depth for the
+                                ! landfast ice.
+ADJUST_DEPTH = False            !   [Boolean] default = False
+                                ! If true, read in a depth adjustment for landfast ice.
 BASAL_STRESS_MIN_THICK = 0.01   !   [m] default = 0.01
                                 ! Minimum ice thickness for grounding in ITD landfast ice.
 BASAL_STRESS_MAX_DEPTH = 50.0   !   [m] default = 50.0
@@ -537,6 +557,9 @@ NEW_RIDGE_REDISTRIBUTION = False !   [Boolean] default = False
                                 ! Lipscomb et al. 2007
 RIDGE_MU = 3.0                  !   [m^0.5] default = 3.0
                                 ! E-folding scale of ridge ice from Lipscomb et al. 2007
+RIDGE_AREA_UNDERFLOW = 0.0      !   [none] default = 0.0
+                                ! A fractional area limit below which ice fraction is set to zero A reasonable
+                                ! default value for a km scale grid cell is 10^-24.
 
 ! === module SIS_sum_output ===
 WRITE_STOCKS = True             !   [Boolean] default = True

@@ -35,7 +35,7 @@ OFFLINE_TRACER_MODE = False     !   [Boolean] default = False
 USE_REGRIDDING = True           !   [Boolean] default = False
                                 ! If True, use the ALE algorithm (regridding/remapping). If False, use the
                                 ! layered isopycnal algorithm.
-REMAP_AUXILIARY_VARS = False    !   [Boolean] default = False
+REMAP_AUXILIARY_VARS = True     !   [Boolean] default = False
                                 ! If true, apply ALE remapping to all of the auxiliary 3-dimensional variables
                                 ! that are needed to reproduce across restarts, similarly to what is already
                                 ! being done with the primary state variables.  The default should be changed to
@@ -166,7 +166,7 @@ SAVE_INITIAL_CONDS = False      !   [Boolean] default = False
                                 ! If true, write the initial conditions to a file given by IC_OUTPUT_FILE.
 IC_OUTPUT_FILE = "MOM_IC"       ! default = "MOM_IC"
                                 ! The file into which to write the initial conditions.
-WRITE_GEOM = 0                  ! default = 1
+WRITE_GEOM = 1                  ! default = 1
                                 ! If =0, never write the geometry and vertical grid files. If =1, write the
                                 ! geometry and vertical grid files only for a new simulation. If =2, always
                                 ! write the geometry and vertical grid files. Other values are invalid.
@@ -269,7 +269,7 @@ TOPO_EDITS_FILE = ""            ! default = ""
                                 ! The file from which to read a list of i,j,z topography overrides.
 ALLOW_LANDMASK_CHANGES = False  !   [Boolean] default = False
                                 ! If true, allow topography overrides to change land mask.
-MINIMUM_DEPTH = 4.0             !   [m] default = 0.0
+MINIMUM_DEPTH = 5.0             !   [m] default = 0.0
                                 ! If MASKING_DEPTH is unspecified, then anything shallower than MINIMUM_DEPTH is
                                 ! assumed to be land and all fluxes are masked out. If MASKING_DEPTH is
                                 ! specified, then all depths shallower than MINIMUM_DEPTH but deeper than
@@ -385,7 +385,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 2018, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 1997, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 TIDE_M2_FREQ = 1.405189E-04     !   [s-1] default = 1.405189E-04
                                 ! Frequency of the M2 tidal constituent. This is only used if TIDES and TIDE_M2
@@ -580,7 +580,7 @@ REMAP_UV_USING_OLD_ALG = False  !   [Boolean] default = False
                                 ! If true, uses the old remapping-via-a-delta-z method for remapping u and v. If
                                 ! false, uses the new method that remaps between grids described by an old and
                                 ! new thickness.
-REGRIDDING_COORDINATE_MODE = "Z*" ! default = "LAYER"
+REGRIDDING_COORDINATE_MODE = "HYCOM1" ! default = "LAYER"
                                 ! Coordinate mode for vertical regridding. Choose among the following
                                 ! possibilities:  LAYER - Isopycnal or stacked shallow water layers
                                 !  ZSTAR, Z* - stretched geopotential z*
@@ -593,7 +593,25 @@ REGRIDDING_COORDINATE_MODE = "Z*" ! default = "LAYER"
                                 !  ADAPTIVE - optimize for smooth neutral density surfaces
 REGRIDDING_COORDINATE_UNITS = "m" ! default = "m"
                                 ! Units of the regridding coordinate.
-ALE_COORDINATE_CONFIG = "FILE:vgrid_75_2m.nc,dz" ! default = "UNIFORM"
+INTERPOLATION_SCHEME = "P1M_H2" ! default = "P1M_H2"
+                                ! This sets the interpolation scheme to use to determine the new grid. These
+                                ! parameters are only relevant when REGRIDDING_COORDINATE_MODE is set to a
+                                ! function of state. Otherwise, it is not used. It can be one of the following
+                                ! schemes:  P1M_H2     (2nd-order accurate)
+                                !  P1M_H4     (2nd-order accurate)
+                                !  P1M_IH4    (2nd-order accurate)
+                                !  PLM        (2nd-order accurate)
+                                !  PPM_H4     (3rd-order accurate)
+                                !  PPM_IH4    (3rd-order accurate)
+                                !  P3M_IH4IH3 (4th-order accurate)
+                                !  P3M_IH6IH5 (4th-order accurate)
+                                !  PQM_IH4IH3 (4th-order accurate)
+                                !  PQM_IH6IH5 (5th-order accurate)
+BOUNDARY_EXTRAPOLATION = False  !   [Boolean] default = False
+                                ! When defined, a proper high-order reconstruction scheme is used within
+                                ! boundary cells rather than PCM. E.g., if PPM is used for remapping, a PPM
+                                ! reconstruction will also be used within boundary cells.
+ALE_COORDINATE_CONFIG = "HYBRID:hycom1_75_800m.nc,sigma2,FNC1:2,4000,4.5,.01" ! default = "UNIFORM"
                                 ! Determines how to specify the coordinate resolution. Valid options are:
                                 !  PARAM       - use the vector-parameter ALE_RESOLUTION
                                 !  UNIFORM[:N] - uniformly distributed
@@ -607,14 +625,41 @@ ALE_COORDINATE_CONFIG = "FILE:vgrid_75_2m.nc,dz" ! default = "UNIFORM"
                                 !                the filename and two variable names, separated
                                 !                by a comma or space, for sigma-2 and dz. e.g.
                                 !                HYBRID:vgrid.nc,sigma2,dz
-!ALE_RESOLUTION = 4*2.0, 2*2.01, 2.02, 2.03, 2.05, 2.08, 2.11, 2.15, 2.2, 2.27, 2.34, 2.44, 2.55, 2.69, 2.85, 3.04, 3.27, 3.54, 3.85, 4.22, 4.66, 5.18, 5.79, 6.52, 7.37, 8.37, 9.55, 10.94, 12.57, 14.48, 16.72, 19.33, 22.36, 25.87, 29.91, 34.53, 39.79, 45.72, 52.37, 59.76, 67.89, 76.74, 86.29, 96.47, 107.2, 118.35, 129.81, 141.42, 153.01, 164.41, 175.47, 186.01, 195.9, 205.01, 213.27, 220.6, 226.99, 232.43, 236.96, 240.63, 243.52, 245.72, 247.33, 248.45, 249.18, 249.62, 249.86, 249.96, 249.99, 2*250.0 !   [m]
+!ALE_RESOLUTION = 7*2.0, 2*2.01, 2.02, 2.03, 2.05, 2.08, 2.11, 2.15, 2.21, 2.2800000000000002, 2.37, 2.48, 2.61, 2.77, 2.95, 3.17, 3.4299999999999997, 3.74, 4.09, 4.49, 4.95, 5.48, 6.07, 6.74, 7.5, 8.34, 9.280000000000001, 10.33, 11.49, 12.77, 14.19, 15.74, 17.450000000000003, 19.31, 21.35, 23.56, 25.97, 28.580000000000002, 31.41, 34.47, 37.77, 41.32, 45.14, 49.25, 53.65, 58.370000000000005, 63.42, 68.81, 74.56, 80.68, 87.21000000000001, 94.14, 101.51, 109.33, 117.62, 126.4, 135.68, 145.5, 155.87, 166.81, 178.35, 190.51, 203.31, 216.78, 230.93, 245.8, 261.42, 277.83 !   [m]
                                 ! The distribution of vertical resolution for the target
                                 ! grid used for Eulerian-like coordinates. For example,
                                 ! in z-coordinate mode, the parameter is a list of level
                                 ! thicknesses (in m). In sigma-coordinate mode, the list
                                 ! is of non-dimensional fractions of the water column.
+!TARGET_DENSITIES = 1010.0, 1014.3034, 1017.8088, 1020.843, 1023.5566, 1025.813, 1027.0275, 1027.9114, 1028.6422, 1029.2795, 1029.852, 1030.3762, 1030.8626, 1031.3183, 1031.7486, 1032.1572, 1032.5471, 1032.9207, 1033.2798, 1033.6261, 1033.9608, 1034.2519, 1034.4817, 1034.6774, 1034.8508, 1035.0082, 1035.1533, 1035.2886, 1035.4159, 1035.5364, 1035.6511, 1035.7608, 1035.8661, 1035.9675, 1036.0645, 1036.1554, 1036.2411, 1036.3223, 1036.3998, 1036.4739, 1036.5451, 1036.6137, 1036.68, 1036.7441, 1036.8062, 1036.8526, 1036.8874, 1036.9164, 1036.9418, 1036.9647, 1036.9857, 1037.0052, 1037.0236, 1037.0409, 1037.0574, 1037.0738, 1037.0902, 1037.1066, 1037.123, 1037.1394, 1037.1558, 1037.1722, 1037.1887, 1037.206, 1037.2241, 1037.2435, 1037.2642, 1037.2866, 1037.3112, 1037.3389, 1037.3713, 1037.4118, 1037.475, 1037.6332, 1037.8104, 1038.0 !   [m]
+                                ! HYBRID target densities for interfaces
+REGRID_COMPRESSIBILITY_FRACTION = 0.01 !   [nondim] default = 0.0
+                                ! When interpolating potential density profiles we can add some artificial
+                                ! compressibility solely to make homogeneous regions appear stratified.
 MIN_THICKNESS = 1.0E-06         !   [m] default = 0.001
                                 ! When regridding, this is the minimum layer thickness allowed.
+MAXIMUM_INT_DEPTH_CONFIG = "FNC1:5,8000.0,1.0,.01" ! default = "NONE"
+                                ! Determines how to specify the maximum interface depths.
+                                ! Valid options are:
+                                !  NONE        - there are no maximum interface depths
+                                !  PARAM       - use the vector-parameter MAXIMUM_INTERFACE_DEPTHS
+                                !  FILE:string - read from a file. The string specifies
+                                !                the filename and variable name, separated
+                                !                by a comma or space, e.g. FILE:lev.nc,Z
+                                !  FNC1:string - FNC1:dz_min,H_total,power,precision
+!MAXIMUM_INT_DEPTHS = 0.0, 5.0, 12.75, 23.25, 36.49, 52.480000000000004, 71.22, 92.71000000000001, 116.94000000000001, 143.92000000000002, 173.65, 206.13, 241.36, 279.33000000000004, 320.05000000000007, 363.5200000000001, 409.7400000000001, 458.7000000000001, 510.4100000000001, 564.8700000000001, 622.0800000000002, 682.0300000000002, 744.7300000000002, 810.1800000000003, 878.3800000000003, 949.3300000000004, 1023.0200000000004, 1099.4600000000005, 1178.6500000000005, 1260.5900000000006, 1345.2700000000007, 1432.7000000000007, 1522.8800000000008, 1615.8100000000009, 1711.490000000001, 1809.910000000001, 1911.080000000001, 2015.0000000000011, 2121.670000000001, 2231.080000000001, 2343.2400000000007, 2458.1500000000005, 2575.8100000000004, 2696.2200000000003, 2819.3700000000003, 2945.2700000000004, 3073.9200000000005, 3205.3200000000006, 3339.4600000000005, 3476.3500000000004, 3615.9900000000002, 3758.38, 3903.52, 4051.4, 4202.03, 4355.41, 4511.54, 4670.41, 4832.03, 4996.4, 5163.5199999999995, 5333.379999999999, 5505.989999999999, 5681.3499999999985, 5859.459999999998, 6040.319999999998, 6223.919999999998, 6410.269999999999, 6599.369999999999, 6791.219999999999, 6985.8099999999995, 7183.15, 7383.24, 7586.08, 7791.67, 8000.0
+                                ! The list of maximum depths for each interface.
+MAX_LAYER_THICKNESS_CONFIG = "FNC1:400,31000.0,0.1,.01" ! default = "NONE"
+                                ! Determines how to specify the maximum layer thicknesses.
+                                ! Valid options are:
+                                !  NONE        - there are no maximum layer thicknesses
+                                !  PARAM       - use the vector-parameter MAX_LAYER_THICKNESS
+                                !  FILE:string - read from a file. The string specifies
+                                !                the filename and variable name, separated
+                                !                by a comma or space, e.g. FILE:lev.nc,Z
+                                !  FNC1:string - FNC1:dz_min,H_total,power,precision
+!MAX_LAYER_THICKNESS = 400.0, 409.63, 410.32, 410.75, 411.07, 411.32, 411.52, 411.7, 411.86, 412.0, 412.13, 412.24, 412.35, 412.45, 412.54, 412.63, 412.71, 412.79, 412.86, 412.93, 413.0, 413.06, 413.12, 413.18, 413.24, 413.29, 413.34, 413.39, 413.44, 413.49, 413.54, 413.58, 413.62, 413.67, 413.71, 413.75, 413.78, 413.82, 413.86, 413.9, 413.93, 413.97, 414.0, 414.03, 414.06, 414.1, 414.13, 414.16, 414.19, 414.22, 414.24, 414.27, 414.3, 414.33, 414.35, 414.38, 414.41, 414.43, 414.46, 414.48, 414.51, 414.53, 414.55, 414.58, 414.6, 414.62, 414.65, 414.67, 414.69, 414.71, 414.73, 414.75, 414.77, 414.79, 414.83 !   [m]
+                                ! The list of maximum thickness for each layer.
 REMAPPING_SCHEME = "PPM_H4"     ! default = "PLM"
                                 ! This sets the reconstruction scheme used for vertical remapping for all
                                 ! variables. It can be one of the following schemes: PCM         (1st-order
@@ -686,13 +731,13 @@ ODA_INCUPD = False              !   [Boolean] default = False
 SPONGE = False                  !   [Boolean] default = False
                                 ! If true, sponges may be applied anywhere in the domain. The exact location and
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
-OBC_SEGMENT_001_DATA = "U=file:obc/2018/uv_001.nc(u),V=file:obc/2018/uv_001.nc(v),SSH=file:obc/2018/zeta_001.nc(zeta),TEMP=file:obc/2018/temp_001.nc(temp),SALT=file:obc/2018/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
+OBC_SEGMENT_001_DATA = "U=file:obc/1997/uv_001.nc(u),V=file:obc/1997/uv_001.nc(v),SSH=file:obc/1997/zeta_001.nc(zeta),TEMP=file:obc/1997/temp_001.nc(temp),SALT=file:obc/1997/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_002_DATA = "U=file:obc/2018/uv_002.nc(u),V=file:obc/2018/uv_002.nc(v),SSH=file:obc/2018/zeta_002.nc(zeta),TEMP=file:obc/2018/temp_002.nc(temp),SALT=file:obc/2018/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
+OBC_SEGMENT_002_DATA = "U=file:obc/1997/uv_002.nc(u),V=file:obc/1997/uv_002.nc(v),SSH=file:obc/1997/zeta_002.nc(zeta),TEMP=file:obc/1997/temp_002.nc(temp),SALT=file:obc/1997/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_003_DATA = "U=file:obc/2018/uv_003.nc(u),V=file:obc/2018/uv_003.nc(v),SSH=file:obc/2018/zeta_003.nc(zeta),TEMP=file:obc/2018/temp_003.nc(temp),SALT=file:obc/2018/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
+OBC_SEGMENT_003_DATA = "U=file:obc/1997/uv_003.nc(u),V=file:obc/1997/uv_003.nc(v),SSH=file:obc/1997/zeta_003.nc(zeta),TEMP=file:obc/1997/temp_003.nc(temp),SALT=file:obc/1997/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
                                 ! OBC segment docs
-OBC_SEGMENT_004_DATA = "U=file:obc/2018/uv_004.nc(u),V=file:obc/2018/uv_004.nc(v),SSH=file:obc/2018/zeta_004.nc(zeta),TEMP=file:obc/2018/temp_004.nc(temp),SALT=file:obc/2018/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+OBC_SEGMENT_004_DATA = "U=file:obc/1997/uv_004.nc(u),V=file:obc/1997/uv_004.nc(v),SSH=file:obc/1997/zeta_004.nc(zeta),TEMP=file:obc/1997/temp_004.nc(temp),SALT=file:obc/1997/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
                                 ! OBC segment docs
 OBC_USER_CONFIG = "none"        ! default = "none"
                                 ! A string that sets how the user code is invoked to set open boundary data:
@@ -715,7 +760,7 @@ DIAG_COORDS = "z Z ZSTAR"       ! default = "z Z ZSTAR"
                                 ! A list of string tuples associating diag_table modules to a coordinate
                                 ! definition used for diagnostics. Each string is of the form "MODULE_SUFFIX
                                 ! PARAMETER_SUFFIX COORDINATE_NAME".
-DIAG_MISVAL = 1.0E+20           !   [not defined] default = 1.0E+20
+DIAG_MISVAL = 1.0E+20           !   [various] default = 1.0E+20
                                 ! Set the default missing value to use for diagnostics.
 DIAG_AS_CHKSUM = False          !   [Boolean] default = False
                                 ! Instead of writing diagnostics to the diag manager, write a text file
@@ -772,6 +817,9 @@ RESOLN_USE_EBT = False          !   [Boolean] default = False
 KHTH_USE_EBT_STRUCT = False     !   [Boolean] default = False
                                 ! If true, uses the equivalent barotropic structure as the vertical structure of
                                 ! thickness diffusivity.
+KD_GL90_USE_EBT_STRUCT = False  !   [Boolean] default = False
+                                ! If true, uses the equivalent barotropic structure as the vertical structure of
+                                ! diffusivity in the GL90 scheme.
 KHTH_SLOPE_CFF = 0.0            !   [nondim] default = 0.0
                                 ! The nondimensional coefficient in the Visbeck formula for the interface depth
                                 ! diffusivity
@@ -791,13 +839,6 @@ USE_STANLEY_ISO = False         !   [Boolean] default = False
 KD_SMOOTH = 1.0E-06             !   [m2 s-1] default = 1.0E-06
                                 ! A diapycnal diffusivity that is used to interpolate more sensible values of T
                                 ! & S into thin layers.
-INTERNAL_WAVE_SPEED_TOL = 0.001 !   [nondim] default = 0.001
-                                ! The fractional tolerance for finding the wave speeds.
-INTERNAL_WAVE_SPEED_MIN = 0.0   !   [m s-1] default = 0.0
-                                ! A floor in the first mode speed below which 0 used instead.
-INTERNAL_WAVE_SPEED_BETTER_EST = True !   [Boolean] default = True
-                                ! If true, use a more robust estimate of the first mode wave speed as the
-                                ! starting point for iterations.
 USE_QG_LEITH_GM = False         !   [Boolean] default = False
                                 ! If true, use the QG Leith viscosity as the GM coefficient.
 
@@ -864,12 +905,12 @@ HTBL_SHELF_MIN = 0.1            !   [m] default = 0.1
 HTBL_SHELF = 10.0               !   [m] default = 10.0
                                 ! The thickness over which near-surface velocities are averaged for the drag law
                                 ! under an ice shelf.  By default this is the same as HBBL
-KV = 1.0E-06                    !   [m2 s-1]
+KV = 1.0E-05                    !   [m2 s-1]
                                 ! The background kinematic viscosity in the interior. The molecular value, ~1e-6
                                 ! m2 s-1, may be used.
-KV_BBL_MIN = 1.0E-06            !   [m2 s-1] default = 1.0E-06
+KV_BBL_MIN = 1.0E-05            !   [m2 s-1] default = 1.0E-05
                                 ! The minimum viscosities in the bottom boundary layer.
-KV_TBL_MIN = 1.0E-06            !   [m2 s-1] default = 1.0E-06
+KV_TBL_MIN = 1.0E-05            !   [m2 s-1] default = 1.0E-05
                                 ! The minimum viscosities in the top boundary layer.
 CORRECT_BBL_BOUNDS = False      !   [Boolean] default = False
                                 ! If true, uses the correct bounds on the BBL thickness and viscosity so that
@@ -936,11 +977,8 @@ USE_GM_WORK_BUG = False         !   [Boolean] default = False
                                 ! sign, for legacy reproducibility.
 STOCH_EOS = False               !   [Boolean] default = False
                                 ! If true, stochastic perturbations are applied to the EOS in the PGF.
-STANLEY_COEFF = -1.0            !   [not defined] default = -1.0
+STANLEY_COEFF = -1.0            !   [nondim] default = -1.0
                                 ! Coefficient correlating the temperature gradient and SGS T variance.
-STANLEY_A = 1.0                 !   [not defined] default = 1.0
-                                ! Coefficient a which scales chi in stochastic perturbation of the SGS T
-                                ! variance.
 
 ! === module MOM_porous_barriers ===
 PORBAR_ANSWER_DATE = 99991231   ! default = 99991231
@@ -1226,7 +1264,7 @@ BIHARMONIC = True               !   [Boolean] default = True
                                 ! LAPLACIAN.
 AH = 0.0                        !   [m4 s-1] default = 0.0
                                 ! The background biharmonic horizontal viscosity.
-AH_VEL_SCALE = 0.0              !   [m s-1] default = 0.0
+AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
                                 ! The velocity scale which is multiplied by the cube of the grid spacing to
                                 ! calculate the biharmonic viscosity. The final viscosity is the largest of this
                                 ! scaled viscosity, the Smagorinsky and Leith viscosities, and AH.
@@ -1306,6 +1344,9 @@ HMIX_FIXED = 0.9                !   [m]
                                 ! elevated when the bulk mixed layer is not used.
 HMIX_STRESS = 0.9               !   [m] default = 0.9
                                 ! The depth over which the wind stress is applied if DIRECT_STRESS is true.
+USE_GL90_IN_SSW = False         !   [Boolean] default = False
+                                ! If true, use simpler method to calculate 1/N^2 in GL90 vertical viscosity
+                                ! coefficient. This method is valid in stacked shallow water mode.
 KV_ML_INVZ2 = 0.01              !   [m2 s-1] default = 0.0
                                 ! An extra kinematic viscosity in a mixed layer of thickness HMIX_FIXED, with
                                 ! the actual viscosity scaling as 1/(z*HMIX_FIXED)^2, where z is the distance
@@ -1463,47 +1504,10 @@ BT_USE_OLD_CORIOLIS_BRACKET_BUG = False !   [Boolean] default = False
                                 ! in the meridional Coriolis term of the barotropic solver.
 
 ! === module MOM_mixed_layer_restrat ===
-MIXEDLAYER_RESTRAT = True       !   [Boolean] default = False
+MIXEDLAYER_RESTRAT = False      !   [Boolean] default = False
                                 ! If true, a density-gradient dependent re-stratifying flow is imposed in the
                                 ! mixed layer. Can be used in ALE mode without restriction but in layer mode can
                                 ! only be used if BULKMIXEDLAYER is true.
-FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
-                                ! A nondimensional coefficient that is proportional to the ratio of the
-                                ! deformation radius to the dominant lengthscale of the submesoscale mixed layer
-                                ! instabilities, times the minimum of the ratio of the mesoscale eddy kinetic
-                                ! energy to the large-scale geostrophic kinetic energy or 1 plus the square of
-                                ! the grid spacing over the deformation radius, as detailed by Fox-Kemper et al.
-                                ! (2010)
-USE_STANLEY_ML = False          !   [Boolean] default = False
-                                ! If true, turn on Stanley SGS T variance parameterization in ML restrat code.
-FOX_KEMPER_ML_RESTRAT_COEF2 = 0.0 !   [nondim] default = 0.0
-                                ! As for FOX_KEMPER_ML_RESTRAT_COEF but used in a second application of the MLE
-                                ! restratification parameterization.
-MLE_FRONT_LENGTH = 6000.0       !   [m] default = 0.0
-                                ! If non-zero, is the frontal-length scale used to calculate the upscaling of
-                                ! buoyancy gradients that is otherwise represented by the parameter
-                                ! FOX_KEMPER_ML_RESTRAT_COEF. If MLE_FRONT_LENGTH is non-zero, it is recommended
-                                ! to set FOX_KEMPER_ML_RESTRAT_COEF=1.0.
-MLE_USE_PBL_MLD = True          !   [Boolean] default = False
-                                ! If true, the MLE parameterization will use the mixed-layer depth provided by
-                                ! the active PBL parameterization. If false, MLE will estimate a MLD based on a
-                                ! density difference with the surface using the parameter MLE_DENSITY_DIFF.
-MLE_MLD_DECAY_TIME = 2.592E+06  !   [s] default = 0.0
-                                ! The time-scale for a running-mean filter applied to the mixed-layer depth used
-                                ! in the MLE restratification parameterization. When the MLD deepens below the
-                                ! current running-mean the running-mean is instantaneously set to the current
-                                ! MLD.
-MLE_MLD_DECAY_TIME2 = 0.0       !   [s] default = 0.0
-                                ! The time-scale for a running-mean filter applied to the filtered mixed-layer
-                                ! depth used in a second MLE restratification parameterization. When the MLD
-                                ! deepens below the current running-mean the running-mean is instantaneously set
-                                ! to the current MLD.
-MLE_TAIL_DH = 0.0               !   [nondim] default = 0.0
-                                ! Fraction by which to extend the mixed-layer restratification depth used for a
-                                ! smoother stream function at the base of the mixed-layer.
-MLE_MLD_STRETCH = 1.0           !   [nondim] default = 1.0
-                                ! A scaling coefficient for stretching/shrinking the MLD used in the MLE scheme.
-                                ! This simply multiplies MLD wherever used.
 
 ! === module MOM_diagnostics ===
 DIAG_EBT_MONO_N2_COLUMN_FRACTION = 0.0 !   [nondim] default = 0.0
@@ -1512,6 +1516,13 @@ DIAG_EBT_MONO_N2_COLUMN_FRACTION = 0.0 !   [nondim] default = 0.0
 DIAG_EBT_MONO_N2_DEPTH = -1.0   !   [m] default = -1.0
                                 ! The depth below which N2 is limited as monotonic for the purposes of
                                 ! calculating the equivalent barotropic wave speed.
+INTERNAL_WAVE_SPEED_TOL = 0.001 !   [nondim] default = 0.001
+                                ! The fractional tolerance for finding the wave speeds.
+INTERNAL_WAVE_SPEED_MIN = 0.0   !   [m s-1] default = 0.0
+                                ! A floor in the first mode speed below which 0 used instead.
+INTERNAL_WAVE_SPEED_BETTER_EST = True !   [Boolean] default = True
+                                ! If true, use a more robust estimate of the first mode wave speed as the
+                                ! starting point for iterations.
 
 ! === module MOM_diabatic_driver ===
 ! The following parameters are used for diabatic processes.
@@ -1695,7 +1706,7 @@ ML_RADIATION = False            !   [Boolean] default = False
                                 ! If true, allow a fraction of TKE available from wind work to penetrate below
                                 ! the base of the mixed layer with a vertical decay scale determined by the
                                 ! minimum of: (1) The depth of the mixed layer, (2) an Ekman length scale.
-BBL_EFFIC = 0.2                 !   [nondim] default = 0.2
+BBL_EFFIC = 0.01                !   [nondim] default = 0.2
                                 ! The efficiency with which the energy extracted by bottom drag drives BBL
                                 ! diffusion.  This is only used if BOTTOMDRAGLAW is true.
 BBL_MIXING_MAX_DECAY = 200.0    !   [m] default = 200.0
@@ -1781,13 +1792,17 @@ RINO_CRIT = 0.25                !   [nondim] default = 0.25
 SHEARMIX_RATE = 0.089           !   [nondim] default = 0.089
                                 ! A nondimensional rate scale for shear-driven entrainment. Jackson et al find
                                 ! values in the range of 0.085-0.089.
-MAX_RINO_IT = 25                ! default = 50
+MAX_RINO_IT = 25                !   [nondim] default = 50
                                 ! The maximum number of iterations that may be used to estimate the Richardson
                                 ! number driven mixing.
 KD_KAPPA_SHEAR_0 = 1.0E-05      !   [m2 s-1] default = 1.0E-05
                                 ! The background diffusivity that is used to smooth the density and shear
                                 ! profiles before solving for the diffusivities.  The default is the greater of
                                 ! KD and 1e-7 m2 s-1.
+KD_SEED_KAPPA_SHEAR = 1.0       !   [m2 s-1] default = 1.0
+                                ! A moderately large seed value of diapycnal diffusivity that is used as a
+                                ! starting turbulent diffusivity in the iterations to find an energetically
+                                ! constrained solution for the shear-driven diffusivity.
 KD_TRUNC_KAPPA_SHEAR = 1.0E-07  !   [m2 s-1] default = 1.0E-07
                                 ! The value of shear-driven diffusivity that is considered negligible and is
                                 ! rounded down to 0. The default is 1% of KD_KAPPA_SHEAR_0.
@@ -1862,6 +1877,9 @@ RECLAIM_FRAZIL = True           !   [Boolean] default = True
                                 ! If true, try to use any frazil heat deficit to cool any overlying layers down
                                 ! to the freezing point, thereby avoiding the creation of thin ice when the SST
                                 ! is above the freezing point.
+SALT_EXTRACTION_LIMIT = 0.9999  !   [nondim] default = 0.9999
+                                ! An upper limit on the fraction of the salt in a layer that can be lost to the
+                                ! net surface salt fluxes within a timestep.
 PRESSURE_DEPENDENT_FRAZIL = True !   [Boolean] default = False
                                 ! If true, use a pressure dependent freezing temperature when making frazil. The
                                 ! default is false, which will be faster but is inappropriate with ice-shelf
@@ -2265,9 +2283,42 @@ ALLOW_FLUX_ADJUSTMENTS = False  !   [Boolean] default = False
 ! === module MOM_restart ===
 USE_WAVES = False               !   [Boolean] default = False
                                 ! If true, enables surface wave modules.
+WAVE_INTERFACE_ANSWER_DATE = 20221231 ! default = 20221231
+                                ! The vintage of the order of arithmetic and expressions in the surface wave
+                                ! calculations.  Values below 20230101 recover the answers from the end of 2022,
+                                ! while higher values use updated and more robust forms of the same expressions:
+                                !    <  20230101 - Original answers for wave interface routines
+                                !    >= 20230101 - More robust expressions for Update_Stokes_Drift
+                                !    >= 20230102 - More robust expressions for get_StokesSL_LiFoxKemper
+                                !    >= 20230103 - More robust expressions for ust_2_u10_coare3p5
 LA_DEPTH_RATIO = 0.04           !   [nondim] default = 0.04
                                 ! The depth (normalized by BLD) to average Stokes drift over in Langmuir number
                                 ! calculation, where La = sqrt(ust/Stokes).
+LA_DEPTH_MIN = 0.1              !   [m] default = 0.1
+                                ! The minimum depth over which to average the Stokes drift in the Langmuir
+                                ! number calculation.
+VISCOSITY_AIR = 1.0E-06         !   [m2 s-1] default = 1.0E-06
+                                ! A typical viscosity of air at sea level, as used in wave calculations
+VON_KARMAN_WAVES = 0.4          !   [nondim] default = 0.4
+                                ! The value the von Karman constant as used for surface wave calculations.
+RHO_AIR = 1.225                 !   [kg m-3] default = 1.225
+                                ! A typical density of air at sea level, as used in wave calculations
+WAVE_HEIGHT_SCALE_FACTOR = 0.0246 !   [s2 m-1] default = 0.0246
+                                ! A factor relating the square of the 10 m wind speed to the significant wave
+                                ! height, with a default value based on the Pierson-Moskowitz spectrum.
+CHARNOCK_MIN = 0.028            !   [nondim] default = 0.028
+                                ! The minimum value of the Charnock coefficient, which relates the square of the
+                                ! air friction velocity divided by the gravitational acceleration to the wave
+                                ! roughness length.
+CHARNOCK_SLOPE_U10 = 0.0017     !   [s m-1] default = 0.0017
+                                ! The partial derivative of the Charnock coefficient with the 10 m wind speed.
+                                ! Note that in eq. 13 of the Edson et al. 2013 describing the COARE 3.5 bulk
+                                ! flux algorithm, this slope is given as 0.017.  However, 0.0017 reproduces the
+                                ! curve in their figure 6, so that is the default value used in MOM6.
+CHARNOCK_0_WIND_INTERCEPT = -0.005 !   [nondim] default = -0.005
+                                ! The intercept of the fit for the Charnock coefficient in the limit of no wind.
+                                ! Note that this can be negative because CHARNOCK_MIN will keep the final value
+                                ! for the Charnock coefficient from being from being negative.
 
 ! === module MOM_file_parser ===
 SEND_LOG_TO_STDOUT = False      !   [Boolean] default = False

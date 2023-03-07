@@ -1,20 +1,19 @@
-"ATM" , "p_surf"        , "Pair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Pair_2018.nc"     , "bilinear" ,  1.0
-"ATM" , "p_bot"         , "Pair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Pair_2018.nc"     , "bilinear" ,  1.0
-"ATM" , "t_bot"         , "Tair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Tair_2018.nc"              , "bilinear" ,  1.0
-"ATM" , "sphum_bot"     , "Qair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Qair_2018.nc"        , "bilinear" ,  1.0
-"ATM" , "u_bot"         , "Uwind"       , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Uwind_2018.nc"     , "bicubic",   1.0
-"ATM" , "v_bot"         , "Vwind"       , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Vwind_2018.nc"     , "bicubic",   1.0
+"ATM" , "p_surf"        , "Pair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Pair_1997.nc"     , "bilinear" ,  1.0
+"ATM" , "p_bot"         , "Pair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Pair_1997.nc"     , "bilinear" ,  1.0
+"ATM" , "t_bot"         , "Tair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Tair_1997.nc"              , "bilinear" ,  1.0
+"ATM" , "sphum_bot"     , "Qair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Qair_1997.nc"        , "bilinear" ,  1.0
+"ATM" , "u_bot"         , "Uwind"       , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Uwind_1997.nc"     , "bicubic",   1.0
+"ATM" , "v_bot"         , "Vwind"       , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Vwind_1997.nc"     , "bicubic",   1.0
 "ATM" , "z_bot"         , ""            , ""                             , "bilinear" , 10.0
 "ATM" , "gust"          , ""            , ""                             , "bilinear" ,  1.0e-4
-"ICE" , "runoff"        , "runoff"      , "./INPUT/runoff/glofas_runoff_2018.nc"     , "none",   1.0
-#"OCN" , "runoff_hflx"   , "runoff_hflx" , "./INPUT/runoff_file.nc"     , "none",   1.0
-"ICE" , "lw_flux_dn"    , "lwrad_down"  , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_lwrad_down_2018.nc"   , "bilinear" ,  1.0
-"ICE" , "sw_flux_vis_dir_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_2018.nc"        , "bilinear" ,  0.285
-"ICE" , "sw_flux_vis_dif_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_2018.nc"        , "bilinear" ,  0.285
-"ICE" , "sw_flux_nir_dir_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_2018.nc"        , "bilinear" ,  0.215
-"ICE" , "sw_flux_nir_dif_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_2018.nc"        , "bilinear" ,  0.215
-"ICE" , "lprec"         , "rain"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_rain_2018.nc"         , "bilinear" ,  1.0
-"ICE" , "fprec"         , "snow"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_snow_2018.nc"         , "bilinear" ,  1.0
+"ICE" , "runoff"        , "runoff"      , "./INPUT/runoff/glofas_hill_1997.nc"     , "none",   1.0
+"ICE" , "lw_flux_dn"    , "lwrad_down"  , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_lwrad_down_1997.nc"   , "bilinear" ,  1.0
+"ICE" , "sw_flux_vis_dir_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_1997.nc"        , "bilinear" ,  0.285
+"ICE" , "sw_flux_vis_dif_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_1997.nc"        , "bilinear" ,  0.285
+"ICE" , "sw_flux_nir_dir_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_1997.nc"        , "bilinear" ,  0.215
+"ICE" , "sw_flux_nir_dif_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_1997.nc"        , "bilinear" ,  0.215
+"ICE" , "lprec"         , "rain"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_rain_1997.nc"         , "bilinear" ,  1.0
+"ICE" , "fprec"         , "snow"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_snow_1997.nc"         , "bilinear" ,  1.0
 "ICE" , "calving"       , ""            , ""                             , "none"  ,  0.0
 "ICE" , "dhdt"          , ""            , ""                             , "none"  , 80.0
 "ICE" , "dedt"          , ""            , ""                             , "none"  ,  2.0e-6
