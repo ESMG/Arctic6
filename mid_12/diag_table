@@ -2,13 +2,13 @@ Arctic 50 vertical levels
 1900 1 1 0 0 0
 #"ocean_secs",           100, "seconds",  1, "hours", "time"
 "ocean_hourly",              1, "hours",   1, "hours", "time"
-"ocean_daily",               5, "days",   1, "hours", "time"
+"ocean_daily",               1, "days",   1, "hours", "time"
 "ice_daily",                 1, "days",   1, "hours", "time"
-"ocean_daily_uv",            5, "days",   1, "hours", "time"
-"ocean_daily_ts",            5, "days",   1, "hours", "time"
+"ocean_daily_uv",            1, "days",   1, "hours", "time"
+"ocean_daily_ts",            1, "days",   1, "hours", "time"
 "ocean_model_z",             1, "days",   1, "hours", "time"
 "ocean_monthly",             1, "months", 1, "hours", "time"
-#"ocean_Bering_Strait",       1, "hours",  1, "days", "time"
+#"ocean_Bering_Strait",       1, "hours",   1, "days", "time"
 #"ocean_Fram_Strait",         1, "hours",   1, "days", "time"
 #"ocean_Beaufort",            1, "hours",   1, "days", "time"
 #"ocean_Anadyr",              1, "hours",   1, "days", "time"
@@ -133,6 +133,7 @@ Arctic 50 vertical levels
 "ocean_model", "so",           "so",                "ocean_daily_ts", "all", "mean", "none",2
 "ocean_model", "uo",           "uo",                "ocean_daily_uv", "all", "mean", "none",2
 "ocean_model", "vo",           "vo",                "ocean_daily_uv", "all", "mean", "none",2
+"ocean_model", "dzRegrid",     "wo",                "ocean_daily_uv", "all", "mean", "none",2
 "ocean_model", "ubt",          "ubt",               "ocean_daily_uv", "all", "mean", "none",2
 "ocean_model", "vbt",          "vbt",               "ocean_daily_uv", "all", "mean", "none",2
 "ocean_model", "RV",           "RV",                "ocean_daily", "all", "mean", "none",2
@@ -148,7 +149,6 @@ Arctic 50 vertical levels
 "ocean_model",  "tauy",       "tauy",              "ocean_daily", "all", "mean", "none",2
 "ocean_model",  "ustar",      "ustar",             "ocean_daily", "all", "mean", "none",2  # friction vel
 "ocean_model",  "dzRegrid",   "dzRegrid",          "ocean_daily", "all", "mean", "none",2
-"ocean_model",  "vert_remap_h_tendency",   "vert_remap_h_tendency",   "ocean_daily", "all", "mean", "none",2
 #"ocean_model",  "Kd_interface",  "Kd_interface",  "ocean_daily", "all", "mean", "none",2  # friction vel
 "ice_model",  "siconc",   "aice",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "UI",       "uice",      "ice_daily", "all", "mean", "none",2
@@ -184,8 +184,10 @@ Arctic 50 vertical levels
 "ocean_model", "sob",          "sob",          "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "uo",           "uo",           "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "vo",           "vo",           "ocean_monthly", "all", "mean", "none",2
+"ocean_model", "dzRegrid",     "wo",           "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "e",            "e",            "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "MLD_003",      "MLD",          "ocean_monthly", "all", "mean", "none",2
+"ocean_model", "rhopot2",      "rhopot2",      "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "ePBL_h_ML",    "ePBL_h_ML",    "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "net_heat_surface",    "net_heat_surface",    "ocean_monthly", "all", "mean", "none",2
 "ice_model",  "siconc",        "aice",         "ocean_monthly", "all", "mean", "none",2

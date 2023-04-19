@@ -46,7 +46,7 @@ USE_TRIPOLAR_GEOLONB_BUG = False !   [Boolean] default = True
 !MAXIMUM_DEPTH = 7914.32421875  !   [m]
 MAXIMUM_DEPTH = 6500.0          !   [m]
                                 ! The maximum depth of the ocean.
-MINIMUM_DEPTH = 4.0             !   [m] default = 0.0
+MINIMUM_DEPTH = 5.0             !   [m] default = 0.0
                                 ! The (diagnosed) maximum depth of the ocean.
 MASKING_DEPTH = 1.0             !   [m] default = -9999.0
 OMEGA = 7.292E-05               !   [s-1] default = 7.2921E-05

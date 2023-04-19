@@ -46,6 +46,11 @@ WRITE_GEOM = 1                  ! default = 1
                                 ! If =0, never write the geometry and vertical grid files. If =1, write the
                                 ! geometry and vertical grid files only for a new simulation. If =2, always
                                 ! write the geometry and vertical grid files. Other values are invalid.
+REMAP_AUXILIARY_VARS = True     !   [Boolean] default = False
+                                ! If true, apply ALE remapping to all of the auxiliary 3-dimensional variables
+                                ! that are needed to reproduce across restarts, similarly to what is already
+                                ! being done with the primary state variables.  The default should be changed to
+                                ! true.
 
 ! === module MOM_domains ===
 REENTRANT_X = False             !   [Boolean] default = True
@@ -101,7 +106,7 @@ TOPO_CONFIG = "file"            !
                                 !     USER - call a user modified routine.
 TOPO_FILE = "ocean_topog.nc"    ! default = "topog.nc"
                                 ! The file from which the bathymetry is read.
-MINIMUM_DEPTH = 4.0             !   [m] default = 0.0
+MINIMUM_DEPTH = 5.0             !   [m] default = 0.0
                                 ! If MASKING_DEPTH is unspecified, then anything shallower than MINIMUM_DEPTH is
                                 ! assumed to be land and all fluxes are masked out. If MASKING_DEPTH is
                                 ! specified, then all depths shallower than MINIMUM_DEPTH but deeper than
@@ -189,6 +194,11 @@ NK = 75                         !   [nondim]
                                 ! The number of model layers.
 
 ! === module MOM_EOS ===
+EQN_OF_STATE = "WRIGHT_FULL"
+                                ! EQN_OF_STATE determines which ocean equation of state should be used.
+                                ! Currently, the valid choices are "LINEAR", "UNESCO", "JACKETT_MCD", "WRIGHT",
+                                ! "WRIGHT_RED", "WRIGHT_FULL", "NEMO", "ROQUET_RHO", "ROQUET_SPV" and "TEOS10".
+                                ! This is only used if USE_EOS is true.
 DTFREEZE_DP = -7.75E-08         !   [deg C Pa-1] default = 0.0
                                 ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
                                 ! temperature with pressure.
@@ -420,7 +430,7 @@ BBL_THICK_MIN = 0.1             !   [m] default = 0.0
                                 ! The minimum bottom boundary layer thickness that can be used with
                                 ! BOTTOMDRAGLAW. This might be Kv/(cdrag*drag_bg_vel) to give Kv as the minimum
                                 ! near-bottom viscosity.
-KV = 1.0E-06                    !   [m2 s-1]
+KV = 1.0E-05                    !   [m2 s-1]
                                 ! The background kinematic viscosity in the interior. The molecular value, ~1e-6
                                 ! m2 s-1, may be used.
 
@@ -519,7 +529,7 @@ MASS_WEIGHT_IN_PRESSURE_GRADIENT = True !   [Boolean] default = False
                                 ! bathymetry in FV pressure gradient calculations.
 
 ! === module MOM_hor_visc ===
-!AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
+AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
                                 ! The velocity scale which is multiplied by the cube of the grid spacing to
                                 ! calculate the biharmonic viscosity. The final viscosity is the largest of this
                                 ! scaled viscosity, the Smagorinsky and Leith viscosities, and AH.
@@ -539,12 +549,6 @@ BIHARMONIC = True               !   [Boolean] default = True
                                 ! BIHARMONIC may be used with LAPLACIAN.
 AH = 0.0                        !   [m4 s-1] default = 0.0
                                 ! The background biharmonic horizontal viscosity.
-AH_VEL_SCALE = 0.0              !   [m s-1] default = 0.0;  HYCOM: veldf4=0.02
-                                ! The velocity scale which is multiplied by the cube of
-                                ! the grid spacing to calculate the biharmonic viscosity.
-                                ! The final viscosity is the largest of this scaled
-                                ! viscosity, the Smagorinsky and Leith viscosities, and AH.
-                                ! THIS IS WHERE WE WILL NEED TO KEEP AN EYE ON THINGS (11/30/2021)
 !VISC_RES_FN_POWER = 100
 !KH_RES_FN_POWER = 100
 USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = False
@@ -622,7 +626,7 @@ FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
                                 ! energy to the large-scale geostrophic kinetic energy or 1 plus the square of
                                 ! the grid spacing over the deformation radius, as detailed by Fox-Kemper et al.
                                 ! (2010)
-MLE_FRONT_LENGTH = 6000.0       !   [m] default = 0.0
+MLE_FRONT_LENGTH = 200.0        !   [m] default = 0.0
                                 ! If non-zero, is the frontal-length scale used to calculate the upscaling of
                                 ! buoyancy gradients that is otherwise represented by the parameter
                                 ! FOX_KEMPER_ML_RESTRAT_COEF. If MLE_FRONT_LENGTH is non-zero, it is recommended
@@ -636,6 +640,7 @@ MLE_MLD_DECAY_TIME = 2.592E+06  !   [s] default = 0.0
                                 ! in the MLE restratification parameterization. When the MLD deepens below the
                                 ! current running-mean the running-mean is instantaneously set to the current
                                 ! MLD.
+
 ! === module MOM_diagnostics ===
 
 ! === module MOM_diabatic_driver ===
@@ -682,6 +687,9 @@ BBL_MIXING_AS_MAX = False       !   [Boolean] default = True
                                 ! If true, uses a simple estimate of Kd/TKE that will work for arbitrary
                                 ! vertical coordinates. If false, calculates Kd/TKE and bounds based on exact
                                 ! energetics for an isopycnal layer-formulation.
+BBL_EFFIC = 0.01                !   [nondim] default = 0.2
+                                ! The efficiency with which the energy extracted by bottom drag drives BBL
+                                ! diffusion.  This is only used if BOTTOMDRAGLAW is true.
 
 ! === module MOM_bkgnd_mixing ===
 ! Adding static vertical background mixing coefficients
@@ -831,7 +839,7 @@ MAXTRUNC = 100000               !   [truncations save_interval-1] default = 0
                                 ! The run will be stopped, and the day set to a very large value if the velocity
                                 ! is truncated more than MAXTRUNC times between energy saves.  Set MAXTRUNC to 0
                                 ! to stop if there is any truncation of velocities.
-!ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
+ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
                                 ! The interval in units of TIMEUNIT between saves of the energies of the run and
                                 ! other globally summed diagnostics.
 

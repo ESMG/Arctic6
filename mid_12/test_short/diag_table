@@ -31,18 +31,19 @@ Arctic 50 vertical levels
 "ocean_model", "vbt",          "vbt",              "ocean_hourly", "all", .false., "none",2
 #"ocean_model", "uo",           "uo",               "ocean_hourly", "all", .false., "none",2
 #"ocean_model", "vo",           "vo",               "ocean_hourly", "all", .false., "none",2
-"ice_model",   "siconc",       "aice",             "ocean_hourly", "all", .false., "none",2
-"ice_model",   "hi",           "hice",             "ocean_hourly", "all", .false., "none",2
-"ice_model",   "UI",           "uice",             "ocean_hourly", "all", .false., "none",2
-"ice_model",   "VI",           "vice",             "ocean_hourly", "all", .false., "none",2
+#"ice_model",   "siconc",       "aice",             "ocean_hourly", "all", .false., "none",2
+#"ice_model",   "hi",           "hice",             "ocean_hourly", "all", .false., "none",2
+#"ice_model",   "UI",           "uice",             "ocean_hourly", "all", .false., "none",2
+#"ice_model",   "VI",           "vice",             "ocean_hourly", "all", .false., "none",2
 #"ice_model",  "SWDN",       "swdn",      "ocean_hourly", "all", ".false.", "none",2
 
 ## Bering Strait (east-west section)
-#"ocean_model_z", "volcello", "volcello", "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
-#"ocean_model_z", "thetao","thetao",      "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
-#"ocean_model_z", "so",   "so",           "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
-#"ocean_model_z", "vmo",  "vmo",          "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
-#"ocean_model_z", "vo",   "vo",           "ocean_Bering_Strait",    "all", "mean", "643 663  371 371 -1 -1",2
+#"ocean_model_z", "volcello", "volcello", "ocean_Bering_Strait",    "all", "mean", "321 332  185 185 -1 -1",2
+#"ocean_model_z", "thetao",   "thetao",   "ocean_Bering_Strait",    "all", "mean", "321 332  185 185 -1 -1",2
+#"ocean_model_z", "so",      "so",        "ocean_Bering_Strait",    "all", "mean", "321 332  185 185 -1 -1",2
+#"ocean_model_z", "vmo",     "vmo",       "ocean_Bering_Strait",    "all", "mean", "321 332  185 185 -1 -1",2
+#"ocean_model_z", "vo",      "vo",        "ocean_Bering_Strait",    "all", "mean", "321 332  185 185 -1 -1",2
+#"ocean_model_z", "e",       "e",         "ocean_Bering_Strait",    "all", "mean", "321 332  185 185 -1 -1",2
 #
 ## Fram Strait east-west section for flow moving north/south
 #"ocean_model_z", "volcello", "volcello", "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
@@ -126,11 +127,13 @@ Arctic 50 vertical levels
 #"ocean_model", "SSV",          "ssv",              "ocean_daily", "all", "mean", "none",2
 "ocean_model", "SST",          "sst",              "ocean_daily", "all", "mean", "none",2
 #"ocean_model", "SSS",          "sss",              "ocean_daily", "all", "mean", "none",2
-"ocean_model", "SSH",          "ssh",               "ocean_daily_uv", "all", "mean", "none",2
+"ocean_model", "SSH",          "ssh",               "ocean_daily", "all", "mean", "none",2
+"ocean_model", "MLD_003",      "MLD",               "ocean_daily", "all", "mean", "none",2
 "ocean_model", "thetao",       "thetao",            "ocean_daily_ts", "all", "mean", "none",2
 "ocean_model", "so",           "so",                "ocean_daily_ts", "all", "mean", "none",2
 "ocean_model", "uo",           "uo",                "ocean_daily_uv", "all", "mean", "none",2
 "ocean_model", "vo",           "vo",                "ocean_daily_uv", "all", "mean", "none",2
+"ocean_model", "dzRegrid",     "wo",                "ocean_daily_uv", "all", "mean", "none",2
 "ocean_model", "ubt",          "ubt",               "ocean_daily_uv", "all", "mean", "none",2
 "ocean_model", "vbt",          "vbt",               "ocean_daily_uv", "all", "mean", "none",2
 "ocean_model", "RV",           "RV",                "ocean_daily", "all", "mean", "none",2
@@ -146,7 +149,6 @@ Arctic 50 vertical levels
 "ocean_model",  "tauy",       "tauy",              "ocean_daily", "all", "mean", "none",2
 "ocean_model",  "ustar",      "ustar",             "ocean_daily", "all", "mean", "none",2  # friction vel
 "ocean_model",  "dzRegrid",   "dzRegrid",          "ocean_daily", "all", "mean", "none",2
-"ocean_model",  "vert_remap_h_tendency",   "vert_remap_h_tendency",   "ocean_daily", "all", "mean", "none",2
 #"ocean_model",  "Kd_interface",  "Kd_interface",  "ocean_daily", "all", "mean", "none",2  # friction vel
 "ice_model",  "siconc",   "aice",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "UI",       "uice",      "ice_daily", "all", "mean", "none",2
@@ -182,7 +184,9 @@ Arctic 50 vertical levels
 "ocean_model", "sob",          "sob",          "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "uo",           "uo",           "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "vo",           "vo",           "ocean_monthly", "all", "mean", "none",2
+"ocean_model", "dzRegrid",     "wo",           "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "e",            "e",            "ocean_monthly", "all", "mean", "none",2
+"ocean_model", "MLD_003",      "MLD",          "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "ePBL_h_ML",    "ePBL_h_ML",    "ocean_monthly", "all", "mean", "none",2
 "ocean_model", "net_heat_surface",    "net_heat_surface",    "ocean_monthly", "all", "mean", "none",2
 "ice_model",  "siconc",        "aice",         "ocean_monthly", "all", "mean", "none",2

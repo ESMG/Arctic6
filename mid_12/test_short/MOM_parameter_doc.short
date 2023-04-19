@@ -4,6 +4,11 @@
 USE_REGRIDDING = True           !   [Boolean] default = False
                                 ! If True, use the ALE algorithm (regridding/remapping). If False, use the
                                 ! layered isopycnal algorithm.
+REMAP_AUXILIARY_VARS = True     !   [Boolean] default = False
+                                ! If true, apply ALE remapping to all of the auxiliary 3-dimensional variables
+                                ! that are needed to reproduce across restarts, similarly to what is already
+                                ! being done with the primary state variables.  The default should be changed to
+                                ! true.
 DT = 600.0                      !   [s]
                                 ! The (baroclinic) dynamics time step.  The time-step that is actually used will
                                 ! be an integer fraction of the forcing time-step (DT_FORCING in ocean-only mode
@@ -93,7 +98,7 @@ TOPO_CONFIG = "file"            !
                                 !     USER - call a user modified routine.
 TOPO_FILE = "ocean_topog.nc"    ! default = "topog.nc"
                                 ! The file from which the bathymetry is read.
-MINIMUM_DEPTH = 4.0             !   [m] default = 0.0
+MINIMUM_DEPTH = 5.0             !   [m] default = 0.0
                                 ! If MASKING_DEPTH is unspecified, then anything shallower than MINIMUM_DEPTH is
                                 ! assumed to be land and all fluxes are masked out. If MASKING_DEPTH is
                                 ! specified, then all depths shallower than MINIMUM_DEPTH but deeper than
@@ -181,6 +186,11 @@ NK = 75                         !   [nondim]
                                 ! The number of model layers.
 
 ! === module MOM_EOS ===
+EQN_OF_STATE = "WRIGHT_FULL"    ! default = "WRIGHT"
+                                ! EQN_OF_STATE determines which ocean equation of state should be used.
+                                ! Currently, the valid choices are "LINEAR", "UNESCO", "JACKETT_MCD", "WRIGHT",
+                                ! "WRIGHT_RED", "WRIGHT_FULL", "NEMO", "ROQUET_RHO", "ROQUET_SPV" and "TEOS10".
+                                ! This is only used if USE_EOS is true.
 DTFREEZE_DP = -7.75E-08         !   [deg C Pa-1] default = 0.0
                                 ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
                                 ! temperature with pressure.
@@ -383,7 +393,7 @@ BBL_THICK_MIN = 0.1             !   [m] default = 0.0
                                 ! The minimum bottom boundary layer thickness that can be used with
                                 ! BOTTOMDRAGLAW. This might be Kv/(cdrag*drag_bg_vel) to give Kv as the minimum
                                 ! near-bottom viscosity.
-KV = 1.0E-06                    !   [m2 s-1]
+KV = 1.0E-05                    !   [m2 s-1]
                                 ! The background kinematic viscosity in the interior. The molecular value, ~1e-6
                                 ! m2 s-1, may be used.
 
@@ -470,6 +480,10 @@ MASS_WEIGHT_IN_PRESSURE_GRADIENT = True !   [Boolean] default = False
                                 ! bathymetry in FV pressure gradient calculations.
 
 ! === module MOM_hor_visc ===
+AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
+                                ! The velocity scale which is multiplied by the cube of the grid spacing to
+                                ! calculate the biharmonic viscosity. The final viscosity is the largest of this
+                                ! scaled viscosity, the Smagorinsky and Leith viscosities, and AH.
 SMAGORINSKY_AH = True           !   [Boolean] default = False
                                 ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
 SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
@@ -540,7 +554,7 @@ FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
                                 ! energy to the large-scale geostrophic kinetic energy or 1 plus the square of
                                 ! the grid spacing over the deformation radius, as detailed by Fox-Kemper et al.
                                 ! (2010)
-MLE_FRONT_LENGTH = 6000.0       !   [m] default = 0.0
+MLE_FRONT_LENGTH = 200.0        !   [m] default = 0.0
                                 ! If non-zero, is the frontal-length scale used to calculate the upscaling of
                                 ! buoyancy gradients that is otherwise represented by the parameter
                                 ! FOX_KEMPER_ML_RESTRAT_COEF. If MLE_FRONT_LENGTH is non-zero, it is recommended
@@ -589,6 +603,9 @@ INT_TIDE_DECAY_SCALE = 300.0    !   [m] default = 500.0
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with INT_TIDE_DISSIPATION.
+BBL_EFFIC = 0.01                !   [nondim] default = 0.2
+                                ! The efficiency with which the energy extracted by bottom drag drives BBL
+                                ! diffusion.  This is only used if BOTTOMDRAGLAW is true.
 BBL_MIXING_AS_MAX = False       !   [Boolean] default = True
                                 ! If true, take the maximum of the diffusivity from the BBL mixing and the other
                                 ! diffusivities. Otherwise, diffusivity from the BBL_mixing is simply added.

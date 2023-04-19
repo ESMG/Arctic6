@@ -33,7 +33,7 @@ GRID_FILE = "ocean_hgrid.nc"    !
                                 ! Name of the file from which to read horizontal grid data.
 TOPO_FILE = "ocean_topog.nc"    ! default = "topog.nc"
                                 ! The file from which the bathymetry is read.
-MINIMUM_DEPTH = 4.0             !   [m] default = 0.0
+MINIMUM_DEPTH = 5.0             !   [m] default = 0.0
                                 ! If MASKING_DEPTH is unspecified, then anything shallower than MINIMUM_DEPTH is
                                 ! assumed to be land and all fluxes are masked out. If MASKING_DEPTH is
                                 ! specified, then all depths shallower than MINIMUM_DEPTH but deeper than
