@@ -10,6 +10,7 @@ Arctic 50 vertical levels
 "ocean_monthly",             1, "months", 1, "hours", "time"
 #"ocean_Bering_Strait",       1, "hours",   1, "days", "time"
 #"ocean_Fram_Strait",         1, "hours",   1, "days", "time"
+"ocean_Denmark_Strait",      1, "hours",   1, "days", "time"
 #"ocean_Beaufort",            1, "hours",   1, "days", "time"
 #"ocean_Anadyr",              1, "hours",   1, "days", "time"
 #"ocean_CEO",                 1, "hours",   1, "days", "time"
@@ -52,6 +53,13 @@ Arctic 50 vertical levels
 #"ocean_model_z", "vmo",  "vmo",          "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
 #"ocean_model_z", "vo",   "vo",           "ocean_Fram_Strait",  "all", "mean", "310 396  939 939 -1 -1",2
 #
+# Denmark Strait north-south section for flow moving east/west
+"ocean_model_z", "volcello", "volcello", "ocean_Denmark_Strait",  "all", "mean", "152.5636 158.4791  78.61382 78.61382 -1 -1",2
+"ocean_model_z", "thetao","thetao",      "ocean_Denmark_Strait",  "all", "mean", "152.5636 158.4791  78.61382 78.61382 -1 -1",2
+"ocean_model_z", "so",   "so",           "ocean_Denmark_Strait",  "all", "mean", "152.5636 158.4791  78.61382 78.61382 -1 -1",2
+"ocean_model_z", "umo",  "umo",          "ocean_Denmark_Strait",  "all", "mean", "152.5636 158.4791  78.61382 78.61382 -1 -1",2
+"ocean_model_z", "uo",   "uo",           "ocean_Denmark_Strait",  "all", "mean", "152.5636 158.4791  78.61382 78.61382 -1 -1",2
+
 ## DBO6 moorings to the NE section for flow moving east/west
 #"ocean_model_z", "volcello", "volcello", "ocean_Beaufort",  "all", "mean", "685 685  521 559 -1 -1",2
 #"ocean_model_z", "thetao","thetao",      "ocean_Beaufort",  "all", "mean", "685 685  521 559 -1 -1",2
