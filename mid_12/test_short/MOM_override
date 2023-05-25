@@ -4,4 +4,4 @@ DEBUG_BT = False
 !#override LINEARIZED_BT_CORIOLIS = False
 #override ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
 #override RESTART_CHECKSUMS_REQUIRED = False
-!DO_BRINE_PLUME = True
+DO_BRINE_PLUME = True

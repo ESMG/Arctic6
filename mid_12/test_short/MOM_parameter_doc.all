@@ -1946,8 +1946,13 @@ USE_RIVER_HEAT_CONTENT = False  !   [Boolean] default = False
 USE_CALVING_HEAT_CONTENT = False !   [Boolean] default = False
                                 ! If true, use the fluxes%calving_Hflx field to set the heat carried by runoff,
                                 ! instead of using SST*CP*froz_runoff.
-DO_BRINE_PLUME = False          !   [Boolean] default = False
+DO_BRINE_PLUME = True           !   [Boolean] default = False
                                 ! If true, use a brine plume parameterization from Nguyen et al., 2009.
+BRINE_PLUME_DELTA_RHO = 0.003   ! default = 0.003
+                                ! If using the brine plume marameterization, set the density difference defining
+                                ! the mixed layer depth.
+BRINE_PLUME_EXPONENT = 5        ! default = 5
+                                ! If using the brine plume parameterization, set the integer exponent.
 VAR_PEN_SW = True               !   [Boolean] default = False
                                 ! If true, use one of the CHL_A schemes specified by OPACITY_SCHEME to determine
                                 ! the e-folding depth of incoming short wave radiation.
