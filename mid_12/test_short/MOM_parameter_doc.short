@@ -621,8 +621,6 @@ DO_RIVERMIX = True              !   [Boolean] default = False
                                 ! down to RIVERMIX_DEPTH if the ocean is that deep.
 RIVERMIX_DEPTH = 10.0           !   [m] default = 0.0
                                 ! The depth to which rivers are mixed if DO_RIVERMIX is defined.
-DO_BRINE_PLUME = True           !   [Boolean] default = False
-                                ! If true, use a brine plume parameterization from Nguyen et al., 2009.
 VAR_PEN_SW = True               !   [Boolean] default = False
                                 ! If true, use one of the CHL_A schemes specified by OPACITY_SCHEME to determine
                                 ! the e-folding depth of incoming short wave radiation.
