@@ -88,7 +88,7 @@ REDO_FAST_ICE_UPDATE = False    !   [Boolean] default = False
                                 ! If true, recalculate the thermal updates from the fast dynamics on the slowly
                                 ! evolving ice state, rather than copying over the slow ice state to the fast
                                 ! ice state.
-READ_HLIM_VALS = False          !   [Boolean] default = False
+READ_HLIM_VALS = True           !   [Boolean] default = False
                                 ! If true, read the lower limits on the ice thicknesscategories.
 NCAT_ICE = 10                   !   [nondim] default = 5
                                 ! The number of sea ice thickness categories.
@@ -101,6 +101,8 @@ MIN_OCEAN_PARTSIZE = 0.0        !   [nondim] default = 0.0
                                 ! some purposes it may be useful to set this to a miniscule value (like 1e-40)
                                 ! that will be lost to roundoff during any sums so that the open ocean fluxes
                                 ! can be used in with new categories.
+HLIM_VALS = "1.0e-10, 0.1, 0.3, 0.7, 1.1, 1.5, 2.0, 2.5, 3.5, 4.5" ! default = "1.0e-10, 0.1, 0.3, 0.7, 1.1, 1.5, 2.0, 2.5"
+                                ! This sets the list of lower limits on the ice thickness categories.
 
 ! === module MOM_domains ===
 REENTRANT_X = False             !   [Boolean] default = True
