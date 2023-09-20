@@ -395,8 +395,6 @@ TRANSMUTATION_RATE_RESCALE = 1.0 !   [nondim] default = 1.0
                                 ! units of [s-1].  If this factor is negative, the field that is being read is a
                                 ! timescale, so the rate is the Adcroft reciprocal of the field that is read
                                 ! times this scaling factor
-DO_BRINE_PLUME = False          !   [Boolean] default = False
-                                ! If true, split heat and salt fluxes to the ocean into brine plumes and other.
 
 ! === module SIS2_ice_thm (updates) ===
 ! This sub-module does updates of the sea-ice due to thermodynamic changes.
@@ -516,11 +514,6 @@ LEMIEUX_ALPHA_B = 20.0          !   [Nondim] default = 20.0
                                 ! The value of a third Lemieux landfast ice tuneable parameter.
 LEMIEUX_U0 = 5.0E-05            !   [m s-1] default = 5.0E-05
                                 ! Velocity for Lemieux landfast ice.
-H_ADJ_FILE = ""                 ! default = ""
-                                ! The path to the file containing an adjustment to the bottom depth for the
-                                ! landfast ice.
-ADJUST_DEPTH = False            !   [Boolean] default = False
-                                ! If true, read in a depth adjustment for landfast ice.
 BASAL_STRESS_MIN_THICK = 0.01   !   [m] default = 0.01
                                 ! Minimum ice thickness for grounding in ITD landfast ice.
 BASAL_STRESS_MAX_DEPTH = 50.0   !   [m] default = 50.0

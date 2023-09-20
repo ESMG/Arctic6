@@ -885,6 +885,13 @@ USE_STANLEY_ISO = False         !   [Boolean] default = False
 KD_SMOOTH = 1.0E-06             !   [m2 s-1] default = 1.0E-06
                                 ! A diapycnal diffusivity that is used to interpolate more sensible values of T
                                 ! & S into thin layers.
+INTERNAL_WAVE_SPEED_TOL = 0.001 !   [nondim] default = 0.001
+                                ! The fractional tolerance for finding the wave speeds.
+INTERNAL_WAVE_SPEED_MIN = 0.0   !   [m s-1] default = 0.0
+                                ! A floor in the first mode speed below which 0 used instead.
+INTERNAL_WAVE_SPEED_BETTER_EST = True !   [Boolean] default = True
+                                ! If true, use a more robust estimate of the first mode wave speed as the
+                                ! starting point for iterations.
 USE_QG_LEITH_GM = False         !   [Boolean] default = False
                                 ! If true, use the QG Leith viscosity as the GM coefficient.
 
@@ -1359,7 +1366,9 @@ VERT_FRICTION_ANSWER_DATE = 99991231 ! default = 99991231
                                 ! The vintage of the order of arithmetic and expressions in the viscous
                                 ! calculations.  Values below 20190101 recover the answers from the end of 2018,
                                 ! while higher values use expressions that do not use an arbitrary hard-coded
-                                ! maximum viscous coupling coefficient  between layers.  If both
+                                ! maximum viscous coupling coefficient between layers.  Values below 20230601
+                                ! recover a form of the viscosity within the mixed layer that breaks up the
+                                ! magnitude of the wind stress in some non-Boussinesq cases.  If both
                                 ! VERT_FRICTION_2018_ANSWERS and VERT_FRICTION_ANSWER_DATE are specified, the
                                 ! latter takes precedence.
 DIRECT_STRESS = True            !   [Boolean] default = False
@@ -1550,10 +1559,60 @@ BT_USE_OLD_CORIOLIS_BRACKET_BUG = False !   [Boolean] default = False
                                 ! in the meridional Coriolis term of the barotropic solver.
 
 ! === module MOM_mixed_layer_restrat ===
-MIXEDLAYER_RESTRAT = False      !   [Boolean] default = False
+MIXEDLAYER_RESTRAT = True       !   [Boolean] default = False
                                 ! If true, a density-gradient dependent re-stratifying flow is imposed in the
                                 ! mixed layer. Can be used in ALE mode without restriction but in layer mode can
                                 ! only be used if BULKMIXEDLAYER is true.
+MLE%
+USE_BODNER23 = False            !   [Boolean] default = False
+                                ! If true, use the Bodner et al., 2023, formulation of the re-stratifying
+                                ! mixed-layer restratification parameterization. This only works in ALE mode.
+%MLE
+FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
+                                ! A nondimensional coefficient that is proportional to the ratio of the
+                                ! deformation radius to the dominant lengthscale of the submesoscale mixed layer
+                                ! instabilities, times the minimum of the ratio of the mesoscale eddy kinetic
+                                ! energy to the large-scale geostrophic kinetic energy or 1 plus the square of
+                                ! the grid spacing over the deformation radius, as detailed by Fox-Kemper et al.
+                                ! (2010)
+USE_STANLEY_ML = False          !   [Boolean] default = False
+                                ! If true, turn on Stanley SGS T variance parameterization in ML restrat code.
+FOX_KEMPER_ML_RESTRAT_COEF2 = 0.0 !   [nondim] default = 0.0
+                                ! As for FOX_KEMPER_ML_RESTRAT_COEF but used in a second application of the MLE
+                                ! restratification parameterization.
+MLE_FRONT_LENGTH = 200.0        !   [m] default = 0.0
+                                ! If non-zero, is the frontal-length scale used to calculate the upscaling of
+                                ! buoyancy gradients that is otherwise represented by the parameter
+                                ! FOX_KEMPER_ML_RESTRAT_COEF. If MLE_FRONT_LENGTH is non-zero, it is recommended
+                                ! to set FOX_KEMPER_ML_RESTRAT_COEF=1.0.
+MLE_USE_PBL_MLD = True          !   [Boolean] default = False
+                                ! If true, the MLE parameterization will use the mixed-layer depth provided by
+                                ! the active PBL parameterization. If false, MLE will estimate a MLD based on a
+                                ! density difference with the surface using the parameter MLE_DENSITY_DIFF.
+MLE_MLD_DECAY_TIME = 2.592E+06  !   [s] default = 0.0
+                                ! The time-scale for a running-mean filter applied to the mixed-layer depth used
+                                ! in the MLE restratification parameterization. When the MLD deepens below the
+                                ! current running-mean the running-mean is instantaneously set to the current
+                                ! MLD.
+MLE_MLD_DECAY_TIME2 = 0.0       !   [s] default = 0.0
+                                ! The time-scale for a running-mean filter applied to the filtered mixed-layer
+                                ! depth used in a second MLE restratification parameterization. When the MLD
+                                ! deepens below the current running-mean the running-mean is instantaneously set
+                                ! to the current MLD.
+MLE_TAIL_DH = 0.0               !   [nondim] default = 0.0
+                                ! Fraction by which to extend the mixed-layer restratification depth used for a
+                                ! smoother stream function at the base of the mixed-layer.
+MLE_MLD_STRETCH = 1.0           !   [nondim] default = 1.0
+                                ! A scaling coefficient for stretching/shrinking the MLD used in the MLE scheme.
+                                ! This simply multiplies MLD wherever used.
+KV_RESTRAT = 0.0                !   [m2 s-1] default = 0.0
+                                ! A small viscosity that sets a floor on the momentum mixing rate during
+                                ! restratification.  If this is positive, it will prevent some possible
+                                ! divisions by zero even if ustar, RESTRAT_USTAR_MIN, and f are all 0.
+RESTRAT_USTAR_MIN = 1.45842E-18 !   [m s-1] default = 1.45842E-18
+                                ! The minimum value of ustar that will be used by the mixed layer
+                                ! restratification module.  This can be tiny, but if this is greater than 0, it
+                                ! will prevent divisions by zero when f and KV_RESTRAT are zero.
 
 ! === module MOM_diagnostics ===
 DIAG_EBT_MONO_N2_COLUMN_FRACTION = 0.0 !   [nondim] default = 0.0
@@ -1562,13 +1621,6 @@ DIAG_EBT_MONO_N2_COLUMN_FRACTION = 0.0 !   [nondim] default = 0.0
 DIAG_EBT_MONO_N2_DEPTH = -1.0   !   [m] default = -1.0
                                 ! The depth below which N2 is limited as monotonic for the purposes of
                                 ! calculating the equivalent barotropic wave speed.
-INTERNAL_WAVE_SPEED_TOL = 0.001 !   [nondim] default = 0.001
-                                ! The fractional tolerance for finding the wave speeds.
-INTERNAL_WAVE_SPEED_MIN = 0.0   !   [m s-1] default = 0.0
-                                ! A floor in the first mode speed below which 0 used instead.
-INTERNAL_WAVE_SPEED_BETTER_EST = True !   [Boolean] default = True
-                                ! If true, use a more robust estimate of the first mode wave speed as the
-                                ! starting point for iterations.
 
 ! === module MOM_diabatic_driver ===
 ! The following parameters are used for diabatic processes.
