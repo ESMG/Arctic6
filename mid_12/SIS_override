@@ -12,6 +12,8 @@
 #override NEW_RIDGE_REDISTRIBUTION = False
 !#override MERGED_CONTINUITY = True
 #override NCAT_ICE = 10
+!#override READ_HLIM_VALS = True
+!#override HLIM_VALS = "1.0e-10, 0.1, 0.3, 0.7, 1.1, 1.5, 2.0, 2.5, 3.5, 4.5"
 #override U_TRUNC_FILE = "U_sis_truncations"
 #override V_TRUNC_FILE = "V_sis_truncations"
 !#override DO_BRINE_PLUME = True
