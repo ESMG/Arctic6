@@ -17,11 +17,7 @@
 #override U_TRUNC_FILE = "U_sis_truncations"
 #override V_TRUNC_FILE = "V_sis_truncations"
 !#override DO_BRINE_PLUME = True
-BATHY_ROUGHNESS_MIN = 2.5       !   [m] default = 2.5
-                                ! Minimum bathymetric roughness.
-BATHY_ROUGHNESS_MAX = 2.5       !   [m] default = 2.5
-                                ! Maximum bathymetric roughness.
-BASAL_STRESS_NCAT_B = 100       ! default = 100
+BASAL_STRESS_NCAT_B = 10        ! default = 100
                                 ! Number of bathymetric depth categories in landfast ice computation.
 BASAL_STRESS_NCAT_I = 100       ! default = 100
                                 ! Number of ice thickness categories in landfast ice computation.
