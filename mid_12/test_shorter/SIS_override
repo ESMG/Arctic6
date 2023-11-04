@@ -8,7 +8,7 @@
 #override ICE_YIELD_ELLIPTICITY = 1.5
 #override ITD_LANDFAST = True
 #override ICE_STATS_INTERVAL = 0.0416666666666667 !   [days] default = 1.0
-DEBUG = True
+DEBUG = False
 #override NEW_RIDGE_PARTICIPATION = False
 #override NEW_RIDGE_REDISTRIBUTION = False
 !#override MERGED_CONTINUITY = True
