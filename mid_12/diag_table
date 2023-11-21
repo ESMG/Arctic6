@@ -21,18 +21,19 @@ Arctic 50 vertical levels
 ##"ocean_Cardigan",            1, "hours",   1, "days", "time"
 ##"ocean_Robeson",             1, "hours",   1, "days", "time"
 
-#"ocean_model", "SSH",          "ssh",              "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "ubt",          "ubt",              "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "vbt",          "vbt",              "ocean_hourly", "all", .false., "none",2
+"ocean_model", "SSH",          "ssh",              "ocean_hourly", "all", .false., "none",2
+"ocean_model", "ubt",          "ubt",              "ocean_hourly", "all", .false., "none",2
+"ocean_model", "vbt",          "vbt",              "ocean_hourly", "all", .false., "none",2
+"ocean_model", "thetao",       "temp",             "ocean_hourly", "all", .false., "none",2
 ##"ocean_model", "uo",           "uo",               "ocean_hourly", "all", .false., "none",2
 ##"ocean_model", "vo",           "vo",               "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "ustar",        "ustar",            "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "taux",         "taux",             "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "tauy",         "tauy",             "ocean_hourly", "all", .false., "none",2
+"ocean_model", "ustar",        "ustar",            "ocean_hourly", "all", .false., "none",2
+"ocean_model", "tau_mag",      "tau_mag",          "ocean_hourly", "all", .false., "none",2
+"ice_model",   "siconc",       "aice",             "ocean_hourly", "all", .false., "none",2
+"ice_model",   "itheta",       "itheta",           "ocean_hourly", "all", .false., "none",2
+"ice_model",   "del_sh",       "del_sh",           "ocean_hourly", "all", .false., "none",2
 #"ocean_model", "MLD_003",      "MLD",          "ocean_hourly", "all", .false., "none",2
 #"ocean_model", "ePBL_h_ML",    "ePBL_h_ML",    "ocean_hourly", "all", .false., "none",2
-#"ice_model",   "siconc",       "aice",             "ocean_hourly", "all", .false., "none",2
-#"ice_model",   "hi",           "hice",             "ocean_hourly", "all", .false., "none",2
 #"ice_model",   "UI",           "uice",             "ocean_hourly", "all", .false., "none",2
 #"ice_model",   "VI",           "vice",             "ocean_hourly", "all", .false., "none",2
 ##"ice_model",  "SWDN",       "swdn",      "ocean_hourly", "all", ".false.", "none",2
