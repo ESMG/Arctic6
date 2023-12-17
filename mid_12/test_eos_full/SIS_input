@@ -181,13 +181,14 @@ ICE_DELTA_EDD_R_POND = 1.0      !   [nondimensional] default = 0.0
 DOCUMENT_FILE = "SIS_parameter_doc" ! default = "MOM_parameter_doc"
                                 ! The basename for files where run-time parameters, their settings, units and
                                 ! defaults are documented. Blank will disable all parameter documentation.
+TRACER_ADV_REFILL_MASSLESS=True
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with INT_TIDE_DISSIPATION.
 ! === module SIS_open_boundary ===
-OBC_NUMBER_OF_SEGMENTS = 4      ! default = 0
+OBC_NUMBER_OF_SEGMENTS = 0      ! default = 0
                                 ! The number of open boundary segments.
-OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
-OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
-OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
-OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
+!OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
+!OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
+!OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
+!OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !

@@ -4,8 +4,9 @@
         restart_input_dir = 'INPUT',
         restart_output_dir = 'RESTART',
         parameter_filename = 'MOM_input',
-                              'MOM_override',
-                              'MOM_layout'
+                             'MOM_override',
+                             'MOM_layout',
+			     'MOM_saltrestore'
 /
 
  &SIS_input_nml
@@ -28,8 +29,8 @@
         hours  = 0,
         current_date = 1993,1,1,0,0,0,
         calendar = 'gregorian',
-        dt_cpld = 3600,
-        dt_atmos = 3600,
+        dt_cpld = 1800,
+        dt_atmos = 1800,
         do_atmos = .false.,
         do_land = .false.,
         do_ice = .true.,

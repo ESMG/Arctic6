@@ -2295,13 +2295,13 @@ MAX_P_SURF = 0.0                !   [Pa] default = -1.0
                                 ! structure does not limit the water that can be frozen out of the ocean and the
                                 ! ice-ocean heat fluxes are treated explicitly.  No limit is applied if a
                                 ! negative value is used.
-RESTORE_SALINITY = False        !   [Boolean] default = False
+RESTORE_SALINITY = True         !   [Boolean] default = False
                                 ! If true, the coupled driver will add a globally-balanced fresh-water flux that
                                 ! drives sea-surface salinity toward specified values.
 RESTORE_TEMPERATURE = False     !   [Boolean] default = False
                                 ! If true, the coupled driver will add a  heat flux that drives sea-surface
                                 ! temperature toward specified values.
-ADJUST_NET_SRESTORE_TO_ZERO = False !   [Boolean] default = False
+ADJUST_NET_SRESTORE_TO_ZERO = True !   [Boolean] default = True
                                 ! If true, adjusts the salinity restoring seen to zero whether restoring is via
                                 ! a salt flux or virtual precip.
 ADJUST_NET_SRESTORE_BY_SCALING = False !   [Boolean] default = False
@@ -2330,6 +2330,35 @@ WIND_STAGGER = "C"              ! default = "C"
 WIND_STRESS_MULTIPLIER = 1.0    !   [nondim] default = 1.0
                                 ! A factor multiplying the wind-stress given to the ocean by the coupler. This
                                 ! is used for testing and should be =1.0 for any production runs.
+FLUXCONST = 0.1667              !   [m day-1] default = 0.0
+                                ! The constant that relates the restoring surface fluxes to the relative surface
+                                ! anomalies (akin to a piston velocity).  Note the non-MKS units.
+FLUXCONST_SALT = 0.1667         !   [m day-1] default = 0.1667
+                                ! The constant that relates the restoring surface salt fluxes to the relative
+                                ! surface anomalies (akin to a piston velocity).  Note the non-MKS units.
+SALT_RESTORE_FILE = "salt_PHC2_Arctic_12k_00.nc" ! default = "salt_restore.nc"
+                                ! A file in which to find the surface salinity to use for restoring.
+SALT_RESTORE_VARIABLE = "salt"  ! default = "salt"
+                                ! The name of the surface salinity variable to read from SALT_RESTORE_FILE for
+                                ! restoring salinity.
+SRESTORE_AS_SFLUX = True        !   [Boolean] default = False
+                                ! If true, the restoring of salinity is applied as a salt flux instead of as a
+                                ! freshwater flux.
+MAX_DELTA_SRESTORE = 5.0        !   [PSU or g kg-1] default = 999.0
+                                ! The maximum salinity difference used in restoring terms.
+MASK_SRESTORE_UNDER_ICE = True  !   [Boolean] default = False
+                                ! If true, disables SSS restoring under sea-ice based on a frazil criteria
+                                ! (SST<=Tf). Only used when RESTORE_SALINITY is True.
+MASK_SRESTORE_MARGINAL_SEAS = False !   [Boolean] default = False
+                                ! If true, disable SSS restoring in marginal seas. Only used when
+                                ! RESTORE_SALINITY is True.
+BASIN_FILE = "basin.nc"         ! default = "basin.nc"
+                                ! A file in which to find the basin masks, in variable 'basin'.
+MASK_SRESTORE = False           !   [Boolean] default = False
+                                ! If true, read a file (salt_restore_mask) containing a mask for SSS restoring.
+RESTORE_FLUX_RHO = 1035.0       !   [kg m-3] default = 1035.0
+                                ! The density that is used to convert piston velocities into salt or heat fluxes
+                                ! with RESTORE_SALINITY or RESTORE_TEMPERATURE.
 CD_TIDES = 0.0018               !   [nondim] default = 1.0E-04
                                 ! The drag coefficient that applies to the tides.
 TKE_TIDAL_RHO = 1035.0          !   [kg m-3] default = 1035.0
