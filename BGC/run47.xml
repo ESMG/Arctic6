@@ -384,6 +384,11 @@ $baseDate
 truncate -s 0 $work/INPUT/MOM_override
 cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
 #override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+#override DO_RIVERMIX = True
+#override KV = 1.0E-05
+#override SAL_SCALAR_VALUE = 0.0
+#override MLE%USE_BODNER23 = False
+#override KD_MAX = -1.0
 #override BBL_EFFIC = 0.01
 !SPLIT_RK2B = True
 MOM_OVERRIDE_EOF

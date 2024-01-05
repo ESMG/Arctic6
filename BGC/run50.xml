@@ -589,7 +589,7 @@ DT_OBC_SEG_UPDATE_OBGC = 3600
 #override CHL_FROM_FILE = False
 #override DO_GEOTHERMAL = True
 #override GENERIC_TRACER_IC_FILE = "bgc_ics_75z.nc"
-SPLIT_RK2B = True
+!SPLIT_RK2B = True
 MOM_OVERRIDE_EOF
         ]]>
       </csh>
