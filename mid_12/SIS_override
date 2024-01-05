@@ -1,4 +1,3 @@
-#override CGRID_ICE_DYNAMICS = True
 #override DO_ICEBERGS = False
 #override ICE_OCEAN_STRESS_STAGGER = "C"
 #override CONTINUITY_H_NEGLECT = 1e-28 kg m-2
@@ -8,7 +7,11 @@
 #override ICE_YIELD_ELLIPTICITY = 1.5
 #override ITD_LANDFAST = True
 !DEBUG = True
+#override NCAT_ICE = 10
+BASAL_STRESS_NCAT_B = 10        ! default = 100
+                                ! Number of bathymetric depth categories in landfast ice computation.
+BASAL_STRESS_NCAT_I = 100       ! default = 100
+                                ! Number of ice thickness categories in landfast ice computation.
 #override NEW_RIDGE_PARTICIPATION = False
 #override NEW_RIDGE_REDISTRIBUTION = False
 !#override MERGED_CONTINUITY = True
-#override NCAT_ICE = 10
