@@ -407,7 +407,7 @@ WARSAW_SUM_ORDER = True         !   [Boolean] default = True
                                 ! compatibilty but may eventually be obsoleted.
 TIMEUNIT = 8.64E+04             !   [s] default = 8.64E+04
                                 ! The time unit for ICE_STATS_INTERVAL.
-ICE_STATS_INTERVAL = 1.0        !   [days] default = 1.0
+ICE_STATS_INTERVAL = 0.0416666666666667 !   [days] default = 1.0
                                 ! The interval in units of TIMEUNIT between writes of the globally summed ice
                                 ! statistics and conservation checks.
 DT_RHEOLOGY = -1.0              !   [seconds] default = -1.0
@@ -486,9 +486,9 @@ BASAL_STRESS_CUTOFF = 1.943     !   [nondim] default = 1.943
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with ITD_LANDFAST.
-BATHY_ROUGHNESS_MIN = 2.5       !   [m] default = 2.5
+BATHY_ROUGHNESS_MIN = 0.0       !   [m] default = 2.5
                                 ! Minimum bathymetric roughness.
-BATHY_ROUGHNESS_MAX = 2.5       !   [m] default = 2.5
+BATHY_ROUGHNESS_MAX = 50.0      !   [m] default = 2.5
                                 ! Maximum bathymetric roughness.
 BASAL_STRESS_NCAT_B = 10        ! default = 100
                                 ! Number of bathymetric depth categories in landfast ice computation.
