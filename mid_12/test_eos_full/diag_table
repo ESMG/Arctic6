@@ -163,8 +163,8 @@ Arctic 50 vertical levels
 #"ice_model",  "sh_t",     "sh_t",      "ice_daily", "all", "mean", "none",2
 #"ice_model",  "sh_s",     "sh_s",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "SWDN",     "swdn",      "ice_daily", "all", "mean", "none",2
-#"ice_model",  "SIGI",     "SIGI",      "ice_daily", "all", "mean", "none",2
-#"ice_model",  "SIGII",    "SIGII",     "ice_daily", "all", "mean", "none",2
+"ice_model",  "SIGI",     "SIGI",      "ice_daily", "all", "mean", "none",2
+"ice_model",  "SIGII",    "SIGII",     "ice_daily", "all", "mean", "none",2
 #"ice_model",  "STRENGTH", "STRENGTH",  "ice_daily", "all", "mean", "none",2
 "ice_model",  "RDG_RATE", "RDG_RATE",  "ice_daily", "all", "mean", "none",2
 #"ice_model",  "RDG_FRAC", "RDG_FRAC",  "ice_daily", "all", "mean", "none",2
@@ -188,6 +188,7 @@ Arctic 50 vertical levels
 "ocean_model", "MLD_003",      "MLD",           "ocean_month", "all", "mean", "none",2
 "ocean_model", "ePBL_h_ML",    "ePBL_h_ML",     "ocean_month", "all", "mean", "none",2
 "ocean_model", "net_heat_surface",    "net_heat_surface",    "ocean_month", "all", "mean", "none",2
+"ocean_model", "lf_bodner",    "lf_bodner",     "ocean_month", "all", "mean", "none",2
 "ice_model",  "siconc",        "aice",          "ocean_month", "all", "mean", "none",2
 "ice_model",  "HI",            "hice",          "ocean_month", "all", "mean", "none",2
 "ice_model",  "HS",            "hsnow",         "ocean_month", "all", "mean", "none",2

@@ -128,6 +128,10 @@ ITD_LANDFAST = True             !   [Boolean] default = False
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with ITD_LANDFAST.
+BATHY_ROUGHNESS_MIN = 0.0       !   [m] default = 2.5
+                                ! Minimum bathymetric roughness.
+BATHY_ROUGHNESS_MAX = 50.0      !   [m] default = 2.5
+                                ! Maximum bathymetric roughness.
 BASAL_STRESS_NCAT_B = 10        ! default = 100
                                 ! Number of bathymetric depth categories in landfast ice computation.
 ICE_COVER_DISCARD = 1.0E-30     !   [nondim] default = -1.0

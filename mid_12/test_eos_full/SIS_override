@@ -22,3 +22,4 @@ BASAL_STRESS_NCAT_B = 10        ! default = 100
 BASAL_STRESS_NCAT_I = 100       ! default = 100
                                 ! Number of ice thickness categories in landfast ice computation.
 #override RESTART_CHECKSUMS_REQUIRED = False
+#override TEARDROP_YIELD_CURVE = True
