@@ -185,6 +185,10 @@ TRACER_ADV_REFILL_MASSLESS=True
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with INT_TIDE_DISSIPATION.
+BATHY_ROUGHNESS_MIN = 0.0       !   [m] default = 2.5
+                                ! Minimum bathymetric roughness.
+BATHY_ROUGHNESS_MAX = 50.0      !   [m] default = 2.5
+                                ! Maximum bathymetric roughness.
 ! === module SIS_open_boundary ===
 OBC_NUMBER_OF_SEGMENTS = 4      ! default = 0
                                 ! The number of open boundary segments.

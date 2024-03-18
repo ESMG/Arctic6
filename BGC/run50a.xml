@@ -2,7 +2,7 @@
 <!-- FRE Usage documentation: http://www.gfdl.noaa.gov/fms/fre -->
 <!--
 Quick start guide
-module load fre/bronx-20
+module load fre/bronx-21
 
 fremake -x run50.xml -p ncrc5.intel22 -t repro,hdf5 MOM6_SIS2_COBALT_compile_symm
 
@@ -55,11 +55,11 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
   <property name="ICEPACK_GIT_FIX" value="Icepack1.3.3"/>
 
   <!-- customize as needed -->
-  <property name="FRE_STEM" value="fre/NWA/2024_01"/>
+  <property name="FRE_STEM" value="fre/Arc_12/2024_01"/>
 
   <!-- Please make sure to change "YOURGROUPLETTER" to your group, such as b, f, g, m, o... -->
   <property name="NCRC_GROUP" value="cefi"/>
-  <property name="GFDL_GROUP" value="gfdl_med"/>
+  <property name="GFDL_GROUP" value="cefi"/>
 
   <!--Production run properties. Users can modify these according to their need and/or performance analysis-->
   <property name="PROD_SIMTIME" value="25"/>
@@ -73,7 +73,7 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
   <property name="PP_START_YEAR" value="1993"/>
 
   <!-- fre version to be used -->
-  <property name="FRE_VERSION" value="bronx-20"/>
+  <property name="FRE_VERSION" value="bronx-21"/>
 
   <!-- on/off switch for MDBI database -->
   <property name="MDBIswitch" value="off"/>
@@ -94,10 +94,12 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
   <property name="ACR" value="/lustre/f2/dev/Andrew.C.Ross"/>
   <property name="ESMG" value="/lustre/f2/dev/gfdl/Katherine.Hedstrom/ESMG"/>
   <property name="ESMG_H" value="/autofs/ncrc-svm1_home2/Katherine.Hedstrom/ESMG"/>
+  <property name="cefi_WS" value="/gpfs/f5/cefi/world-shared"/>
+  <property name="med_SHR" value="/gpfs/f5/gfdl_med/proj-shared/ARC12"/>
 
   <!--This is necessary only if you want to run exact same experiment on multiple platforms-->
   <property name="PLATINFO" value=""/>
-  <property name="AWG_INPUT_HOME_GAEA" value="/lustre/f2/dev/gfdl/Katherine.Hedstrom/ESMG/ESMG-configs/awg_include"/>
+  <property name="AWG_INPUT_HOME_GAEA" value="$(cefi_WS)/nwa-xml/xml_include"/>
   <property name="AWG_INPUT_HOME_GFDL" value="/nbhome/$USER/$(FRE_STEM)$(PLATINFO)/$(name)/mdt_xml/awg_include"/>
 
   <!--The start year of forcing dataset-->
@@ -105,8 +107,8 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
 
   <!-- Supported compilers and platforms -->
   <setup>
-    <xi:include href="../../../../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='ncrc5.intel22'])"/>
-    <xi:include href="../../../../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='gfdl.ncrc5-intel22'])"/>
+    <xi:include href="../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='ncrc5.intel22'])"/>
+    <xi:include href="../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='gfdl.ncrc5-intel22'])"/>
   </setup>
 
   <!--= COMPILE =-->
@@ -588,6 +590,7 @@ cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
 #override MAX_FIELDS=500
 #override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
 DT_OBC_SEG_UPDATE_OBGC = 3600
+#override KV = 0.0
 #override CHL_FROM_FILE = False
 #override DO_GEOTHERMAL = True
 #override GENERIC_TRACER_IC_FILE = "bgc_ics_75z.nc"
@@ -651,6 +654,18 @@ MOM_OVERRIDE_EOF
     </runtime>
 
     <postProcess>
+      <csh><![CDATA[
+         cd $work
+         #Make a directory to trick FRE to pick up and archive in ascii
+         mkdir extra.results
+         mv *velocity_truncations MOM_parameter_doc* SIS_parameter_doc* seaice.stats* ocean.stats* extra.results/
+         cp diag_table extra.results/.
+         cp $scriptName extra.results/runscript.csh
+         #When the ocean uses a mask_table the ocean_static.nc file produced by the model run has holes in coordinates (geolon,geolat)
+         #This causes problems for ferret and python tools for analysis.
+         #Copy a non-masked version of ocean_static.nc to be saved as a history file to be used by the analysis scipts .
+         #cp $work/INPUT/ocean_static_no_mask_table.nc $work/
+      ]]></csh>
       <xi:include xpointer="xpointer(//freInclude[@name='MOM6_postprocess']/postProcess/node())"/>
       <xi:include xpointer="xpointer(//freInclude[@name='COBALT_postprocess']/postProcess/node())"/>
     </postProcess>
@@ -753,32 +768,32 @@ SIS_diurnal_EOF
 # IAF cycle mechanism
 echo "Model year = $fyear"
 cd $work/INPUT
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/psl_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_psl.nc
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/tas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_tas.nc
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/huss_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_huss.nc
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/uas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_uas.nc
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/vas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_vas.nc
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/rlds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_rlds.nc
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/rsds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_rsds.nc
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/prra_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_prra.nc
-ln -sf /lustre/f2/pdata/gfdl/gfdl_O/datasets/reanalysis/JRA55-do/v1.5.0/padded/prsn_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_prsn.nc
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/salt_001.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/salt_002.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/salt_003.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/salt_004.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/temp_001.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/temp_002.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/temp_003.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/temp_004.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/zeta_001.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/zeta_002.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/zeta_003.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/zeta_004.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/uv_001.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/uv_002.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/uv_003.nc .
-ln -sf /lustre/f2/dev/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/uv_004.nc .
-ln -sf /lustre/f2/dev/gfdl/Katherine.Hedstrom/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/Runoff/glofas_hill_${fyear}.nc glofas_runoff.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/psl_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_psl.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/tas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_tas.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/huss_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_huss.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/uas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_uas.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/vas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_vas.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/rlds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_rlds.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/rsds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_rsds.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/prra_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_prra.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/prsn_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_prsn.nc
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/salt_001.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/salt_002.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/salt_003.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/salt_004.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/temp_001.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/temp_002.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/temp_003.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/temp_004.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/zeta_001.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/zeta_002.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/zeta_003.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/zeta_004.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/uv_001.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/uv_002.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/uv_003.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/uv_004.nc .
+ln -sf /gpfs/f5/gfdl_med/proj-shared/ARC12/ESMG/INPUT/Runoff/glofas_hill_${fyear}.nc glofas_runoff.nc
 cd $work
 
         ]]>
@@ -789,7 +804,7 @@ cd $work
   <freInclude name="arctic_grid">
     <input>
       <dataFile label="gridSpec" target="INPUT/" chksum="" size="" timestamp="">
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/arctic_grid.tar</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/GRID/arctic_grid.tar</dataSource>
 	<dataSource site="gfdl">/archive/Katherine.Hedstrom/Arctic_12k/arctic_grid.tar</dataSource>
       </dataFile>
     </input>
@@ -801,44 +816,44 @@ cd $work
         <!-- Main settings: -->
         <dataSource site="ncrc">$(ESMG_H)/ESMG-configs/Arctic6/mid_12/MOM_input</dataSource>
         <dataSource site="ncrc">$(ESMG_H)/ESMG-configs/Arctic6/mid_12/MOM_saltrestore</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/salt_PHC2_Arctic_12k_00.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/seawifs-clim-1997-2010.smoothed.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tidal_amplitude_Arctic_12k.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/salt_PHC2_Arctic_12k_00.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/seawifs-clim-1997-2010.smoothed.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_amplitude_Arctic_12k.nc</dataSource>
         <!-- GLORYS initial condition: -->
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/glorys_ic_75z_1993.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/bgc_ics_75z.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/initial/glorys_ic_75z_1993.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/bgc_ics_75z.nc</dataSource>
         <!-- Boundary conditions for BGC -->
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/bgc_woa.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/bgc_cobalt.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/bgc_glodap.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/bgc_woa.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/bgc_cobalt.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/bgc_glodap.nc</dataSource>
         <!-- Boundary conditions for physics -->
         <!-- Tidal boundary conditions: -->
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tu1.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tu2.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tu3.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tu4.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tz1.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tz2.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tz3.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/tz4.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_bcs/tu1.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_bcs/tu2.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_bcs/tu3.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_bcs/tu4.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_bcs/tz1.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_bcs/tz2.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_bcs/tz3.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/tidal_bcs/tz4.nc</dataSource>
         <!-- For the ice: -->
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/ice_mass_12k.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/ice_outflow.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/initial/ice_mass_12k.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/ice_outflow.nc</dataSource>
         <!--River nutrients and DIC and alkalinity -->
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc</dataSource>
-        <dataSource site="ncrc">$(ESMG)/ESMG-configs/Arctic6/mid_12/INPUT/RiverNutrients_Combined_Q100_Arctic12k_plusSi.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc</dataSource>
+        <dataSource site="ncrc">$(med_SHR)/ESMG/INPUT/RiverNutrients_Combined_Q100_Arctic12k_plusSi.nc</dataSource>
       </dataFile>
       <!--Other files for BGC fluxes from atmosphere -->
       <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
-        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drydust_climo_1993-2014.nc</dataSource>
-        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetdust_climo_1993-2014.nc</dataSource>
-        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_dryfe_climo_1993-2014.nc</dataSource>
-        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetfe_climo_1993-2014.nc</dataSource>
-        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drynh4_climo_1993-2014.nc</dataSource>
-        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetnh4_climo_1993-2014.nc</dataSource>
-        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drynoy_climo_1993-2014.nc</dataSource>
-        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetnoy_climo_1993-2014.nc</dataSource>
-        <dataSource site="ncrc">$(ACR)/global_input/mole_fraction_of_co2_extended_ssp245.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/esm4_deposition/esm4_drydust_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/esm4_deposition/esm4_wetdust_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/esm4_deposition/esm4_dryfe_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/esm4_deposition/esm4_wetfe_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/esm4_deposition/esm4_drynh4_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/esm4_deposition/esm4_wetnh4_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/esm4_deposition/esm4_drynoy_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/esm4_deposition/esm4_wetnoy_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_WS)/global_input/mole_fraction_of_co2_extended_ssp245.nc</dataSource>
       </dataFile>
       <!-- Extra file for chlorophyll for estimating opacity: -->
       <namelist name="MOM_input_nml" >

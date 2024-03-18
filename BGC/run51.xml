@@ -4,11 +4,12 @@
 Quick start guide
 module load fre/bronx-20
 
-fremake -x run50.xml -p ncrc5.intel22 -t repro,hdf5 MOM6_SIS2_COBALT_compile_symm
+fremake -x run51.xml -p ncrc5.intel22 -t repro,hdf5 MOM6_SIS2_compile_symm
+fremake -f -x run51.xml -p ncrc5.intel22 -t repro,hdf5 MOM6_SIS2_compile_symm
 
-Compile: sleep 1; sbatch /lustre/f2/dev/Katherine.Hedstrom/fre/NWA/2024_01//MOM6_SIS2_COBALT_compile_symm/ncrc5.intel22-repro-hdf5/exec/compile_MOM6_SIS2_COBALT_compile_symm.csh
+Compile: sleep 1; sbatch /lustre/f2/dev/Katherine.Hedstrom/fre/Arc_12/2024_01//MOM6_SIS2_compile_symm/ncrc5.intel22-repro-hdf5/exec/compile_MOM6_SIS2_compile_symm.csh
 
-frerun -x run50.xml -p ncrc5.intel22 -t repro,hdf5 run50 -r test (basic)
+frerun -x run51.xml -p ncrc5.intel22 -t repro,hdf5 run51 -r test (basic)
 sleep 1; sbatch /lustre/f2/dev/Katherine.Hedstrom/fre/NWA/2023_12/Arctic_12k/ncrc5.intel22-repro-hdf5/scripts/run/Arctic_12k_1x0m2d_632x1o
 
 To postprocess later:
@@ -29,8 +30,7 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
   <property name="NULL_TAG" value="2021.03"/>
 
   <!-- git tag for ocean_shared source code -->
-  <!--property name="OCEAN_BGC_GIT_TAG" value="feature/4P-2023-10-diags"/-->
-  <property name="OCEAN_BGC_GIT_TAG" value="four_p"/>
+  <property name="OCEAN_BGC_GIT_TAG" value="feature/4P-2023-10-diags"/>
 
   <!-- git tag date for MOM6 source code -->
   <property name="MOM6_DATE" value="20230201"/>
@@ -39,7 +39,6 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
   <property name="MOM6_GIT_TAG" value="dev/gfdl"/>
 
   <!-- git tag for MOM6 source code -->
-  <!--property name="MOM6_GIT_FIX" value="feature/bgc-budget-diags-index"/--> <!-- Trying new branch with bug fix for bgc obc index -->
   <property name="MOM6_GIT_FIX" value="esmg_work"/> <!-- Kate's melting pot of versions -->
 
   <!-- SIS2 commit to check out -->
@@ -55,11 +54,11 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
   <property name="ICEPACK_GIT_FIX" value="Icepack1.3.3"/>
 
   <!-- customize as needed -->
-  <property name="FRE_STEM" value="fre/NWA/2024_01"/>
+  <property name="FRE_STEM" value="fre/Arc_12/2024_01"/>
 
   <!-- Please make sure to change "YOURGROUPLETTER" to your group, such as b, f, g, m, o... -->
   <property name="NCRC_GROUP" value="cefi"/>
-  <property name="GFDL_GROUP" value="gfdl_med"/>
+  <property name="GFDL_GROUP" value="cefi"/>
 
   <!--Production run properties. Users can modify these according to their need and/or performance analysis-->
   <property name="PROD_SIMTIME" value="25"/>
@@ -113,13 +112,13 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
   <!--===========-->
   <!--The property MOM6_EXAMPLES should point to the mom6 directory that is checked out. It is needed by MOM6 to access its input data files-->
   <property name="PROG_MAIN" value="coupler/coupler_main.o"/>
-  <property name="LIBS_ROOT" value="MOM6_SIS2_COBALT_compile_symm"/>
+  <property name="LIBS_ROOT" value="MOM6_SIS2_compile_symm"/>
   <property name="FMS_LIB_DIR" value="./$(LIBS_ROOT)/$(platform)-$(target)/exec"/>
 
   <property name="MOM6_EXAMPLES" value="$root/$(LIBS_ROOT)/src/mom6"/>
   <property name="MY_LIBS" value="$(EXEC_ROOT)/$(FMS_LIB_DIR)"/>
 
-  <experiment name="MOM6_SIS2_COBALT_compile_symm">
+  <experiment name="MOM6_SIS2_compile_symm">
     <description>
       Make the executable for ocean-ice experiments.
     </description>
@@ -132,19 +131,14 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
       </compile>
     </component>
 
-    <component name="mom6_symmetric" requires="fms" paths="mom6/src/MOM6/config_src/memory/dynamic_symmetric mom6/src/MOM6/config_src/drivers/FMS_cap mom6/src/MOM6/src/*/ mom6/src/MOM6/src/*/*/ mom6/src/MOM6/config_src/external/ODA_hooks mom6/src/MOM6/config_src/external/stochastic_physics mom6/src/MOM6/config_src/external/drifters mom6/src/MOM6/config_src/external/database_comms mom6/src/Icepack/columnphysics ocean_BGC/generic_tracers ocean_BGC/mocsy/src mom6/src/MOM6/pkg/GSW-Fortran/*/ mom6/src/MOM6/config_src/infra/FMS2">
-    <!--component name="mom6_symmetric" requires="fms" paths="mom6/src/MOM6/config_src/memory/dynamic_symmetric mom6/src/MOM6/config_src/drivers/FMS_cap mom6/src/MOM6/src/*/ mom6/src/MOM6/src/*/*/ mom6/src/MOM6/config_src/external/ODA_hooks mom6/src/MOM6/config_src/external/stochastic_physics mom6/src/MOM6/config_src/external/drifters mom6/src/MOM6/config_src/external/database_comms ocean_BGC/generic_tracers ocean_BGC/mocsy/src mom6/src/MOM6/pkg/GSW-Fortran/*/ mom6/src/MOM6/config_src/infra/FMS2"-->
-    <!--component name="mom6_symmetric" requires="fms" paths="mom6/src/MOM6/config_src/memory/dynamic_symmetric mom6/src/MOM6/config_src/drivers/FMS_cap mom6/src/MOM6/src/*/ mom6/src/MOM6/src/*/*/ mom6/src/MOM6/config_src/external/*/ mom6/src/MOM6/config_src/infra/FMS2 mom6/src/atmos_null mom6/src/land_null mom6/src/SIS2/config_src/dynamic_symmetric mom6/src/Icepack/columnphysics mom6/src/ice_param mom6/src/SIS2/src mom6/src/icebergs mom6/src/coupler/full mom6/src/coupler/shared"-->
+    <component name="mom6_symmetric" requires="fms" paths="mom6/src/MOM6/config_src/memory/dynamic_symmetric mom6/src/MOM6/config_src/drivers/FMS_cap mom6/src/MOM6/src/*/ mom6/src/MOM6/src/*/*/ mom6/src/MOM6/config_src/external/*/ mom6/src/Icepack/columnphysics mom6/src/MOM6/pkg/GSW-Fortran/*/ mom6/src/MOM6/config_src/infra/FMS2">
       <source versionControl="git" root="https://github.com/NOAA-GFDL">
         <codeBase version="master"> ocean_BGC.git </codeBase>
         <csh><![CDATA[
-          #(cd ocean_BGC && git remote add yc https://github.com/yichengt900/ocean_BGC.git && git fetch yc && git checkout yc/$(OCEAN_BGC_GIT_TAG))
-          (cd ocean_BGC && git remote add esmg https://github.com/ESMG/ocean_BGC.git && git fetch esmg && git checkout esmg/$(OCEAN_BGC_GIT_TAG))
           git clone -b dev/gfdl https://github.com/NOAA-GFDL/MOM6-examples.git mom6
           pushd mom6
           git checkout $(MOM6_GIT_TAG)
           git submodule update --recursive --init src/MOM6 src/SIS2 src/icebergs
-          #git submodule update --recursive --init src/MOM6 src/SIS2 src/icebergs src/Icepack src/coupler src/atmos_null src/land_null src/ice_param
           if ("$(MOM6_GIT_FIX)" != "") then
             (cd src/MOM6 && git remote add esmg https://github.com/ESMG/MOM6.git && git fetch esmg && git checkout esmg/$(MOM6_GIT_FIX))
             #(cd src/MOM6 && git checkout $(MOM6_GIT_FIX))
@@ -203,7 +197,7 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
     </component>
   </experiment>
 
-  <experiment name="run50" inherit="MOM6_SIS2_COBALT_compile_symm">
+  <experiment name="run51" inherit="MOM6_SIS2_compile_symm">
     <description>
     </description>
     <input>
@@ -229,33 +223,16 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
         ocean_nthreads = $ocn_threads
         do_chksum = .false.
       </namelist>
-      <namelist name="generic_tracer_nml">
-        do_generic_tracer = .true.
-        do_generic_abiotic = .false.
-        do_generic_CFC = .false.
-        do_generic_COBALT = .true.
-        do_generic_age = .false.
-        do_generic_SF6 = .false.
-        force_update_fluxes = .true.
-        as_param='unused'
-      </namelist>
       <namelist name="time_interp_external_nml">
         max_fields = 400
       </namelist>
-      <namelist name="generic_abiotic_nml">
-        co2_calc='mocsy'
-      </namelist>
-      <namelist name="generic_COBALT_nml">
-        co2_calc = 'mocsy'
-        debug = .false.
-      </namelist>
       <namelist name="diag_manager_nml">
-        max_files = 600
+        max_files = 400
         flush_nc_files=.false.
         max_axes = 400
-        max_num_axis_sets = 600,
-        max_input_fields = 2000
-        max_output_fields = 5000
+        max_num_axis_sets = 400,
+        max_input_fields = 1200
+        max_output_fields = 1800
         mix_snapshot_average_fields=.false.
       </namelist>
       <namelist name="xgrid_nml">
@@ -273,7 +250,6 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
         threading_read = 'multi'
         max_files_r = 800
         max_files_w = 800
-        checksum_required = .false.
       </namelist>
       <namelist name="atmos_model_nml">
         layout = 1,1
@@ -334,10 +310,6 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
 "ATM", "v_bot",              "vas",    "INPUT/JRA_vas.nc",           "bicubic",   1.0
 "ATM", "z_bot",              "",       "",                           "bilinear", 10.0
 "ATM", "gust",               "",       "",                           "bilinear",  1.0e-4
-"ATM", "o2_flux_pcair_atm",  "",       "",                           "none",      0.214
-"ATM", "co2_flux_pcair_atm", "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_extended_ssp245.nc", "bilinear", 1.0e-06
-"ATM", "co2_bot",            "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_extended_ssp245.nc", "bilinear", 1.0e-06
-"ATM", "co2_dvmr_restore",   "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_extended_ssp245.nc", "bilinear", 1.0e-06
 #
 "ICE", "lw_flux_dn",         "rlds",   "INPUT/JRA_rlds.nc",          "bilinear",  1.0
 "ICE", "sw_flux_vis_dir_dn", "rsds",   "INPUT/JRA_rsds.nc",          "bilinear",  0.285
@@ -373,33 +345,6 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
 "LND", "drag_q",             "",       "",                           "none",     0.0
 "LND", "p_surf",             "",       "",                           "none",     1.0e5
 #
-"OCN", "runoff_no3_flux_ice_ocn",   "NO3_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_ldon_flux_ice_ocn",  "LDON_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_sldon_flux_ice_ocn", "SLDON_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_srdon_flux_ice_ocn", "SRDON_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_ndet_flux_ice_ocn",  "NDET_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_po4_flux_ice_ocn",   "PO4_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_ldop_flux_ice_ocn",  "LDOP_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_sldop_flux_ice_ocn", "SLDOP_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_srdop_flux_ice_ocn", "SRDOP_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_pdet_flux_ice_ocn",  "PDET_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_fed_flux_ice_ocn",   "FED_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_alk_flux_ice_ocn",   "ALK_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_dic_flux_ice_ocn",   "DIC_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_nh4_flux_ice_ocn",   "NH4_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_fedet_flux_ice_ocn", "FEDET_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_o2_flux_ice_ocn",    "O2_CONC",      "./INPUT/RiverNutrients_Combined_Q100_Arctic12k.nc", "none",      1.0e-3
-"OCN", "runoff_sio4_flux_ice_ocn",  "SI_CONC",      "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_plusSi.nc", "none",      1.0e-3
-"OCN", "runoff_lith_flux_ice_ocn",  "",             "",                                                                          "none",     13.0e-3
-"OCN", "dry_dep_fed_flux_ice_ocn",  "dryfe",        "./INPUT/esm4_dryfe_climo_1993-2014.nc",                                 "bilinear",     -1.0
-"OCN", "wet_dep_fed_flux_ice_ocn",  "wetfe",        "./INPUT/esm4_wetfe_climo_1993-2014.nc",                                 "bilinear",     -1.0
-"OCN", "dry_dep_lith_flux_ice_ocn", "drydust",      "./INPUT/esm4_drydust_climo_1993-2014.nc",                               "bilinear",     -1.0
-"OCN", "wet_dep_lith_flux_ice_ocn", "wetdust",      "./INPUT/esm4_wetdust_climo_1993-2014.nc",                               "bilinear",     -1.0
-"OCN", "dry_dep_po4_flux_ice_ocn",  "drydust",      "./INPUT/esm4_drydust_climo_1993-2014.nc",                               "bilinear",     -4.0e-6
-"OCN", "wet_dep_no3_flux_ice_ocn",  "wetnoy",       "./INPUT/esm4_wetnoy_climo_1993-2014.nc",                                "bilinear",     -1.0
-"OCN", "dry_dep_no3_flux_ice_ocn",  "drynoy",       "./INPUT/esm4_drynoy_climo_1993-2014.nc",                                "bilinear",     -1.0
-"OCN", "wet_dep_nh4_flux_ice_ocn",  "wetnh4",       "./INPUT/esm4_wetnh4_climo_1993-2014.nc",                                "bilinear",     -1.0
-"OCN", "dry_dep_nh4_flux_ice_ocn",  "drynh4",       "./INPUT/esm4_drynh4_climo_1993-2014.nc",                                "bilinear",     -1.0
       </dataTable>
 
       <fieldTable>
@@ -423,160 +368,14 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
         "units",        "kg/kg" /
 ###.................................................
 
-"namelists","ocean_mod","generic_COBALT"
-enforce_src_info = f
-alk_obc_src_file_name = bgc_glodap.nc
-alk_obc_lfac_in = 0.03
-alk_obc_lfac_out = 1.0
-cadet_arag_obc_src_file_name = bgc_cobalt.nc
-cadet_arag_obc_lfac_in = 0.03
-cadet_ararg_obc_lfac_out = 1.0
-cadet_calc_obc_src_file_name = bgc_cobalt.nc
-cadet_calc_obc_lfac_in = 0.03
-cadet_calc_obc_lfac_out = 1.0
-dic_obc_src_file_name = bgc_glodap.nc
-dic_obc_lfac_in = 0.03
-dic_obc_lfac_out = 1.0
-dic14_obc_src_file_name = bgc_zero.nc
-dic14_obc_lfac_in = 0.03
-dic14_obc_lfac_out = 1.0
-do14_obc_src_file_name = bgc_zero.nc
-do14_obc_lfac_in = 0.03
-do14_obc_lfac_out = 1.0
-do14c_obc_src_file_name = bgc_zero.nc
-do14c_obc_lfac_in = 0.03
-do14c_obc_lfac_out = 1.0
-di14c_obc_src_file_name = bgc_zero.nc
-di14c_obc_lfac_in = 0.03
-di14c_obc_lfac_out = 1.0
-fed_obc_src_file_name = bgc_cobalt.nc
-fed_obc_lfac_in = 0.03
-fed_obc_lfac_out = 1.0
-fedi_obc_src_file_name = bgc_cobalt.nc
-fedi_obc_lfac_in = 0.03
-fedi_obc_lfac_out = 1.0
-felg_obc_src_file_name = bgc_cobalt.nc
-felg_obc_lfac_in = 0.03
-felg_obc_lfac_out = 1.0
-fedet_obc_src_file_name = bgc_cobalt.nc
-fedet_obc_lfac_in = 0.03
-fedet_obc_lfac_out = 1.0
-fesm_obc_src_file_name = bgc_cobalt.nc
-fesm_obc_lfac_in = 0.03
-fesm_obc_lfac_out = 1.0
-ldon_obc_src_file_name = bgc_cobalt.nc
-ldon_obc_lfac_in = 0.03
-ldon_obc_lfac_out = 1.0
-ldop_obc_src_file_name = bgc_cobalt.nc
-ldop_obc_lfac_in = 0.03
-ldop_obc_lfac_out = 1.0
-lith_obc_src_file_name = bgc_cobalt.nc
-lith_obc_lfac_in = 0.03
-lith_obc_lfac_out = 1.0
-lithdet_obc_src_file_name = bgc_cobalt.nc
-lithdet_obc_lfac_in = 0.03
-lithdet_obc_lfac_out = 1.0
-nbact_obc_src_file_name = bgc_cobalt.nc
-nbact_obc_lfac_in = 0.03
-nbact_obc_lfac_out = 1.0
-ndet_obc_src_file_name = bgc_cobalt.nc
-ndet_obc_lfac_in = 0.03
-ndet_obc_lfac_out = 1.0
-ndi_obc_src_file_name = bgc_cobalt.nc
-ndi_obc_lfac_in = 0.03
-ndi_obc_lfac_out = 1.0
-nlg_obc_src_file_name = bgc_cobalt.nc
-nlg_obc_lfac_in = 0.03
-nlg_obc_lfac_out = 1.0
-nsm_obc_src_file_name = bgc_cobalt.nc
-nsm_obc_lfac_in = 0.03
-nsm_obc_lfac_out = 1.0
-nh3_obc_src_file_name = bgc_zero.nc
-nh3_obc_lfac_in = 0.03
-nh3_obc_lfac_out = 1.0
-nh4_obc_src_file_name = bgc_cobalt.nc
-nh4_obc_lfac_in = 0.03
-nh4_obc_lfac_out = 1.0
-no3_obc_src_file_name = bgc_woa.nc
-no3_obc_lfac_in = 0.03
-no3_obc_lfac_out = 1.0
-o2_obc_src_file_name = bgc_woa.nc
-o2_obc_lfac_in = 0.03
-o2_obc_lfac_out = 1.0
-pdet_obc_src_file_name = bgc_cobalt.nc
-pdet_obc_lfac_in = 0.03
-pdet_obc_lfac_out = 1.0
-po4_obc_src_file_name = bgc_woa.nc
-po4_obc_lfac_in = 0.03
-po4_obc_lfac_out = 1.0
-srdon_obc_src_file_name = bgc_cobalt.nc
-srdon_obc_lfac_in = 0.03
-srdon_obc_lfac_out = 1.0
-srdop_obc_src_file_name = bgc_cobalt.nc
-srdop_obc_lfac_in = 0.03
-srdop_obc_lfac_out = 1.0
-sldon_obc_src_file_name = bgc_cobalt.nc
-sldon_obc_lfac_in = 0.03
-sldon_obc_lfac_out = 1.0
-sldop_obc_src_file_name = bgc_cobalt.nc
-sldop_obc_lfac_in = 0.03
-sldop_obc_lfac_out = 1.0
-sidet_obc_src_file_name = bgc_cobalt.nc
-sidet_obc_lfac_in = 0.03
-sidet_obc_lfac_out = 1.0
-silg_obc_src_file_name = bgc_cobalt.nc
-silg_obc_lfac_in = 0.03
-silg_obc_lfac_out = 1.0
-sio4_obc_src_file_name = bgc_woa.nc
-sio4_obc_lfac_in = 0.03
-sio4_obc_lfac_out = 1.0
-nsmz_obc_src_file_name = bgc_cobalt.nc
-nsmz_obc_lfac_in = 0.03
-nsmz_obc_lfac_out = 1.0
-nmdz_obc_src_file_name = bgc_cobalt.nc
-nmdz_obc_lfac_in = 0.03
-nmdz_obc_lfac_out = 1.0
-nlgz_obc_src_file_name = bgc_cobalt.nc
-nlgz_obc_lfac_in = 0.03
-nlgz_obc_lfac_out = 1.0
-nmdp_obc_src_file_name = bgc_cobalt.nc
-nmdp_obc_lfac_in = 0.03
-nmdp_obc_lfac_out = 1.0
-femdp_obc_src_file_name = bgc_cobalt.nc
-femdp_obc_lfac_in = 0.03
-femdp_obc_lfac_out = 1.0
-femd_obc_src_file_name = bgc_cobalt.nc
-femd_obc_lfac_in = 0.03
-femd_obc_lfac_out = 1.0
-simd_obc_src_file_name = bgc_cobalt.nc
-simd_obc_lfac_in = 0.03
-simd_obc_lfac_out = 1.0
-pdi_obc_src_file_name = bgc_cobalt.nc
-pdi_obc_lfac_in = 0.03
-pdi_obc_lfac_out = 1.0
-psm_obc_src_file_name = bgc_cobalt.nc
-psm_obc_lfac_in = 0.03
-psm_obc_lfac_out = 1.0
-pmd_obc_src_file_name = bgc_cobalt.nc
-pmd_obc_lfac_in = 0.03
-pmd_obc_lfac_out = 1.0
-nmd_obc_src_file_name = bgc_cobalt.nc
-nmd_obc_lfac_in = 0.03
-nmd_obc_lfac_out = 1.0
-plg_obc_src_file_name = bgc_cobalt.nc
-plg_obc_lfac_in = 0.03
-plg_obc_lfac_out = 1.0
-/
       </fieldTable>
       <diagTable>
 $name
 $baseDate
       </diagTable>
       <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
-        <dataSource site="ncrc">/ncrc/home2/Katherine.Hedstrom/ESMG/diag_tables/diag_table_MOM6_2023-03</dataSource>
+        <dataSource site="ncrc">/ncrc/home2/Katherine.Hedstrom/ESMG/diag_tables/diag_table_MOM6_2024-01</dataSource>
         <dataSource site="ncrc">/ncrc/home2/Katherine.Hedstrom/ESMG/diag_tables/diag_table.SIS</dataSource>
-        <dataSource site="ncrc">/ncrc/home2/Andrew.C.Ross/nwa-xml/diag_tables/diag_table_COBALT_2023-04</dataSource>
-        <dataSource site="gfdl">/home/Andrew.C.Ross/git/nwa-xml/diag_tables/diag_table_COBALT_2023-04</dataSource>
         <dataSource site="gfdl">/home/Andrew.C.Ross/git/nwa-xml/diag_tables/diag_table_MOM6_2023-03</dataSource>
         <dataSource site="gfdl">/home/Andrew.C.Ross/git/nwa-xml/diag_tables/diag_table.SIS</dataSource>
       </dataFile>
@@ -584,13 +383,13 @@ $baseDate
         <![CDATA[
 truncate -s 0 $work/INPUT/MOM_override
 cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
-#override USE_generic_tracer = True
-#override MAX_FIELDS=500
 #override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
-DT_OBC_SEG_UPDATE_OBGC = 3600
-#override CHL_FROM_FILE = False
-#override DO_GEOTHERMAL = True
-#override GENERIC_TRACER_IC_FILE = "bgc_ics_75z.nc"
+#override DO_RIVERMIX = True
+#override KV = 1.0E-05
+#override SAL_SCALAR_VALUE = 0.0
+#override MLE%USE_BODNER23 = False
+#override KD_MAX = -1.0
+#override MLE%CR = 0.3
 !SPLIT_RK2B = True
 MOM_OVERRIDE_EOF
         ]]>
@@ -600,7 +399,7 @@ MOM_OVERRIDE_EOF
       <!-- Main experiment: -->
       <production simTime="$(PROD_SIMTIME)" units="years">
         <segment simTime="12" units="months"/>
-        <resources jobWallclock="12:00:00" segRuntime="12:00:00">
+        <resources jobWallclock="06:00:00" segRuntime="06:00:00">
           <ice                          layout = "40,40" io_layout = "1,1" mask_table="mask_table.488.40x40"/>
           <ocn ranks="1112" threads="1" layout = "40,40" io_layout = "1,1" mask_table="mask_table.488.40x40"/>
         </resources>
@@ -651,10 +450,20 @@ MOM_OVERRIDE_EOF
     </runtime>
 
     <postProcess>
+      <csh><![CDATA[
+         cd $work
+         #Make a directory to trick FRE to pick up and archive in ascii
+         mkdir extra.results
+         mv *velocity_truncations MOM_parameter_doc* SIS_parameter_doc* seaice.stats* ocean.stats* extra.results/
+         cp diag_table extra.results/.
+         cp $scriptName extra.results/runscript.csh
+         #When the ocean uses a mask_table the ocean_static.nc file produced by the model run has holes in coordinates (geolon,geolat)
+         #This causes problems for ferret and python tools for analysis.
+         #Copy a non-masked version of ocean_static.nc to be saved as a history file to be used by the analysis scipts .
+         #cp $work/INPUT/ocean_static_no_mask_table.nc $work/
+      ]]></csh>
       <xi:include xpointer="xpointer(//freInclude[@name='MOM6_postprocess']/postProcess/node())"/>
-      <xi:include xpointer="xpointer(//freInclude[@name='COBALT_postprocess']/postProcess/node())"/>
     </postProcess>
-
   </experiment>
 
   <!-- For a new run starting from non-restart initial conditions, this starts the first year as a new run and then restarts for subsequent years -->
@@ -867,143 +676,5 @@ cd $work
     </input>
   </freInclude>
 
-  <freInclude name="COBALT_postprocess">
-    <postProcess>
-      <component type="ocean_cobalt_fdet_100" start="$(PP_START_YEAR)" source="ocean_cobalt_fdet_100">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="monthly"  interval="$(CHUNK_LENGTH_B)"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_cobalt_btm" start="$(PP_START_YEAR)" source="ocean_cobalt_btm">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="monthly"  interval="$(CHUNK_LENGTH_B)"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_cobalt_daily_2d" start="$(PP_START_YEAR)" source="ocean_cobalt_daily_2d">
-        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_B)" />
-      </component>
-      <component type="ocean_cobalt_omip_sfc" start="$(PP_START_YEAR)" source="ocean_cobalt_omip_sfc">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="monthly"  interval="$(CHUNK_LENGTH_B)"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_cobalt_tracers_int" start="$(PP_START_YEAR)" source="ocean_cobalt_tracers_int">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="monthly"  interval="$(CHUNK_LENGTH_B)"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_cobalt_sfc" start="$(PP_START_YEAR)" source="ocean_cobalt_sfc">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="monthly"  interval="$(CHUNK_LENGTH_B)"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_cobalt_fluxes_int" start="$(PP_START_YEAR)" source="ocean_cobalt_fluxes_int">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="monthly"  interval="$(CHUNK_LENGTH_B)"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_cobalt_daily" start="$(PP_START_YEAR)" source="ocean_cobalt_daily">
-        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_A)" />
-      </component>
-      <component type="ocean_cobalt_tracers_month" start="$(PP_START_YEAR)" source="ocean_cobalt_tracers_month">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="monthly"  interval="$(CHUNK_LENGTH_B)"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_cobalt_omip_2d" start="$(PP_START_YEAR)" source="ocean_cobalt_omip_2d">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="monthly"  interval="$(CHUNK_LENGTH_B)"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-    </postProcess>
-  </freInclude>
-  <freInclude name="COBALT_budget_postprocess">
-    <postProcess>
-      <component type="ocean_cobalt_budget_annual" start="$(PP_START_YEAR)" source="ocean_cobalt_budget_annual">
-        <!-- No monthly for this because it's an annual field -->
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_cobalt_budget_instant" start="$(PP_START_YEAR)" source="ocean_cobalt_budget_instant">
-        <!-- No monthly for this because it's an annual field -->
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_A)" />
-        <timeSeries freq="annual" chunkLength="$(CHUNK_LENGTH_B)" />
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <!-- don't process this; it is 14 day averages
-      <component type="ocean_cobalt_budget" start="$(PP_START_YEAR)" source="ocean_cobalt_budget">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_SHORT)" />
-      </component>
-      -->
-    </postProcess>
-  </freInclude>
-  <freInclude name="MOM6_postprocess">
-    <postProcess>
-      <!--PostProcessing component models-->
-      <component type="ocean_daily"   start="$(PP_START_YEAR)" source="ocean_daily">
-        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_A)" source="ocean_daily"/>
-        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_B)" source="ocean_daily">
-          <variables>
-            tos tob ssh sshmin sshmax
-          </variables>
-        </timeSeries>
-      </component>
-      <component type="ocean_monthly" start="$(PP_START_YEAR)"  source="ocean_month">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" source="ocean_month"/>
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" source="ocean_month"/>
-        <timeAverage source="monthly" interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_monthly_z" start="$(PP_START_YEAR)"  source="ocean_month_z">
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" source="ocean_month_z"/>
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" source="ocean_month_z"/>
-        <timeAverage source="monthly" interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_annual"  start="$(PP_START_YEAR)" source="ocean_annual">
-        <timeSeries freq="annual"   chunkLength="$(CHUNK_LENGTH_A)" source="ocean_annual"/>
-        <timeSeries freq="annual"   chunkLength="$(CHUNK_LENGTH_B)" source="ocean_annual"/>
-        <timeAverage source="annual" interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-      <component type="ocean_annual_z" start="$(PP_START_YEAR)" source="ocean_annual_z" >
-        <timeSeries freq="annual"  chunkLength="$(CHUNK_LENGTH_A)" source="ocean_annual_z"/>
-        <timeAverage source="annual" interval="$(CHUNK_LENGTH_B)"/>
-        <timeSeries freq="annual"  chunkLength="$(CHUNK_LENGTH_B)" source="ocean_annual_z"/>
-      </component>
-      <!--ICE-->
-      <component type="ice_daily"   start="$(PP_START_YEAR)" source="ice_daily">
-        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_A)" source="ice_daily"/>
-      </component>
-      <component type="ice_monthly"  start="$(PP_START_YEAR)"  source="ice_month" >
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)"  source="ice_month"/>
-        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)"  source="ice_month"/>
-        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
-      </component>
-    </postProcess>
-  </freInclude>
 </experimentSuite>
 
