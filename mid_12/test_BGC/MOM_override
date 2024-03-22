@@ -1,0 +1,14 @@
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = True
+#override MAX_FIELDS=500
+!#override OBC_TIDE_NODAL_REF_DATE = 1993,7,2
+DT_OBC_SEG_UPDATE_OBGC = 3600
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z 01 ZSTAR,zsfc 02 ZSTAR"
+#override DIAG_COORD_DEF_01 = "WOA09"
+#override DIAG_COORD_DEF_02 = "UNIFORM:40,200."
+#override CHL_FROM_FILE = False
+#override VAR_PEN_SW = True
+#override PEN_SW_NBANDS = 3
+#override DO_GEOTHERMAL = True
