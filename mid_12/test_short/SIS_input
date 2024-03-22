@@ -7,16 +7,16 @@
 CGRID_ICE_DYNAMICS = True       !   [Boolean] default = False
                                 ! If true, use a C-grid discretization of the sea-ice dynamics; if false use a
                                 ! B-grid discretization.
-DO_RIDGING = True               !   [Boolean] default = False
+DO_RIDGING = False              !   [Boolean] default = False
                                 ! If true, call the ridging routines.
 
 ! === module MOM_domains ===
 REENTRANT_X = False             !   [Boolean] default = True
                                 ! If true, the domain is zonally reentrant.
-NIGLOBAL = 540                  !
+NIGLOBAL = 360                  !
                                 ! The total number of thickness grid points in the x-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
-NJGLOBAL = 696                  !
+NJGLOBAL = 464                  !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
 
@@ -82,13 +82,13 @@ ICE_THICKNESS_INIT_CONFIG = "file" ! default = "data_override"
                                 !     data_override - use the data_override capability or zero everywhere
                                 !     uniform - sea ice has uniform thickness where the concentration is
                                 !       nonzero.
-ICE_CONCENTRATION_FILE = "ice_mass_12k.nc" !
+ICE_CONCENTRATION_FILE = "arctic6_SODA3_init_2010_01_05.nc" !
                                 ! The name of the sea ice concentration file.
 ICE_CONCENTRATION_IC_VAR = "aice" ! default = "conc_ice"
                                 ! The initial condition variable for ice mass per unit area.
-ICE_THICKNESS_FILE = "ice_mass_12k.nc" !
+ICE_THICKNESS_FILE = "arctic6_SODA3_init_2010_01_05.nc" !
                                 ! The name of the sea ice thickness file.
-ICE_THICKNESS_IC_VAR = "hm"     ! default = "mH_ice"
+ICE_THICKNESS_IC_VAR = "mi"     ! default = "mH_ice"
                                 ! The initial condition variable for ice mass per unit area.
 ICE_SALINITY_IC = 3.0           !   [g kg-1] default = 0.0
                                 ! The uniform sea ice salinity used for the initial condition
@@ -182,6 +182,7 @@ DOCUMENT_FILE = "SIS_parameter_doc" ! default = "MOM_parameter_doc"
                                 ! The basename for files where run-time parameters, their settings, units and
                                 ! defaults are documented. Blank will disable all parameter documentation.
 TRACER_ADV_REFILL_MASSLESS=True
+<<<<<<<< HEAD:mid_12/test_short/SIS_input
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with INT_TIDE_DISSIPATION.
@@ -192,3 +193,5 @@ OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
 OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
 OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
 OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
+========
+>>>>>>>> origin/gaea_2024:BGC/SIS_input

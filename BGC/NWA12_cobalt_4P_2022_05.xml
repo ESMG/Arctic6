@@ -1,0 +1,1875 @@
+<?xml version="1.0"?>
+<!-- FRE Usage documentation: http://www.gfdl.noaa.gov/fms/fre -->
+<!--
+Quick start guide
+
+module load fre/test
+fremake -x NWA_cobalt_2021.05.xml -p ncrc4.intel18 -t repro MOM6_SIS2_GENERIC_compile_symm
+frerun  -x NWA_cobalt_2021.05.xml -p ncrc4.intel18 -t repro NWA12_COBALT_4P_2022_05
+-->
+
+<experimentSuite rtsVersion="4" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <!-- git tag for general component source code-->
+  <property name="RELEASE" value="2021.03"/>
+
+  <!-- git tag for FMS source code -->
+  <property name="FMS_GIT_TAG" value="release/2021.03"/>
+
+  <!-- git tag for shared source code -->
+  <property name="CPL_GIT_TAG" value="$(RELEASE)"/>
+
+  <!-- git tag for shared source code -->
+  <property name="NULL_TAG" value="$(RELEASE)"/>
+
+  <!-- git tag for ocean_shared source code -->
+  <property name="OCEAN_BGC_GIT_TAG" value="master"/>
+
+  <!-- git tag date for MOM6 source code -->
+  <property name="MOM6_DATE" value="20210630"/>
+
+  <!-- git tag for MOM6 source code -->
+  <property name="MOM6_GIT_TAG" value="dev/gfdl"/>
+
+  <!-- git tag for MOM6 source code -->
+  <property name="MOM6_GIT_FIX" value="andrew-c-ross/merge-bgc-obc-3"/>
+
+  <!-- customize as needed -->
+  <property name="FRE_STEM" value="fre/NWA/protobgc_4Pv3"/>
+
+  <!-- Please make sure to change your group, such as b, f, g, m, o... -->
+  <property name="NCRC_GROUP" value="gfdl_b"/>
+  <property name="GFDL_GROUP" value="gfdl_b"/>
+
+  <!--example containing .frepp scripts for analysis-->
+  <property name="OM4_ANALYSIS" value="ice_ocean_SIS2/OM4_05"/>
+
+  <!--Production run properties. Users can modify these according to their need and/or performance analysis-->
+  <property name="PROD_SIMTIME" value="27"/>
+
+  <!--Post-processing  chunk lengths -->
+  <property name="CHUNK_LENGTH_A" value="5yr"/>
+  <property name="CHUNK_LENGTH_B" value="20yr"/>
+
+  <!--Start year of PP -->
+  <!--Use these values for CORE2 dynamic forcing runs -->
+  <property name="PP_START_YEAR" value="1708"/>
+
+  <!-- fre version to be used -->
+  <property name="FRE_VERSION" value="bronx-19"/>
+
+  <!-- on/off switch for ATM/LND analysis -->
+  <property name="ANALYSIS_SWITCH" value="on"/>
+
+  <!-- on/off switch for MDBI database -->
+  <property name="MDBIswitch" value="off"/>
+
+  <!--Users need not change the following properties -->
+  <!-- Reference release tag for existing files in the archives for answer comparison. Used in "REFERENCE" property. -->
+  <property name="reference_tag" value="xanadu_esm4_20190304_mom6_ESM4_v1.0.3"/>
+
+  <!-- The following properties are for testing/debugging purposes and should normally be empty-->
+  <property name="MODIFIER" value=""/>
+  <property name="DEBUGLEVEL" value=""/>
+  <property name="BUILD_DATE" value=""/>
+
+  <!-- name for source/exec directory -->
+  <property name="STATIC" value=""/>
+
+  <property name="ACR" value="/lustre/f2/dev/Andrew.C.Ross"/>
+  <property name="CAS" value="/lustre/f2/dev/Charles.Stock"/>
+
+  <!--This is necessary only if you want to run exact same experiment on multiple platforms-->
+  <property name="PLATINFO" value=""/>
+  <property name="AWG_INPUT_HOME_GAEA" value="/ncrc/home2/Andrew.C.Ross/nwa-xml/xml_include"/>
+  <property name="AWG_INPUT_HOME_GFDL" value="/nbhome/$USER/$(FRE_STEM)$(PLATINFO)/$(name)/mdt_xml/awg_include"/>
+
+  <!--The start year of forcing dataset-->
+  <property name="append_to_setup_csh" value="set fyear=1993"/>
+
+  <setup>
+    <xi:include href="/ncrc/home2/Andrew.C.Ross/nwa-xml/xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='ncrc4.intel18'])"/>
+    <xi:include href="/ncrc/home2/Andrew.C.Ross/nwa-xml/xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='ncrc3.intel18'])"/>
+    <xi:include href="/ncrc/home2/Andrew.C.Ross/nwa-xml/xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='gfdl.ncrc4-intel18'])"/>
+    <xi:include href="/ncrc/home2/Andrew.C.Ross/nwa-xml/xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='gfdl.ncrc3-intel18'])"/>
+  </setup>
+
+  <!--= COMPILE =-->
+  <!--===========-->
+  <!--The property MOM6_EXAMPLES should point to the mom6 directory that is checked out. It is needed by MOM6 to access its input data files-->
+  <property name="PROG_MAIN" value="coupler/coupler_main.o"/>
+  <property name="LIBS_ROOT" value="MOM6_SIS2_GENERIC_compile_symm"/>
+  <property name="FMS_LIB_DIR" value="./$(LIBS_ROOT)/$(platform)-$(target)/exec"/>
+
+  <property name="MOM6_EXAMPLES" value="$root/$(LIBS_ROOT)/src/mom6"/>
+  <property name="MY_LIBS" value="$(EXEC_ROOT)/$(FMS_LIB_DIR)"/>
+
+  <property name="gfdlO_pdata" value="/lustre/f2/pdata/gfdl/gfdl_O"/>
+
+  <experiment name="MOM6_SIS2_GENERIC_compile_symm">
+    <description>
+      Make the executable for ocean-ice experiments.
+    </description>
+    <component name="fms" paths="FMS">
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(FMS_GIT_TAG)"> FMS.git </codeBase>
+      </source>
+      <compile>
+        <cppDefs>-Duse_libMPI -Duse_netCDF $(F2003_FLAGS) -DMAXFIELDMETHODS_=400</cppDefs>
+      </compile>
+    </component>
+
+    <component name="mom6_symmetric" requires="fms" paths="mom6/src/MOM6/config_src/memory/dynamic_symmetric mom6/src/MOM6/config_src/drivers/FMS_cap mom6/src/MOM6/src/*/ mom6/src/MOM6/src/*/*/ mom6/src/MOM6/config_src/external/ODA_hooks mom6/src/MOM6/config_src/external/stochastic_physics mom6/src/MOM6/config_src/external/drifters ocean_BGC/generic_tracers ocean_BGC/mocsy/src mom6/src/MOM6/pkg/GSW-Fortran/*/ mom6/src/MOM6/config_src/infra/FMS1">
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="master"> ocean_BGC.git </codeBase>
+        <csh><![CDATA[
+( cd ocean_BGC && git checkout $(OCEAN_BGC_GIT_TAG) )
+if ("$(MOM6_GIT_FIX)" != "") then
+  echo WARNING: Checking out from a fork! Work in progress
+  # Check out NWA-specific branch:
+  # (cd ocean_BGC && git remote add acr https://github.com/andrew-c-ross/ocean_BGC.git && git fetch acr && git checkout acr/northwest-atlantic)
+  # Check out Niki's branch with varying reservoir time scales:
+  # (cd ocean_BGC && git remote add nkz https://github.com/nikizadehgfdl/ocean_BGC.git && git fetch nkz && git checkout nkz/obgc_tracer_reservoir_lengthscale)
+  # Check out branch with both 4P COBALT and varying reservoir time scales:
+  (cd ocean_BGC && git remote add acr git@gitlab.gfdl.noaa.gov:andrew.c.ross/ocean_BGC.git && git fetch acr && git checkout acr/4P-reservoirs)
+endif
+git clone -b dev/gfdl https://github.com/NOAA-GFDL/MOM6-examples.git mom6
+pushd mom6
+git checkout $(MOM6_GIT_TAG)
+git submodule update --recursive --init src/MOM6 src/SIS2 src/icebergs
+if ("$(MOM6_GIT_FIX)" != "") then
+  echo WARNING: Checking out from a fork! Work in progress
+  (cd src/MOM6 && git remote add andrew-c-ross https://github.com/andrew-c-ross/MOM6.git && git fetch andrew-c-ross && git checkout $(MOM6_GIT_FIX))
+  (cd src/SIS2 && git checkout 9fdff09dfa798908f4775371ab7649d450b34925)
+endif
+popd
+
+#/bin/mv ocean_BGC/generic_tracers/generic_tracer_utils.F90  ocean_BGC/generic_tracers/generic_tracer_utils.F90.ORIG
+#/bin/cp -p /ncrc/home1/Charles.Stock/Regional_MOM6/NWA/generic_tracer_utils_phytosink.F90 ocean_BGC/generic_tracers/generic_tracer_utils.F90
+#/bin/mv ocean_BGC/generic_tracers/generic_COBALT.F90 ocean_BGC/generic_tracers/generic_COBALT.F90.ORIG
+#/bin/cp -p  /ncrc/home1/Charles.Stock/Regional_MOM6/NWA/COBALT_codes/generic_COBALT4P_nov23midresp_microgen_modfe_btmfix.F90 ocean_BGC/generic_tracers/generic_COBALT.F90
+
+        ]]></csh>
+      </source>
+      <compile>
+        <cppDefs><![CDATA[ $(F2003_FLAGS) -DMAX_FIELDS_=100 -DNOT_SET_AFFINITY -D_USE_MOM6_DIAG -D_USE_GENERIC_TRACER -DUSE_PRECISION=2 -D_FILE_VERSION="'"`git-version-string $<`"'" ]]></cppDefs>
+        <!--makeOverrides>OPENMP=""</makeOverrides>  openmp switch for MOM6 may cause crash -->
+      </compile>
+    </component>
+
+    <component name="sis2" paths="mom6/src/SIS2/config_src/dynamic_symmetric mom6/src/SIS2/config_src/external/Icepack_interfaces mom6/src/SIS2/src mom6/src/icebergs ice_param" requires="fms mom6_symmetric" includeDir="$root/$(LIBS_ROOT)/src/mom6/src/MOM6/src/framework" >
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(NULL_TAG)"> ice_param.git </codeBase>
+      </source>
+      <compile>
+         <cppDefs><![CDATA[$(F2003_FLAGS) -D_FILE_VERSION="'"`git-version-string $<`"'"]]></cppDefs>
+      </compile>
+    </component>
+
+    <component name="land_null" paths="land_null" requires="fms">
+      <description domainName="NA" communityName="NA" communityVersion="NA" communityGrid="NA"/>
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(NULL_TAG)"> land_null.git </codeBase>
+      </source>
+    </component>
+
+    <component name="atmos_null" paths="atmos_null" requires="fms">
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(NULL_TAG)"> atmos_null.git </codeBase>
+      </source>
+      <compile>
+        <cppDefs>$(F2003_FLAGS) </cppDefs>
+      </compile>
+    </component>
+
+    <component name="coupler" paths="coupler/full coupler/shared" requires="fms land_null atmos_null sis2 mom6_symmetric">
+      <description domainName="FMS Coupler" communityName="coupler" communityVersion="$(RELEASE)" communityGrid=""/>
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(CPL_GIT_TAG)"> coupler.git </codeBase>
+      </source>
+      <compile>
+        <cppDefs><![CDATA[$(F2003_FLAGS) -D_USE_LEGACY_LAND_ -Duse_AM3_physics -D_FILE_VERSION="'"`git-version-string $<`"'"]]></cppDefs>
+      </compile>
+    </component>
+  </experiment>
+
+  <experiment name="NWA12_COBALT_4P_2022_05" inherit="MOM6_SIS2_GENERIC_compile_symm">
+    <description>
+      Base MOM6-COBALT-NWA12 hindcast.
+    </description>
+    <input>
+      <namelist name="coupler_nml">
+        months = $months
+        days   = $days
+        current_date = 1993,1,1,0,0,0
+        hours = 0
+        minutes = 0
+        seconds = 0
+        calendar = 'gregorian'
+        dt_cpld  = 3600
+        dt_atmos = 3600
+        do_atmos = .false.
+        do_land = .false.
+        do_ice = .true.
+        do_ocean = .true.
+        atmos_npes = 0,
+        ocean_npes = 0,
+        concurrent = .false.
+        use_lag_fluxes=.false.
+        atmos_nthreads = $atm_threads
+        ocean_nthreads = $ocn_threads
+        do_chksum = .false.
+      </namelist>
+      <namelist name="generic_tracer_nml">
+        do_generic_tracer=.true.
+        do_generic_abiotic=.false.
+        do_generic_CFC=.false.
+        do_generic_COBALT=.true.
+        do_generic_SF6=.false.
+        force_update_fluxes=.true.
+      </namelist>
+      <namelist name="time_interp_external_nml">
+        max_fields = 400
+      </namelist>
+      <namelist name="generic_abiotic_nml">
+        co2_calc='mocsy'
+      </namelist>
+      <namelist name="generic_COBALT_nml">
+        co2_calc = 'mocsy'
+        debug = .false.
+      </namelist>
+      <namelist name="diag_manager_nml">
+        max_files = 600
+        flush_nc_files=.false.
+        max_axes = 600
+        max_num_axis_sets = 600
+        max_input_fields = 2000
+        max_output_fields = 5000
+        mix_snapshot_average_fields=.false.
+      </namelist>
+      <namelist name="xgrid_nml">
+        make_exchange_reproduce = .true.
+        interp_method = 'second_order'
+      </namelist>
+      <namelist name="fms_nml">
+        clock_grain='ROUTINE'
+        clock_flags='NONE'
+        domains_stack_size = 8000000
+        stack_size =0
+      </namelist>
+      <namelist name="fms_io_nml">
+        fms_netcdf_restart=.true.
+        threading_read='multi'
+        max_files_r = 800
+        max_files_w = 800
+        checksum_required=.false.
+      </namelist>
+      <namelist name="atmos_model_nml">
+        layout= 1,1
+      </namelist>
+      <!--verona-->
+      <namelist name="sat_vapor_pres_nml">
+        construct_table_wrt_liq = .true.
+        construct_table_wrt_liq_and_ice = .true.
+      </namelist>
+      <namelist name="ice_albedo_nml">
+        t_range = 10.
+      </namelist>
+      <namelist name="icebergs_nml">
+        verbose=.false.
+        verbose_hrs=24
+        traj_sample_hrs=24
+        debug=.false.
+        really_debug=.false.
+        use_slow_find=.true.
+        add_weight_to_ocean=.true.
+        passive_mode=.false.
+        generate_test_icebergs=.false.
+        speed_limit=0.
+        use_roundoff_fix=.true.
+        make_calving_reproduce=.true.
+      </namelist>
+      <namelist name="monin_obukhov_nml">
+        neutral = .true.
+      </namelist>
+      <namelist name="ocean_albedo_nml">
+        ocean_albedo_option = 2
+      </namelist>
+      <namelist name="ocean_rough_nml">
+        rough_scheme = 'beljaars'
+      </namelist>
+      <namelist name="surface_flux_nml">
+        ncar_ocean_flux_multilevel = .true.
+        bulk_zu = 10.0
+        bulk_zt = 2.0
+        bulk_zq = 2.0
+        raoult_sat_vap = .true.
+      </namelist>
+      <namelist name="topography_nml">
+        topog_file = 'INPUT/navy_topography.data.nc'
+      </namelist>
+
+      <!--common setup-->
+      <xi:include xpointer="xpointer(//freInclude[@name='always_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_data']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+
+      <dataTable>
+"ATM", "p_surf",             "msl",    "INPUT/ERA5_msl.nc",           "bilinear",  1.0
+"ATM", "p_bot",              "msl",    "INPUT/ERA5_msl.nc",           "bilinear",  1.0
+"ATM", "t_bot",              "t2m",    "INPUT/ERA5_t2m.nc",           "bilinear",  1.0
+"ATM", "sphum_bot",          "sphum",  "INPUT/ERA5_sphum.nc",          "bilinear",  1.0
+"ATM", "u_bot",              "u10",    "INPUT/ERA5_u10.nc",          "bicubic",   1.0
+"ATM", "v_bot",              "v10",    "INPUT/ERA5_v10.nc",          "bicubic",   1.0
+"ATM", "z_bot",              "",       "",                           "bilinear", 10.0
+"ATM", "gust",               "",       "",                           "bilinear",  1.0e-4
+"ATM", "o2_flux_pcair_atm",  "",       "",                           "none",      0.214
+#"ATM", "co2_flux_pcair_atm", "",       "",                           "none",    360.0e-06
+#"ATM", "co2_bot",            "",       "",                           "none",    360.0e-06
+#"ATM", "co2_dvmr_restore",   "",       "",                           "none",    360.0e-06
+"ATM", "co2_flux_pcair_atm", "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_extended.nc", "bilinear", 1.0e-06
+"ATM", "co2_bot",            "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_extended.nc", "bilinear", 1.0e-06
+"ATM", "co2_dvmr_restore",   "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_extended.nc", "bilinear", 1.0e-06
+#
+"ICE", "lw_flux_dn"        , "strd",   "INPUT/ERA5_strd.nc",          "bilinear", 2.77778e-4
+"ICE", "sw_flux_vis_dir_dn", "ssrd",   "INPUT/ERA5_ssrd.nc",          "bilinear",  7.9167e-5
+"ICE", "sw_flux_vis_dif_dn", "ssrd",   "INPUT/ERA5_ssrd.nc",          "bilinear",  7.9167e-5
+"ICE", "sw_flux_nir_dir_dn", "ssrd",   "INPUT/ERA5_ssrd.nc",          "bilinear",  5.9722e-5
+"ICE", "sw_flux_nir_dif_dn", "ssrd",   "INPUT/ERA5_ssrd.nc",          "bilinear",  5.9722e-5
+"ICE", "lprec",              "tp",     "INPUT/ERA5_tp.nc",            "bilinear", 0.277777778
+"ICE", "fprec",              "",       "",                           "none",      0.0
+"ICE", "runoff",             "runoff", "INPUT/glofas_runoff.nc",     "none",      1.0
+"ICE", "calving",            "",       "",                           "none",      0.0
+"ICE", "dhdt",               "",       "",                           "none",     80.0
+"ICE", "dedt",               "",       "",                           "none",      2.0e-6
+"ICE", "drdt",               "",       "",                           "none",     10.0
+#
+"LND", "t_surf",             "",       "",                           "none",    273.0
+"LND", "t_ca",               "",       "",                           "none",    273.0
+"LND", "q_ca",               "",       "",                           "none",     0.0
+"LND", "rough_mom",          "",       "",                           "none",     0.01
+"LND", "rough_heat",         "",       "",                           "none",     0.1
+"LND", "albedo",             "",       "",                           "none",     0.1
+"LND", "sphum_surf",         "",       "",                           "none",     0.0
+"LND", "sphum_ca",           "",       "",                           "none",     0.0
+"LND", "t_flux",             "",       "",                           "none",     0.0
+"LND", "sphum_flux",         "",       "",                           "none",     0.0
+"LND", "lw_flux",            "",       "",                           "none",     0.0
+"LND", "sw_flux",            "",       "",                           "none",     0.0
+"LND", "lprec",              "",       "",                           "none",     0.0
+"LND", "fprec",              "",       "",                           "none",     0.0
+"LND", "dhdt",               "",       "",                           "none",     5.0
+"LND", "dedt",               "",       "",                           "none",     2.0e-6
+"LND", "dedq",               "",       "",                           "none",     0.0
+"LND", "drdt",               "",       "",                           "none",     5.0
+"LND", "drag_q",             "",       "",                           "none",     0.0
+"LND", "p_surf",             "",       "",                           "none",     1.0e5
+#
+"OCN", "runoff_no3_flux_ice_ocn",   "NO3_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_ldon_flux_ice_ocn",  "LDON_CONC",    "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_sldon_flux_ice_ocn", "SLDON_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_srdon_flux_ice_ocn", "SRDON_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_ndet_flux_ice_ocn",  "NDET_CONC",    "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_po4_flux_ice_ocn",   "PO4_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_ldop_flux_ice_ocn",  "LDOP_CONC",    "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_sldop_flux_ice_ocn", "SLDOP_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_srdop_flux_ice_ocn", "SRDOP_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_pdet_flux_ice_ocn",  "PDET_CONC",    "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_fed_flux_ice_ocn",   "FED_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_alk_flux_ice_ocn",   "ALK_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_dic_flux_ice_ocn",   "DIC_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_nh4_flux_ice_ocn",   "NH4_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_fedet_flux_ice_ocn", "FEDET_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_lith_flux_ice_ocn",  "",             "",                                                           "none",     13.0e-3
+#
+"OCN", "dry_dep_fed_flux_ice_ocn",  "dryfe",   "./INPUT/esm4_dryfe_climo_1993-2014.nc",                 "bilinear", -1.0
+"OCN", "wet_dep_fed_flux_ice_ocn",  "wetfe",   "./INPUT/esm4_wetfe_climo_1993-2014.nc",                 "bilinear", -1.0
+"OCN", "dry_dep_lith_flux_ice_ocn", "drydust", "./INPUT/esm4_drydust_climo_1993-2014.nc",               "bilinear", -1.0
+"OCN", "wet_dep_lith_flux_ice_ocn", "wetdust", "./INPUT/esm4_wetdust_climo_1993-2014.nc",               "bilinear", -1.0
+# TODO:
+"OCN", "dry_dep_po4_flux_ice_ocn",  "drydust", "./INPUT/esm4_drydust_climo_1993-2014.nc",               "bilinear",  -4.0e-6
+"OCN", "wet_dep_no3_flux_ice_ocn",  "wetnoy",  "./INPUT/esm4_wetnoy_climo_1993-2014.nc",                "bilinear",  -1.0
+"OCN", "dry_dep_no3_flux_ice_ocn",  "drynoy",  "./INPUT/esm4_drynoy_climo_1993-2014.nc",                "bilinear",  -1.0
+"OCN", "wet_dep_nh4_flux_ice_ocn",  "wetnh4",  "./INPUT/esm4_wetnh4_climo_1993-2014.nc",                "bilinear",  -1.0
+"OCN", "dry_dep_nh4_flux_ice_ocn",  "drynh4",  "./INPUT/esm4_drynh4_climo_1993-2014.nc",                "bilinear",  -1.0
+      </dataTable>
+
+      <fieldTable>
+# specific humidity for moist runs
+"TRACER", "atmos_mod", "sphum"
+          "longname",     "specific humidity"
+          "units",        "kg/kg" /
+# prognostic cloud scheme tracers
+"TRACER", "atmos_mod", "liq_wat"
+          "longname",     "cloud liquid specific humidity"
+          "units",        "kg/kg" /
+"TRACER", "atmos_mod", "ice_wat"
+          "longname",     "cloud ice water specific humidity"
+          "units",        "kg/kg" /
+"TRACER", "atmos_mod", "cld_amt"
+          "longname",     "cloud fraction"
+          "units",        "none" /
+# sphum must be present on land as well
+"TRACER", "land_mod",     "sphum"
+          "longname",     "specific humidity"
+          "units",        "kg/kg" /
+###.................................................
+
+"namelists","ocean_mod","generic_COBALT"
+enforce_src_info = f
+alk_obc_src_file_name = bgc_esper.nc
+alk_obc_lfac_in = 0.005
+alk_obc_lfac_out = 1.0
+cadet_arag_obc_src_file_name = bgc_cobalt.nc
+cadet_arag_obc_lfac_in = 0.005
+cadet_ararg_obc_lfac_out = 1.0
+cadet_calc_obc_src_file_name = bgc_cobalt.nc
+cadet_calc_obc_lfac_in = 0.005
+cadet_calc_obc_lfac_out = 1.0
+dic_obc_src_file_name = bgc_esper.nc
+dic_obc_lfac_in = 0.005
+dic_obc_lfac_out = 1.0
+dic14_obc_src_file_name = bgc_zero.nc
+dic14_obc_lfac_in = 0.005
+dic14_obc_lfac_out = 1.0
+do14_obc_src_file_name = bgc_zero.nc
+do14_obc_lfac_in = 0.005
+do14_obc_lfac_out = 1.0
+do14c_obc_src_file_name = bgc_zero.nc
+do14c_obc_lfac_in = 0.005
+do14c_obc_lfac_out = 1.0
+di14c_obc_src_file_name = bgc_zero.nc
+di14c_obc_lfac_in = 0.005
+di14c_obc_lfac_out = 1.0
+fed_obc_src_file_name = bgc_cobalt.nc
+fed_obc_lfac_in = 0.005
+fed_obc_lfac_out = 1.0
+fedi_obc_src_file_name = bgc_cobalt.nc
+fedi_obc_lfac_in = 0.005
+fedi_obc_lfac_out = 1.0
+felg_obc_src_file_name = bgc_cobalt.nc
+felg_obc_lfac_in = 0.005
+felg_obc_lfac_out = 1.0
+fedet_obc_src_file_name = bgc_cobalt.nc
+fedet_obc_lfac_in = 0.005
+fedet_obc_lfac_out = 1.0
+fesm_obc_src_file_name = bgc_cobalt.nc
+fesm_obc_lfac_in = 0.005
+fesm_obc_lfac_out = 1.0
+ldon_obc_src_file_name = bgc_cobalt.nc
+ldon_obc_lfac_in = 0.005
+ldon_obc_lfac_out = 1.0
+ldop_obc_src_file_name = bgc_cobalt.nc
+ldop_obc_lfac_in = 0.005
+ldop_obc_lfac_out = 1.0
+lith_obc_src_file_name = bgc_cobalt.nc
+lith_obc_lfac_in = 0.005
+lith_obc_lfac_out = 1.0
+lithdet_obc_src_file_name = bgc_cobalt.nc
+lithdet_obc_lfac_in = 0.005
+lithdet_obc_lfac_out = 1.0
+nbact_obc_src_file_name = bgc_cobalt.nc
+nbact_obc_lfac_in = 0.005
+nbact_obc_lfac_out = 1.0
+ndet_obc_src_file_name = bgc_cobalt.nc
+ndet_obc_lfac_in = 0.005
+ndet_obc_lfac_out = 1.0
+ndi_obc_src_file_name = bgc_cobalt.nc
+ndi_obc_lfac_in = 0.005
+ndi_obc_lfac_out = 1.0
+nlg_obc_src_file_name = bgc_cobalt.nc
+nlg_obc_lfac_in = 0.005
+nlg_obc_lfac_out = 1.0
+nsm_obc_src_file_name = bgc_cobalt.nc
+nsm_obc_lfac_in = 0.005
+nsm_obc_lfac_out = 1.0
+nh3_obc_src_file_name = bgc_zero.nc
+nh3_obc_lfac_in = 0.005
+nh3_obc_lfac_out = 1.0
+nh4_obc_src_file_name = bgc_cobalt.nc
+nh4_obc_lfac_in = 0.005
+nh4_obc_lfac_out = 1.0
+no3_obc_src_file_name = bgc_woa.nc
+no3_obc_lfac_in = 0.005
+no3_obc_lfac_out = 1.0
+o2_obc_src_file_name = bgc_woa.nc
+o2_obc_lfac_in = 0.005
+o2_obc_lfac_out = 1.0
+pdet_obc_src_file_name = bgc_cobalt.nc
+pdet_obc_lfac_in = 0.005
+pdet_obc_lfac_out = 1.0
+po4_obc_src_file_name = bgc_woa.nc
+po4_obc_lfac_in = 0.005
+po4_obc_lfac_out = 1.0
+srdon_obc_src_file_name = bgc_cobalt.nc
+srdon_obc_lfac_in = 0.005
+srdon_obc_lfac_out = 1.0
+srdop_obc_src_file_name = bgc_cobalt.nc
+srdop_obc_lfac_in = 0.005
+srdop_obc_lfac_out = 1.0
+sldon_obc_src_file_name = bgc_cobalt.nc
+sldon_obc_lfac_in = 0.005
+sldon_obc_lfac_out = 1.0
+sldop_obc_src_file_name = bgc_cobalt.nc
+sldop_obc_lfac_in = 0.005
+sldop_obc_lfac_out = 1.0
+sidet_obc_src_file_name = bgc_cobalt.nc
+sidet_obc_lfac_in = 0.005
+sidet_obc_lfac_out = 1.0
+silg_obc_src_file_name = bgc_cobalt.nc
+silg_obc_lfac_in = 0.005
+silg_obc_lfac_out = 1.0
+sio4_obc_src_file_name = bgc_woa.nc
+sio4_obc_lfac_in = 0.005
+sio4_obc_lfac_out = 1.0
+nsmz_obc_src_file_name = bgc_cobalt.nc
+nsmz_obc_lfac_in = 0.005
+nsmz_obc_lfac_out = 1.0
+nmdz_obc_src_file_name = bgc_cobalt.nc
+nmdz_obc_lfac_in = 0.005
+nmdz_obc_lfac_out = 1.0
+nlgz_obc_src_file_name = bgc_cobalt.nc
+nlgz_obc_lfac_in = 0.005
+nlgz_obc_lfac_out = 1.0
+nmdp_obc_src_file_name = bgc_cobalt.nc
+nmdp_obc_lfac_in = 0.005
+nmdp_obc_lfac_out = 1.0
+femdp_obc_src_file_name = bgc_cobalt.nc
+femdp_obc_lfac_in = 0.005
+femdp_obc_lfac_out = 1.0
+femd_obc_src_file_name = bgc_cobalt.nc
+femd_obc_lfac_in = 0.005
+femd_obc_lfac_out = 1.0
+simd_obc_src_file_name = bgc_cobalt.nc
+simd_obc_lfac_in = 0.005
+simd_obc_lfac_out = 1.0
+pdi_obc_src_file_name = bgc_cobalt.nc
+pdi_obc_lfac_in = 0.005
+pdi_obc_lfac_out = 1.0
+psm_obc_src_file_name = bgc_cobalt.nc
+psm_obc_lfac_in = 0.005
+psm_obc_lfac_out = 1.0
+pmd_obc_src_file_name = bgc_cobalt.nc
+pmd_obc_lfac_in = 0.005
+pmd_obc_lfac_out = 1.0
+nmd_obc_src_file_name = bgc_cobalt.nc
+nmd_obc_lfac_in = 0.005
+nmd_obc_lfac_out = 1.0
+pld_obc_src_file_name = bgc_cobalt.nc
+pld_obc_lfac_in = 0.005
+pld_obc_lfac_out = 1.0
+/
+      </fieldTable>
+      <diagTable>
+$name
+$baseDate
+"ocean_hour_snap", 1, "hours",  1, "hours", "time"
+"ice_month",       1, "months", 1, "days" , "time"
+# Hourly ocean for tides
+"ocean_model",   "SSU",      "ssu",         "ocean_hour_snap", "all", "none", "none", 2
+"ocean_model",   "SSV",      "ssv",         "ocean_hour_snap", "all", "none", "none", 2
+"ocean_model",   "zos",      "zos",         "ocean_hour_snap", "all", "none", "none", 2
+# Monthly sea ice
+"ice_model",     "siconc",   "aice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "hi",       "hice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "UI",       "uice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "VI",       "vice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "HS",       "hsnow",       "ice_month",       "all", "mean", "none", 2
+      </diagTable>
+      <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table_COBALT_4P_052522</dataSource>
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table.MOM6</dataSource>
+      </dataFile>
+      <!-- Run the first year with the below uncommented, then comment. Need a better solution -->
+      <!--
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/initial/20030101.tar</dataSource>
+      </dataFile>
+      -->
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = True
+#override MAX_FIELDS=500
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+DT_OBC_SEG_UPDATE_OBGC = 3600
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z 01 ZSTAR,zsfc 02 ZSTAR"
+#override DIAG_COORD_DEF_01 = "WOA09"
+#override DIAG_COORD_DEF_02 = "UNIFORM:40,200."
+#override CHL_FROM_FILE = False
+#override PEN_SW_NBANDS = 1
+#override DO_GEOTHERMAL = True
+MOM_OVERRIDE_EOF
+        ]]>
+      </csh>
+    </input>
+    <runtime>
+      <production simTime="$(PROD_SIMTIME)" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="09:00:00" segRuntime="09:00:00">
+          <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+        </resources>
+      </production>
+
+      <regression name="test">
+        <run days="3">
+          <resources jobWallclock="00:40:00">
+            <ice                          layout = "40,40" io_layout = "1,5" mask_table="mask_table.535.40x40"/>
+            <ocn ranks="1065" threads="1" layout = "40,40" io_layout = "1,5" mask_table="mask_table.535.40x40"/>
+          </resources>
+        </run>
+      </regression>
+
+      <regression name="month">
+        <run months="1">
+          <resources jobWallclock="01:30:00">
+            <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+            <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          </resources>
+        </run>
+      </regression>
+
+      <regression name="rts">
+        <run days="15 16">
+          <resources jobWallclock="01:30:00">
+            <ice                          layout = "40,40" io_layout = "1,1" mask_table="MOM_mask_table"/>
+            <ocn ranks="2015" threads="1" layout = "40,40" io_layout = "1,1" mask_table="MOM_mask_table"/>
+          </resources>
+        </run>
+      </regression>
+
+      <regression name="debug">
+        <run days="2">
+          <resources jobWallclock="01:00:00">
+            <ice                          layout = "40,40" io_layout = "1,6" mask_table="MOM_mask_table"/>
+            <ocn ranks="2015" threads="1" layout = "40,40" io_layout = "1,6" mask_table="MOM_mask_table"/>
+          </resources>
+        </run>
+        <run days="1 1">
+          <resources jobWallclock="01:00:00">
+            <ice                          layout = "40,40" io_layout = "1,6" mask_table="MOM_mask_table"/>
+            <ocn ranks="2015" threads="1" layout = "40,40" io_layout = "1,6" mask_table="MOM_mask_table"/>
+          </resources>
+        </run>
+      </regression>
+
+      <regression name="restart">
+        <run days="2" >
+          <resources jobWallclock="00:30:00">
+            <ice                           layout = "40,40" io_layout = "1,1" mask_table="MOM_mask_table"/>
+            <ocn ranks="2015" threads="1"  layout = "40,40" io_layout = "1,1" mask_table="MOM_mask_table"/>
+          </resources>
+        </run>
+        <run days="1 1" >
+          <resources jobWallclock="00:30:00">
+            <ice                           layout = "40,40" io_layout = "1,1" mask_table="MOM_mask_table"/>
+            <ocn ranks="2015" threads="1"  layout = "40,40" io_layout = "1,1" mask_table="MOM_mask_table"/>
+          </resources>
+        </run>
+      </regression>
+    </runtime>
+  </experiment>
+
+  <!-- For a new run starting from non-restart initial conditions, this starts the first year as a new run and then restarts for subsequent years -->
+  <freInclude name="choose_restart">
+    <input>
+      <csh type="always">
+        <![CDATA[
+#------------------------------------------
+## Find out whether to restart.
+
+if ( $currentSeg == 1 ) then
+    set restart_flag = 'n'
+else
+    set restart_flag = 'r'
+    #Because of a technical issue FRE does not delete old uncombined restarts before copying the new ones for the next segment
+    #The INPUT/ ends up with inconsistent restart files which at best cause the model to crash right away.
+    if(-e $work/INPUT/MOM.res.nc.0000 ) \rm -rf $work/INPUT/MOM.res*.nc
+endif
+        ]]>
+      </csh>
+    </input>
+  </freInclude>
+
+  <!-- For a new run starting from a restart file (e.g. from the end of a spinup simulation), this always sets the restart flag -->
+  <freInclude name="always_restart">
+    <input>
+      <csh type="always">
+        <![CDATA[
+set restart_flag = 'r'
+#Because of a technical issue FRE does not delete old uncombined restarts before copying the new ones for the next segment
+#The INPUT/ ends up with inconsistent restart files which at best cause the model to crash right away.
+if(-e $work/INPUT/MOM.res.nc.0000 ) \rm -rf $work/INPUT/MOM.res*.nc
+        ]]>
+      </csh>
+    </input>
+  </freInclude>
+
+  <freInclude name="OM4_common">
+    <input>
+      <csh type="always">
+        <![CDATA[
+ln -s $work/INPUT/ocean_topog.nc $work/INPUT/topog.nc
+
+touch $work/INPUT/MOM_override
+touch $work/INPUT/SIS_override
+touch $work/INPUT/MOM_layout
+touch $work/INPUT/SIS_layout
+
+# Record the job stdout location for later use timings database
+cat >> $HOME/frejobs_stdout <<EOF_frejobs
+$stdoutDir/$FRE_JOBID
+EOF_frejobs
+
+cat > $work/INPUT/MOM_layout << MOM_LAYOUT_EOF
+#override IO_LAYOUT = $ocn_io_layout
+#override LAYOUT    = $ocn_layout
+#override MASKTABLE = $ocn_mask_table
+#override OCEAN_OMP_THREADS = $ocn_threads
+MOM_LAYOUT_EOF
+
+cat > $work/INPUT/SIS_layout << SIS_LAYOUT_EOF
+#override IO_LAYOUT = $ice_io_layout
+#override LAYOUT    = $ice_layout
+#override MASKTABLE = $ice_mask_table
+SIS_LAYOUT_EOF
+
+cat > $work/INPUT/SIS_override << SIS_OVERRIDE_EOF
+#override ICE_STATS_INTERVAL = 10.
+#override DO_ICEBERGS = False
+#override ICE_OCEAN_STRESS_STAGGER = "C"
+SIS_OVERRIDE_EOF
+
+cat > $work/INPUT/SIS_diurnal << SIS_diurnal_EOF
+!ADD_DIURNAL_SW = True ! This must ONLY be used in the ice-ocean mode if forcing is not diurnal (e.g. CORE), NOT fully coupled mode.
+SIS_diurnal_EOF
+
+# Copy AWG and OWG ascii input files to GFDL (waiting for FRE to do this for us)
+#if ( $?flagOutputXferOn && $?flagOutputPostProcessOn && $currentSeg == 1 ) then
+#  #gcp --batch does not understand some variations of home filesystem like /autofs/mnt/ncrc-svm1_home1 so we need to massage rtsxml to comply
+#  set xmldirlocal = `dirname $rtsxml | sed -r "s/^\/(autofs|ncrc)\/.+\/$USER\//\~$USER\//"`
+#  set xmldirRemote = `echo $xmldirlocal | sed -r "$patternSedHome"`
+#  set platform_domain = `perl -T -e "use Net::Domain(hostdomain) ; print hostdomain"`
+#  if ("${platform_domain}" == "ncrc.gov") then
+#    set xmldirRemote = `echo $xmldirlocal | sed -r "$patternSedHome;$patternSedCTMP;$patternSedCPERM"`
+#    gcp --batch -cd -r --sync $xmldirlocal/awg_include gfdl:$(NB_ROOT)/mdt_xml/
+#    gcp --batch -cd -r --sync $xmldirlocal/awg_include gfdl:$xmldirRemote/
+#  endif
+#  #trick to copy MOM6 directory but avoid traversing the .datasets links
+#  tar cvf mom6.tar --exclude='.datasets' -C $(MOM6_EXAMPLES) . > /dev/null
+#  mkdir mom6
+#  tar xvf mom6.tar -C ./mom6 > /dev/null
+#  if ("${platform_domain}" == "ncrc.gov") then
+#    gcp --batch -cd -r --sync mom6 gfdl:$(NB_ROOT)/
+#  else if ("${platform_domain}" =~ *"fairmont.rdhpcs.noaa.gov"* ) then
+#    gcp -cd -r --sync mom6 gfdl:$(NB_ROOT)/
+#  endif
+#endif
+
+# IAF cycle mechanism
+echo "Model year = $fyear"
+cd $work/INPUT
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/era5/ERA5_msl_${fyear}_padded.nc ERA5_msl.nc
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/era5/ERA5_t2m_${fyear}_padded.nc ERA5_t2m.nc
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/era5/ERA5_sphum_${fyear}_padded.nc ERA5_sphum.nc
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/era5/ERA5_strd_${fyear}_padded.nc ERA5_strd.nc
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/era5/ERA5_ssrd_${fyear}_padded.nc ERA5_ssrd.nc
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/era5/ERA5_tp_${fyear}_padded.nc ERA5_tp.nc
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/era5/ERA5_u10_${fyear}_padded.nc ERA5_u10.nc
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/era5/ERA5_v10_${fyear}_padded.nc ERA5_v10.nc
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/nwa12_input/glofas/2022_04/glofas_runoff_${fyear}.nc glofas_runoff.nc
+cd $work
+      ]]>
+      </csh>
+    </input>
+  </freInclude>
+
+  <freInclude name="nwa12_grid">
+    <input>
+      <dataFile label="gridSpec" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/nwa12_grid_75z.tar</dataSource>
+      </dataFile>
+    </input>
+  </freInclude>
+
+  <freInclude name="nwa12_data">
+    <input>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/NWA12/MOM_inputs/2022_05/MOM_input</dataSource>
+        <!-- Boundary conditions for BGC -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_woa.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_esper.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_cobalt.nc</dataSource>
+        <!-- Boundary conditions for physics -->
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/so_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/so_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/so_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/thetao_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/thetao_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/thetao_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/zos_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/zos_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/zos_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/uv_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/uv_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/uv_003.nc</dataSource>
+        <!--River nutrients and DIC and alkalinity -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc</dataSource>
+        <!-- Files for tidal boundary conditions -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu1.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu2.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu3.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz1.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz2.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz3.nc</dataSource>
+      </dataFile>
+      <!--Other files for BGC fluxes from atmosphere -->
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drydust_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetdust_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_dryfe_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetfe_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drynh4_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetnh4_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drynoy_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetnoy_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/mole_fraction_of_co2_extended.nc</dataSource>
+      </dataFile>
+      <namelist name="MOM_input_nml">
+         output_directory = './'
+         input_filename = '$restart_flag'
+         restart_input_dir = 'INPUT/'
+         restart_output_dir = 'RESTART/'
+         parameter_filename = 'INPUT/MOM_input','INPUT/MOM_layout','INPUT/MOM_override'
+      </namelist>
+    </input>
+  </freInclude>
+
+  <freInclude name="nwa12_spinup_data">
+    <input>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/NWA12/MOM_inputs/2022_05/MOM_input</dataSource>
+        <!-- Boundary conditions for BGC -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_woa.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_esper_1993.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_cobalt.nc</dataSource>
+        <!-- Initial conditions for BGC and physics -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_woa_esper_ics_1993.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glorys/glorys_ic_1993-01-01.nc</dataSource>
+        <!-- Boundary conditions for physics -->
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/so_1mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/so_2mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/so_3mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/thetao_1mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/thetao_2mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/thetao_3mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/zos_1mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/zos_2mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/zos_3mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/uv_1mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/uv_2mod.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/uv_3mod.nc</dataSource>
+        <!-- Atmosphere for spin up -->
+        <dataSource site="ncrc">$(ACR)/era5/looped/ERA5_msl_1993_mod.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/era5/looped/ERA5_sphum_1993_mod.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/era5/looped/ERA5_ssrd_1993_mod.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/era5/looped/ERA5_strd_1993_mod.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/era5/looped/ERA5_t2m_1993_mod.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/era5/looped/ERA5_tp_1993_mod.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/era5/looped/ERA5_u10_1993_mod.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/era5/looped/ERA5_v10_1993_mod.nc</dataSource>
+        <!-- Runoff -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glofas/glofas_runoff_1993_mod.nc</dataSource>
+        <!--River nutrients and DIC and alkalinity -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc</dataSource>
+        <!-- Files for tidal boundary conditions -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu1.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu2.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu3.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz1.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz2.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz3.nc</dataSource>
+      </dataFile>
+      <!--Other files for BGC fluxes from atmosphere -->
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drydust_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetdust_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_dryfe_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetfe_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drynh4_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetnh4_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_drynoy_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/esm4_deposition/esm4_wetnoy_climo_1993-2014.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/global_input/mole_fraction_of_co2_1993_mod.nc</dataSource>
+      </dataFile>
+      <namelist name="MOM_input_nml">
+         output_directory = './'
+         input_filename = '$restart_flag'
+         restart_input_dir = 'INPUT/'
+         restart_output_dir = 'RESTART/'
+         parameter_filename = 'INPUT/MOM_input','INPUT/MOM_layout','INPUT/MOM_override'
+      </namelist>
+    </input>
+  </freInclude>
+
+  <freInclude name="SIS2_data">
+    <input>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/NWA12/SIS_input</dataSource>
+      </dataFile>
+      <namelist name="SIS_input_nml">
+        output_directory = './'
+        input_filename = '$restart_flag'
+        restart_input_dir = 'INPUT/'
+        restart_output_dir = 'RESTART/'
+        parameter_filename = 'INPUT/SIS_input','INPUT/SIS_layout','INPUT/SIS_override'
+      </namelist>
+    </input>
+  </freInclude>
+
+  <experiment name="NWA12_COBALT_4P_2022_05_spinup" inherit="NWA12_COBALT_4P_2022_05">
+    <description>
+      Repeating 1993 simulation to spin up the model.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_spinup_data']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <dataTable>
+"ATM", "p_surf",             "msl",    "INPUT/ERA5_msl_1993_mod.nc",           "bilinear",  1.0
+"ATM", "p_bot",              "msl",    "INPUT/ERA5_msl_1993_mod.nc",           "bilinear",  1.0
+"ATM", "t_bot",              "t2m",    "INPUT/ERA5_t2m_1993_mod.nc",           "bilinear",  1.0
+"ATM", "sphum_bot",          "sphum",  "INPUT/ERA5_sphum_1993_mod.nc",          "bilinear",  1.0
+"ATM", "u_bot",              "u10",    "INPUT/ERA5_u10_1993_mod.nc",          "bicubic",   1.0
+"ATM", "v_bot",              "v10",    "INPUT/ERA5_v10_1993_mod.nc",          "bicubic",   1.0
+"ATM", "z_bot",              "",       "",                           "bilinear", 10.0
+"ATM", "gust",               "",       "",                           "bilinear",  1.0e-4
+"ATM", "o2_flux_pcair_atm",  "",       "",                           "none",      0.214
+#"ATM", "co2_flux_pcair_atm", "",       "",                           "none",    360.0e-06
+#"ATM", "co2_bot",            "",       "",                           "none",    360.0e-06
+#"ATM", "co2_dvmr_restore",   "",       "",                           "none",    360.0e-06
+"ATM", "co2_flux_pcair_atm", "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_1993_mod.nc", "bilinear", 1.0e-06
+"ATM", "co2_bot",            "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_1993_mod.nc", "bilinear", 1.0e-06
+"ATM", "co2_dvmr_restore",   "mole_fraction_of_carbon_dioxide_in_air", "INPUT/mole_fraction_of_co2_1993_mod.nc", "bilinear", 1.0e-06
+#
+"ICE", "lw_flux_dn"        , "strd",   "INPUT/ERA5_strd_1993_mod.nc",          "bilinear", 2.77778e-4
+"ICE", "sw_flux_vis_dir_dn", "ssrd",   "INPUT/ERA5_ssrd_1993_mod.nc",          "bilinear",  7.9167e-5
+"ICE", "sw_flux_vis_dif_dn", "ssrd",   "INPUT/ERA5_ssrd_1993_mod.nc",          "bilinear",  7.9167e-5
+"ICE", "sw_flux_nir_dir_dn", "ssrd",   "INPUT/ERA5_ssrd_1993_mod.nc",          "bilinear",  5.9722e-5
+"ICE", "sw_flux_nir_dif_dn", "ssrd",   "INPUT/ERA5_ssrd_1993_mod.nc",          "bilinear",  5.9722e-5
+"ICE", "lprec",              "tp",     "INPUT/ERA5_tp_1993_mod.nc",            "bilinear", 0.277777778
+"ICE", "fprec",              "",       "",                           "none",      0.0
+"ICE", "runoff",             "runoff", "INPUT/glofas_runoff_1993_mod.nc",     "none",      1.0
+"ICE", "calving",            "",       "",                           "none",      0.0
+"ICE", "dhdt",               "",       "",                           "none",     80.0
+"ICE", "dedt",               "",       "",                           "none",      2.0e-6
+"ICE", "drdt",               "",       "",                           "none",     10.0
+#
+"LND", "t_surf",             "",       "",                           "none",    273.0
+"LND", "t_ca",               "",       "",                           "none",    273.0
+"LND", "q_ca",               "",       "",                           "none",     0.0
+"LND", "rough_mom",          "",       "",                           "none",     0.01
+"LND", "rough_heat",         "",       "",                           "none",     0.1
+"LND", "albedo",             "",       "",                           "none",     0.1
+"LND", "sphum_surf",         "",       "",                           "none",     0.0
+"LND", "sphum_ca",           "",       "",                           "none",     0.0
+"LND", "t_flux",             "",       "",                           "none",     0.0
+"LND", "sphum_flux",         "",       "",                           "none",     0.0
+"LND", "lw_flux",            "",       "",                           "none",     0.0
+"LND", "sw_flux",            "",       "",                           "none",     0.0
+"LND", "lprec",              "",       "",                           "none",     0.0
+"LND", "fprec",              "",       "",                           "none",     0.0
+"LND", "dhdt",               "",       "",                           "none",     5.0
+"LND", "dedt",               "",       "",                           "none",     2.0e-6
+"LND", "dedq",               "",       "",                           "none",     0.0
+"LND", "drdt",               "",       "",                           "none",     5.0
+"LND", "drag_q",             "",       "",                           "none",     0.0
+"LND", "p_surf",             "",       "",                           "none",     1.0e5
+#
+"OCN", "runoff_no3_flux_ice_ocn",   "NO3_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_ldon_flux_ice_ocn",  "LDON_CONC",    "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_sldon_flux_ice_ocn", "SLDON_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_srdon_flux_ice_ocn", "SRDON_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_ndet_flux_ice_ocn",  "NDET_CONC",    "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_po4_flux_ice_ocn",   "PO4_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_ldop_flux_ice_ocn",  "LDOP_CONC",    "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_sldop_flux_ice_ocn", "SLDOP_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_srdop_flux_ice_ocn", "SRDOP_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_pdet_flux_ice_ocn",  "PDET_CONC",    "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_fed_flux_ice_ocn",   "FED_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_alk_flux_ice_ocn",   "ALK_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_dic_flux_ice_ocn",   "DIC_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_nh4_flux_ice_ocn",   "NH4_CONC",     "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_fedet_flux_ice_ocn", "FEDET_CONC",   "./INPUT/RiverNutrients_Integrated_NWA12_GLOFAS_04272022.nc", "none",      1.0e-3
+"OCN", "runoff_lith_flux_ice_ocn",  "",             "",                                                           "none",     13.0e-3
+#
+"OCN", "dry_dep_fed_flux_ice_ocn",  "dryfe",   "./INPUT/esm4_dryfe_climo_1993-2014.nc",                 "bilinear", -1.0
+"OCN", "wet_dep_fed_flux_ice_ocn",  "wetfe",   "./INPUT/esm4_wetfe_climo_1993-2014.nc",                 "bilinear", -1.0
+"OCN", "dry_dep_lith_flux_ice_ocn", "drydust", "./INPUT/esm4_drydust_climo_1993-2014.nc",               "bilinear", -1.0
+"OCN", "wet_dep_lith_flux_ice_ocn", "wetdust", "./INPUT/esm4_wetdust_climo_1993-2014.nc",               "bilinear", -1.0
+# TODO:
+"OCN", "dry_dep_po4_flux_ice_ocn",  "drydust", "./INPUT/esm4_drydust_climo_1993-2014.nc",               "bilinear",  -4.0e-6
+"OCN", "wet_dep_no3_flux_ice_ocn",  "wetnoy",  "./INPUT/esm4_wetnoy_climo_1993-2014.nc",                "bilinear",  -1.0
+"OCN", "dry_dep_no3_flux_ice_ocn",  "drynoy",  "./INPUT/esm4_drynoy_climo_1993-2014.nc",                "bilinear",  -1.0
+"OCN", "wet_dep_nh4_flux_ice_ocn",  "wetnh4",  "./INPUT/esm4_wetnh4_climo_1993-2014.nc",                "bilinear",  -1.0
+"OCN", "dry_dep_nh4_flux_ice_ocn",  "drynh4",  "./INPUT/esm4_drynh4_climo_1993-2014.nc",                "bilinear",  -1.0
+      </dataTable>
+      <fieldTable>
+# specific humidity for moist runs
+"TRACER", "atmos_mod", "sphum"
+          "longname",     "specific humidity"
+          "units",        "kg/kg" /
+# prognostic cloud scheme tracers
+"TRACER", "atmos_mod", "liq_wat"
+          "longname",     "cloud liquid specific humidity"
+          "units",        "kg/kg" /
+"TRACER", "atmos_mod", "ice_wat"
+          "longname",     "cloud ice water specific humidity"
+          "units",        "kg/kg" /
+"TRACER", "atmos_mod", "cld_amt"
+          "longname",     "cloud fraction"
+          "units",        "none" /
+# sphum must be present on land as well
+"TRACER", "land_mod",     "sphum"
+          "longname",     "specific humidity"
+          "units",        "kg/kg" /
+###.................................................
+
+"namelists","ocean_mod","generic_COBALT"
+enforce_src_info = f
+alk_obc_src_file_name = bgc_esper_1993.nc
+alk_obc_lfac_in = 0.005
+alk_obc_lfac_out = 1.0
+cadet_arag_obc_src_file_name = bgc_cobalt.nc
+cadet_arag_obc_lfac_in = 0.005
+cadet_ararg_obc_lfac_out = 1.0
+cadet_calc_obc_src_file_name = bgc_cobalt.nc
+cadet_calc_obc_lfac_in = 0.005
+cadet_calc_obc_lfac_out = 1.0
+dic_obc_src_file_name = bgc_esper_1993.nc
+dic_obc_lfac_in = 0.005
+dic_obc_lfac_out = 1.0
+dic14_obc_src_file_name = bgc_zero.nc
+dic14_obc_lfac_in = 0.005
+dic14_obc_lfac_out = 1.0
+do14_obc_src_file_name = bgc_zero.nc
+do14_obc_lfac_in = 0.005
+do14_obc_lfac_out = 1.0
+do14c_obc_src_file_name = bgc_zero.nc
+do14c_obc_lfac_in = 0.005
+do14c_obc_lfac_out = 1.0
+di14c_obc_src_file_name = bgc_zero.nc
+di14c_obc_lfac_in = 0.005
+di14c_obc_lfac_out = 1.0
+fed_obc_src_file_name = bgc_cobalt.nc
+fed_obc_lfac_in = 0.005
+fed_obc_lfac_out = 1.0
+fedi_obc_src_file_name = bgc_cobalt.nc
+fedi_obc_lfac_in = 0.005
+fedi_obc_lfac_out = 1.0
+felg_obc_src_file_name = bgc_cobalt.nc
+felg_obc_lfac_in = 0.005
+felg_obc_lfac_out = 1.0
+fedet_obc_src_file_name = bgc_cobalt.nc
+fedet_obc_lfac_in = 0.005
+fedet_obc_lfac_out = 1.0
+fesm_obc_src_file_name = bgc_cobalt.nc
+fesm_obc_lfac_in = 0.005
+fesm_obc_lfac_out = 1.0
+ldon_obc_src_file_name = bgc_cobalt.nc
+ldon_obc_lfac_in = 0.005
+ldon_obc_lfac_out = 1.0
+ldop_obc_src_file_name = bgc_cobalt.nc
+ldop_obc_lfac_in = 0.005
+ldop_obc_lfac_out = 1.0
+lith_obc_src_file_name = bgc_cobalt.nc
+lith_obc_lfac_in = 0.005
+lith_obc_lfac_out = 1.0
+lithdet_obc_src_file_name = bgc_cobalt.nc
+lithdet_obc_lfac_in = 0.005
+lithdet_obc_lfac_out = 1.0
+nbact_obc_src_file_name = bgc_cobalt.nc
+nbact_obc_lfac_in = 0.005
+nbact_obc_lfac_out = 1.0
+ndet_obc_src_file_name = bgc_cobalt.nc
+ndet_obc_lfac_in = 0.005
+ndet_obc_lfac_out = 1.0
+ndi_obc_src_file_name = bgc_cobalt.nc
+ndi_obc_lfac_in = 0.005
+ndi_obc_lfac_out = 1.0
+nlg_obc_src_file_name = bgc_cobalt.nc
+nlg_obc_lfac_in = 0.005
+nlg_obc_lfac_out = 1.0
+nsm_obc_src_file_name = bgc_cobalt.nc
+nsm_obc_lfac_in = 0.005
+nsm_obc_lfac_out = 1.0
+nh3_obc_src_file_name = bgc_zero.nc
+nh3_obc_lfac_in = 0.005
+nh3_obc_lfac_out = 1.0
+nh4_obc_src_file_name = bgc_cobalt.nc
+nh4_obc_lfac_in = 0.005
+nh4_obc_lfac_out = 1.0
+no3_obc_src_file_name = bgc_woa.nc
+no3_obc_lfac_in = 0.005
+no3_obc_lfac_out = 1.0
+o2_obc_src_file_name = bgc_woa.nc
+o2_obc_lfac_in = 0.005
+o2_obc_lfac_out = 1.0
+pdet_obc_src_file_name = bgc_cobalt.nc
+pdet_obc_lfac_in = 0.005
+pdet_obc_lfac_out = 1.0
+po4_obc_src_file_name = bgc_woa.nc
+po4_obc_lfac_in = 0.005
+po4_obc_lfac_out = 1.0
+srdon_obc_src_file_name = bgc_cobalt.nc
+srdon_obc_lfac_in = 0.005
+srdon_obc_lfac_out = 1.0
+srdop_obc_src_file_name = bgc_cobalt.nc
+srdop_obc_lfac_in = 0.005
+srdop_obc_lfac_out = 1.0
+sldon_obc_src_file_name = bgc_cobalt.nc
+sldon_obc_lfac_in = 0.005
+sldon_obc_lfac_out = 1.0
+sldop_obc_src_file_name = bgc_cobalt.nc
+sldop_obc_lfac_in = 0.005
+sldop_obc_lfac_out = 1.0
+sidet_obc_src_file_name = bgc_cobalt.nc
+sidet_obc_lfac_in = 0.005
+sidet_obc_lfac_out = 1.0
+silg_obc_src_file_name = bgc_cobalt.nc
+silg_obc_lfac_in = 0.005
+silg_obc_lfac_out = 1.0
+sio4_obc_src_file_name = bgc_woa.nc
+sio4_obc_lfac_in = 0.005
+sio4_obc_lfac_out = 1.0
+nsmz_obc_src_file_name = bgc_cobalt.nc
+nsmz_obc_lfac_in = 0.005
+nsmz_obc_lfac_out = 1.0
+nmdz_obc_src_file_name = bgc_cobalt.nc
+nmdz_obc_lfac_in = 0.005
+nmdz_obc_lfac_out = 1.0
+nlgz_obc_src_file_name = bgc_cobalt.nc
+nlgz_obc_lfac_in = 0.005
+nlgz_obc_lfac_out = 1.0
+nmdp_obc_src_file_name = bgc_cobalt.nc
+nmdp_obc_lfac_in = 0.005
+nmdp_obc_lfac_out = 1.0
+femdp_obc_src_file_name = bgc_cobalt.nc
+femdp_obc_lfac_in = 0.005
+femdp_obc_lfac_out = 1.0
+femd_obc_src_file_name = bgc_cobalt.nc
+femd_obc_lfac_in = 0.005
+femd_obc_lfac_out = 1.0
+simd_obc_src_file_name = bgc_cobalt.nc
+simd_obc_lfac_in = 0.005
+simd_obc_lfac_out = 1.0
+pdi_obc_src_file_name = bgc_cobalt.nc
+pdi_obc_lfac_in = 0.005
+pdi_obc_lfac_out = 1.0
+psm_obc_src_file_name = bgc_cobalt.nc
+psm_obc_lfac_in = 0.005
+psm_obc_lfac_out = 1.0
+pmd_obc_src_file_name = bgc_cobalt.nc
+pmd_obc_lfac_in = 0.005
+pmd_obc_lfac_out = 1.0
+nmd_obc_src_file_name = bgc_cobalt.nc
+nmd_obc_lfac_in = 0.005
+nmd_obc_lfac_out = 1.0
+pld_obc_src_file_name = bgc_cobalt.nc
+pld_obc_lfac_in = 0.005
+pld_obc_lfac_out = 1.0
+/
+      </fieldTable>
+      <diagTable>
+$name
+$baseDate
+"ice_month",       1, "months", 1, "days" , "time"
+# Monthly sea ice
+"ice_model",     "siconc",   "aice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "hi",       "hice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "UI",       "uice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "VI",       "vice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "HS",       "hsnow",       "ice_month",       "all", "mean", "none", 2
+      </diagTable>
+      <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table_COBALT_4P_052522</dataSource>
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table.MOM6</dataSource>
+      </dataFile>
+      <!-- Use real 1993 initial conditions -->
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_woa_esper_ics_1993.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glorys/glorys_ic_1993-01-01.nc</dataSource>
+      </dataFile>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = True
+#override GENERIC_TRACER_IC_FILE = "bgc_woa_esper_ics_1993.nc"
+#override MAX_FIELDS=500
+#override OBC_TIDE_NODAL_REF_DATE = 1993,7,2
+#override OBC_SEGMENT_001_DATA = "U=file:uv_1mod.nc(u),V=file:uv_1mod.nc(v),SSH=file:zos_1mod.nc(zos),TEMP=file:thetao_1mod.nc(thetao),SALT=file:so_1mod.nc(so),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)"
+#override OBC_SEGMENT_002_DATA = "U=file:uv_2mod.nc(u),V=file:uv_2mod.nc(v),SSH=file:zos_2mod.nc(zos),TEMP=file:thetao_2mod.nc(thetao),SALT=file:so_2mod.nc(so),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)"
+#override OBC_SEGMENT_003_DATA = "U=file:uv_3mod.nc(u),V=file:uv_3mod.nc(v),SSH=file:zos_3mod.nc(zos),TEMP=file:thetao_3mod.nc(thetao),SALT=file:so_3mod.nc(so),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)"
+DT_OBC_SEG_UPDATE_OBGC = 3600
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z 01 ZSTAR,zsfc 02 ZSTAR"
+#override DIAG_COORD_DEF_01 = "WOA09"
+#override DIAG_COORD_DEF_02 = "UNIFORM:40,200."
+#override CHL_FROM_FILE = False
+#override PEN_SW_NBANDS = 1
+#override DO_GEOTHERMAL = True
+MOM_OVERRIDE_EOF
+        ]]>
+
+      </csh>
+    </input>
+    <runtime>
+      <production simTime="30" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="07:30:00" segRuntime="07:30:00">
+          <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+        </resources>
+      </production>
+    </runtime>
+  </experiment>
+
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup" inherit="NWA12_COBALT_4P_2022_05">
+    <description>
+      Same as the base MOM6-COBALT-NWA12 hindcast, except it starts from initial conditions
+      interpolated from other sources (GLORYS, WOA, etc), whereas the base hindcast
+      starts from the end of the repeating 1993 spinup.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_data']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <diagTable>
+$name
+$baseDate
+"ice_month",       1, "months", 1, "days" , "time"
+# Monthly sea ice
+"ice_model",     "siconc",   "aice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "hi",       "hice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "UI",       "uice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "VI",       "vice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "HS",       "hsnow",       "ice_month",       "all", "mean", "none", 2
+      </diagTable>
+      <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table_COBALT_4P_052522</dataSource>
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table.MOM6</dataSource>
+      </dataFile>
+      <!-- Use real 1993 initial conditions -->
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_woa_esper_ics_1993.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glorys/glorys_ic_1993-01-01.nc</dataSource>
+      </dataFile>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = True
+#override GENERIC_TRACER_IC_FILE = "bgc_woa_esper_ics_1993.nc"
+#override MAX_FIELDS=500
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+DT_OBC_SEG_UPDATE_OBGC = 3600
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z 01 ZSTAR,zsfc 02 ZSTAR"
+#override DIAG_COORD_DEF_01 = "WOA09"
+#override DIAG_COORD_DEF_02 = "UNIFORM:40,200."
+#override CHL_FROM_FILE = False
+#override PEN_SW_NBANDS = 1
+#override DO_GEOTHERMAL = True
+MOM_OVERRIDE_EOF
+        ]]>
+      </csh>
+    </input>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_sponge_spinup" inherit="NWA12_COBALT_4P_2022_05_spinup">
+    <description>
+      Same as the repeating 1993 spinup run, except this includes sponging for velocity.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_spinup_data']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_sponges']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/sponge/glorys_sponge_uv_1993_mod.nc</dataSource>
+      </dataFile>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = True
+#override GENERIC_TRACER_IC_FILE = "bgc_woa_esper_ics_1993.nc"
+#override MAX_FIELDS=500
+#override OBC_TIDE_NODAL_REF_DATE = 1993,7,2
+#override OBC_SEGMENT_001_DATA = "U=file:uv_1mod.nc(u),V=file:uv_1mod.nc(v),SSH=file:zos_1mod.nc(zos),TEMP=file:thetao_1mod.nc(thetao),SALT=file:so_1mod.nc(so),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)"
+#override OBC_SEGMENT_002_DATA = "U=file:uv_2mod.nc(u),V=file:uv_2mod.nc(v),SSH=file:zos_2mod.nc(zos),TEMP=file:thetao_2mod.nc(thetao),SALT=file:so_2mod.nc(so),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)"
+#override OBC_SEGMENT_003_DATA = "U=file:uv_3mod.nc(u),V=file:uv_3mod.nc(v),SSH=file:zos_3mod.nc(zos),TEMP=file:thetao_3mod.nc(thetao),SALT=file:so_3mod.nc(so),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)"
+DT_OBC_SEG_UPDATE_OBGC = 3600
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z 01 ZSTAR,zsfc 02 ZSTAR"
+#override DIAG_COORD_DEF_01 = "WOA09"
+#override DIAG_COORD_DEF_02 = "UNIFORM:40,200."
+#override CHL_FROM_FILE = False
+#override PEN_SW_NBANDS = 1
+#override DO_GEOTHERMAL = True
+#override SPONGE = True
+#override SPONGE_UV = True
+#override SPONGE_DAMPING_FILE = "damping_t_zero.nc"
+#override SPONGE_UV_DAMPING_FILE = "damping_tanh_uv_100km_7d.nc"
+#override SPONGE_IDAMP_VAR = "Idamp"
+#override SPONGE_IDAMP_U_var = "Idamp_u"
+#override SPONGE_IDAMP_V_var = "Idamp_v"
+#override SPONGE_STATE_FILE = "glorys_sponge_uv_1993_mod.nc"
+#override SPONGE_UV_STATE_FILE = "glorys_sponge_uv_1993_mod.nc"
+#override SPONGE_PTEMP_VAR = "uo"
+#override SPONGE_SALT_VAR = "vo"
+#override SPONGE_U_VAR = "uo"
+#override SPONGE_V_VAR = "vo"
+#override INTERPOLATE_SPONGE_TIME_SPACE = True
+#override SPONGE_DATA_ONGRID = True
+MOM_OVERRIDE_EOF
+        ]]>
+
+      </csh>
+    </input>
+  </experiment>
+  <freInclude name="nwa12_sponges">
+    <input>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/sponge/damping_t_zero.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/sponge/damping_tanh_uv_100km_7d.nc</dataSource>
+      </dataFile>
+    </input>
+  </freInclude>
+  <experiment name="NWA12_COBALT_4P_2022_05_sponge" inherit="NWA12_COBALT_4P_2022_05">
+    <description>
+      Same as the base hindcast, except this includes sponging for velocity.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='always_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_data']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_sponges']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <!-- Run the first year with the below uncommented, then comment. Need a better solution -->
+      <!--
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/initial/sponge_spinup.tar</dataSource>
+      </dataFile>
+      -->
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = True
+#override MAX_FIELDS=500
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+DT_OBC_SEG_UPDATE_OBGC = 3600
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z 01 ZSTAR,zsfc 02 ZSTAR"
+#override DIAG_COORD_DEF_01 = "WOA09"
+#override DIAG_COORD_DEF_02 = "UNIFORM:40,200."
+#override CHL_FROM_FILE = False
+#override PEN_SW_NBANDS = 1
+#override DO_GEOTHERMAL = True
+#override SPONGE = True
+#override SPONGE_UV = True
+#override SPONGE_DAMPING_FILE = "damping_t_zero.nc"
+#override SPONGE_UV_DAMPING_FILE = "damping_tanh_uv_100km_7d.nc"
+#override SPONGE_IDAMP_VAR = "Idamp"
+#override SPONGE_IDAMP_U_var = "Idamp_u"
+#override SPONGE_IDAMP_V_var = "Idamp_v"
+#override SPONGE_STATE_FILE = "glorys_sponge_uv.nc"
+#override SPONGE_UV_STATE_FILE = "glorys_sponge_uv.nc"
+#override SPONGE_PTEMP_VAR = "uo"
+#override SPONGE_SALT_VAR = "vo"
+#override SPONGE_U_VAR = "uo"
+#override SPONGE_V_VAR = "vo"
+#override INTERPOLATE_SPONGE_TIME_SPACE = True
+#override SPONGE_DATA_ONGRID = True
+MOM_OVERRIDE_EOF
+
+ln -sf /lustre/f2/dev/Andrew.C.Ross/nwa12_input/sponge/glorys_sponge_uv_monthly_coarse_${fyear}.nc $work/INPUT/glorys_sponge_uv.nc
+
+        ]]>
+
+      </csh>
+    </input>
+    <runtime>
+      <production simTime="10" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="09:00:00" segRuntime="09:00:00">
+          <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+        </resources>
+      </production>
+    </runtime>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup_physicsonly" inherit="NWA12_COBALT_4P_2022_05_nospinup">
+    <description>
+      Same as the hindcast without spinup, except without BGC, as an extra control.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_data']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <diagTable>
+        $name
+        $baseDate
+      </diagTable>
+      <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table.MOM6</dataSource>
+      </dataFile>
+      <!-- Use real 1993 initial conditions -->
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glorys/glorys_ic_1993-01-01.nc</dataSource>
+      </dataFile>
+      <!-- Extra file for chlorophyll for estimating opacity: -->
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/seawifs-clim-1997-2010.nwa12.nc</dataSource>
+      </dataFile>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = False
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+#override DO_GEOTHERMAL = True
+#override CHL_FROM_FILE = True
+#override CHL_FILE = "seawifs-clim-1997-2010.nwa12.nc"
+#override PEN_SW_NBANDS = 3
+MOM_OVERRIDE_EOF
+        ]]>
+      </csh>
+      <namelist name="generic_tracer_nml">
+        do_generic_tracer=.true.
+        do_generic_abiotic=.false.
+        do_generic_CFC=.false.
+        do_generic_COBALT=.false.
+        do_generic_SF6=.false.
+        force_update_fluxes=.true.
+      </namelist>
+    </input>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup_physicsonly_exact" inherit="NWA12_COBALT_4P_2022_05_nospinup_physicsonly">
+    <description>
+      Same as the hindcast without spinup, except without BGC, and also reverting all settings to previous non-BGC run, as an extra control.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = False
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+#override CHL_FROM_FILE = True
+#override CHL_FILE = "seawifs-clim-1997-2010.nwa12.nc"
+#override PEN_SW_NBANDS = 3
+#override DT_THERM = 1200.0
+#override DT_OBC_SEG_UPDATE_OBGC = 1200.0
+#override INTERNAL_WAVE_SPEED_BETTER_EST = False
+#override TIDE_REF_DATE = 1980,1,1
+#override EPBL_MLD_BISECTION = True
+#override LA_DEPTH_RATIO = 0.04
+#override OBC_TIDE_REF_DATE = 1980, 1, 1
+#override DO_GEOTHERMAL = False
+MOM_OVERRIDE_EOF
+        ]]>
+      </csh>
+    </input>
+    <runtime>
+      <production simTime="$(PROD_SIMTIME)" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="04:30:00" segRuntime="04:30:00">
+          <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+        </resources>
+      </production>
+    </runtime>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup_physicsonly_oldrivers" inherit="NWA12_COBALT_4P_2022_05_nospinup_physicsonly">
+    <description>
+      Same as the hindcast without spinup, except without BGC, and also reverting all settings to previous non-BGC run, as an extra control.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = False
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+#override CHL_FROM_FILE = True
+#override CHL_FILE = "seawifs-clim-1997-2010.nwa12.nc"
+#override PEN_SW_NBANDS = 3
+#override DT_THERM = 1200.0
+#override DT_OBC_SEG_UPDATE_OBGC = 1200.0
+#override INTERNAL_WAVE_SPEED_BETTER_EST = False
+#override TIDE_REF_DATE = 1980,1,1
+#override EPBL_MLD_BISECTION = True
+#override LA_DEPTH_RATIO = 0.04
+#override OBC_TIDE_REF_DATE = 1980, 1, 1
+#override DO_GEOTHERMAL = False
+MOM_OVERRIDE_EOF
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/nwa12_input/glofas/glofas_runoff_${fyear}.nc $work/INPUT/glofas_runoff.nc
+        ]]>
+      </csh>
+    </input>
+    <runtime>
+      <production simTime="$(PROD_SIMTIME)" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="04:30:00" segRuntime="04:30:00">
+          <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+        </resources>
+      </production>
+    </runtime>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup_physicsonly_oldrivers_altlayout" inherit="NWA12_COBALT_4P_2022_05_nospinup_physicsonly_oldrivers">
+    <description>
+      Same as the hindcast without spinup, except without BGC, and also using a different layout, as an extra control.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = False
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+#override CHL_FROM_FILE = True
+#override CHL_FILE = "seawifs-clim-1997-2010.nwa12.nc"
+#override PEN_SW_NBANDS = 3
+#override DT_THERM = 1200.0
+#override DT_OBC_SEG_UPDATE_OBGC = 1200.0
+#override INTERNAL_WAVE_SPEED_BETTER_EST = False
+#override TIDE_REF_DATE = 1980,1,1
+#override EPBL_MLD_BISECTION = True
+#override LA_DEPTH_RATIO = 0.04
+#override OBC_TIDE_REF_DATE = 1980, 1, 1
+#override DO_GEOTHERMAL = False
+MOM_OVERRIDE_EOF
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/nwa12_input/glofas/glofas_runoff_${fyear}.nc $work/INPUT/glofas_runoff.nc
+        ]]>
+      </csh>
+    </input>
+    <runtime>
+      <production simTime="5" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="05:00:00" segRuntime="05:00:00">
+          <ice                          layout = "40,40" io_layout = "1,5" mask_table="mask_table.535.40x40"/>
+          <ocn ranks="1065" threads="1" layout = "40,40" io_layout = "1,5" mask_table="mask_table.535.40x40"/>
+        </resources>
+      </production>
+    </runtime>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup_nudgets_360d" inherit="NWA12_COBALT_4P_2022_05_nospinup">
+    <description>
+      Nearly the same as the hindcast without spinup, except with nudging. Includes a few tweaks to make more similar to a physics-only run.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_data']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/sponge/damping_full_t_360d.nc</dataSource>
+      </dataFile>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_woa_esper_ics_1993.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glorys/glorys_ic_1993-01-01.nc</dataSource>
+      </dataFile>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = True
+#override GENERIC_TRACER_IC_FILE = "bgc_woa_esper_ics_1993.nc"
+#override MAX_FIELDS=500
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+DT_OBC_SEG_UPDATE_OBGC = 3600
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z 01 ZSTAR,zsfc 02 ZSTAR"
+#override DIAG_COORD_DEF_01 = "WOA09"
+#override DIAG_COORD_DEF_02 = "UNIFORM:40,200."
+#override CHL_FROM_FILE = False
+#override PEN_SW_NBANDS = 1
+#override DO_GEOTHERMAL = True
+#override DT_THERM = 1200.0
+#override INTERNAL_WAVE_SPEED_BETTER_EST = False
+#override EPBL_MLD_BISECTION = True
+#override LA_DEPTH_RATIO = 0.04
+#override SPONGE = True
+#override SPONGE_UV = False
+#override SPONGE_DAMPING_FILE = "damping_full_t_360d.nc"
+#override SPONGE_IDAMP_VAR = "Idamp"
+#override SPONGE_STATE_FILE = "glorys_sponge_ts.nc"
+#override SPONGE_PTEMP_VAR = "thetao"
+#override SPONGE_SALT_VAR = "so"
+#override INTERPOLATE_SPONGE_TIME_SPACE = True
+#override SPONGE_DATA_ONGRID = True
+MOM_OVERRIDE_EOF
+ln -sf /lustre/f2/dev/Andrew.C.Ross/nwa12_input/sponge/glorys_sponge_ts_monthly_coarse_${fyear}.nc $work/INPUT/glorys_sponge_ts.nc
+        ]]>
+      </csh>
+    </input>
+    <runtime>
+      <production simTime="$(PROD_SIMTIME)" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="11:00:00" segRuntime="11:00:00">
+          <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+        </resources>
+      </production>
+    </runtime>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup_physicsonly_oldrivers_oldboundary" inherit="NWA12_COBALT_4P_2022_05_nospinup_physicsonly">
+    <description>
+      Same as the hindcast without spinup, except without BGC, and also reverting all settings to previous non-BGC run, as an extra control.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = False
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+#override CHL_FROM_FILE = True
+#override CHL_FILE = "seawifs-clim-1997-2010.nwa12.nc"
+#override PEN_SW_NBANDS = 3
+#override DT_THERM = 1200.0
+#override DT_OBC_SEG_UPDATE_OBGC = 1200.0
+#override INTERNAL_WAVE_SPEED_BETTER_EST = False
+#override TIDE_REF_DATE = 1980,1,1
+#override EPBL_MLD_BISECTION = True
+#override LA_DEPTH_RATIO = 0.04
+#override OBC_TIDE_REF_DATE = 1980, 1, 1
+#override DO_GEOTHERMAL = False
+MOM_OVERRIDE_EOF
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/nwa12_input/glofas/glofas_runoff_${fyear}.nc $work/INPUT/glofas_runoff.nc
+        ]]>
+      </csh>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/NWA12/MOM_inputs/2022_05/MOM_input</dataSource>
+        <!-- Boundary conditions for physics -->
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/so_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/2022_04/so_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/so_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/thetao_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/2022_04/thetao_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/thetao_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/zos_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/2022_04/zos_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/zos_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/uv_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/2022_04/uv_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/uv_003.nc</dataSource>
+        <!-- Files for tidal boundary conditions -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu1.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu2.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu3.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz1.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz2.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz3.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glorys/glorys_ic_1993-01-01.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/seawifs-clim-1997-2010.nwa12.nc</dataSource>
+      </dataFile>
+      <diagTable>
+        $name
+        $baseDate
+"ocean_model",   "volcello",     "volcello",         "ocean_month",         "all", "mean", "none",2 # Cell measure for 3d data
+      </diagTable>
+      <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table.MOM6</dataSource>
+      </dataFile>
+    </input>
+    <runtime>
+      <production simTime="$(PROD_SIMTIME)" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="04:30:00" segRuntime="04:30:00">
+          <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+        </resources>
+      </production>
+    </runtime>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup_physicsonly_oldrivers_filledboundary" inherit="NWA12_COBALT_4P_2022_05_nospinup_physicsonly">
+    <description>
+      Same as the hindcast without spinup, except without BGC, and also reverting all settings to previous non-BGC run, as an extra control.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = False
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+#override CHL_FROM_FILE = True
+#override CHL_FILE = "seawifs-clim-1997-2010.nwa12.nc"
+#override PEN_SW_NBANDS = 3
+#override DT_THERM = 1200.0
+#override DT_OBC_SEG_UPDATE_OBGC = 1200.0
+#override INTERNAL_WAVE_SPEED_BETTER_EST = False
+#override TIDE_REF_DATE = 1980,1,1
+#override EPBL_MLD_BISECTION = True
+#override LA_DEPTH_RATIO = 0.04
+#override OBC_TIDE_REF_DATE = 1980, 1, 1
+#override DO_GEOTHERMAL = False
+MOM_OVERRIDE_EOF
+ln -sf /lustre/f2/dev/gfdl/Andrew.C.Ross/nwa12_input/glofas/glofas_runoff_${fyear}.nc $work/INPUT/glofas_runoff.nc
+        ]]>
+      </csh>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/NWA12/MOM_inputs/2022_05/MOM_input</dataSource>
+        <!-- Boundary conditions for physics -->
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/so_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/so_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/so_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/thetao_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/thetao_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/thetao_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/zos_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/zos_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/zos_003.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/uv_001.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/uv_002.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/glorys/filled/uv_003.nc</dataSource>
+        <!-- Files for tidal boundary conditions -->
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu1.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu2.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tu3.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz1.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz2.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/tides/tz3.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glorys/glorys_ic_1993-01-01.nc</dataSource>
+        <dataSource platform="$(platform)">$(ACR)/nwa12_input/seawifs-clim-1997-2010.nwa12.nc</dataSource>
+      </dataFile>
+      <diagTable>
+        $name
+        $baseDate
+"ocean_model",   "volcello",     "volcello",         "ocean_month",         "all", "mean", "none",2 # Cell measure for 3d data
+      </diagTable>
+      <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table.MOM6</dataSource>
+      </dataFile>
+    </input>
+    <runtime>
+      <production simTime="$(PROD_SIMTIME)" units="years">
+        <segment simTime="12" units="months"/>
+        <resources jobWallclock="04:59:00" segRuntime="04:59:00">
+          <ice                          layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+          <ocn ranks="1646" threads="1" layout = "50,50" io_layout = "1,5" mask_table="mask_table.854.50x50"/>
+        </resources>
+      </production>
+    </runtime>
+  </experiment>
+  <experiment name="NWA12_COBALT_4P_2022_05_nospinup_3bands" inherit="NWA12_COBALT_4P_2022_05_nospinup">
+    <description>
+      Fixing the number of bands for opacity.
+    </description>
+    <input>
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='nwa12_data']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+      <diagTable>
+$name
+$baseDate
+"ice_month",       1, "months", 1, "days" , "time"
+# Monthly sea ice
+"ice_model",     "siconc",   "aice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "hi",       "hice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "UI",       "uice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "VI",       "vice",        "ice_month",       "all", "mean", "none", 2
+"ice_model",     "HS",       "hsnow",       "ice_month",       "all", "mean", "none", 2
+"ocean_model",   "volcello",     "volcello",         "ocean_month",         "all", "mean", "none",2 # Cell measure for 3d data
+      </diagTable>
+      <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table_COBALT_4P_052522</dataSource>
+        <dataSource site="ncrc">$(ACR)/git/nwa-xml/diag_tables/diag_table.MOM6</dataSource>
+      </dataFile>
+      <!-- Use real 1993 initial conditions -->
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ACR)/nwa12_input/bgc/bgc_woa_esper_ics_1993.nc</dataSource>
+        <dataSource site="ncrc">$(ACR)/nwa12_input/glorys/glorys_ic_1993-01-01.nc</dataSource>
+      </dataFile>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override USE_OCMIP2_CFC = False
+#override USE_IDEAL_AGE_TRACER = False
+#override USE_generic_tracer = True
+#override GENERIC_TRACER_IC_FILE = "bgc_woa_esper_ics_1993.nc"
+#override MAX_FIELDS=500
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+DT_OBC_SEG_UPDATE_OBGC = 3600
+#override NUM_DIAG_COORDS = 2
+#override DIAG_COORDS = "z 01 ZSTAR,zsfc 02 ZSTAR"
+#override DIAG_COORD_DEF_01 = "WOA09"
+#override DIAG_COORD_DEF_02 = "UNIFORM:40,200."
+#override CHL_FROM_FILE = False
+#override PEN_SW_NBANDS = 3
+#override DO_GEOTHERMAL = True
+MOM_OVERRIDE_EOF
+        ]]>
+      </csh>
+    </input>
+  </experiment>
+</experimentSuite>

@@ -12,7 +12,7 @@ DT = 600.0                      !   [s]
                                 ! The (baroclinic) dynamics time step.  The time-step that is actually used will
                                 ! be an integer fraction of the forcing time-step (DT_FORCING in ocean-only mode
                                 ! or the coupling timestep in coupled mode.)
-DT_THERM = 3600.0               !   [s] default = 900.0
+DT_THERM = 3600.0               !   [s] default = 600.0
                                 ! The thermodynamic and tracer advection time step. Ideally DT_THERM should be
                                 ! an integer multiple of DT and less than the forcing or coupling time-step,
                                 ! unless THERMO_SPANS_COUPLING is true, in which case DT_THERM can be an integer
@@ -28,6 +28,11 @@ C_P = 3992.0                    !   [J kg-1 K-1] default = 3991.86795711963
                                 ! The heat capacity of sea water, approximated as a constant. This is only used
                                 ! if ENABLE_THERMODYNAMICS is true. The default value is from the TEOS-10
                                 ! definition of conservative temperature.
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
+========
+SAVE_INITIAL_CONDS = False      !   [Boolean] default = False
+                                ! If true, write the initial conditions to a file given by IC_OUTPUT_FILE.
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
 CHECK_BAD_SURFACE_VALS = True   !   [Boolean] default = False
                                 ! If true, check the surface state for ridiculous values.
 BAD_VAL_SSH_MAX = 50.0          !   [m] default = 20.0
@@ -347,7 +352,7 @@ SPONGE = False                  !   [Boolean] default = False
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
 !SPONGE_DAMPING_FILE = "Arctic6_idamp.nc" !
                                 ! The name of the file with the sponge damping rates.
-!SPONGE_STATE_FILE = "arctic6_SODA3_2011_clim.nc" ! default = "Arctic6_idamp.nc"
+!SPONGE_STATE_FILE = "arctic18_SODA3_1980_clim.nc" ! default = "Arctic6_idamp.nc"
                                 ! The name of the file with the state to damp toward.
 !SPONGE_PTEMP_VAR = "temp"       ! default = "PTEMP"
                                 ! The name of the potential temperature variable in SPONGE_STATE_FILE.
@@ -355,7 +360,7 @@ SPONGE = False                  !   [Boolean] default = False
                                 ! The name of the salinity variable in SPONGE_STATE_FILE.
 SPONGE_UV = False               !   [Boolean] default = False
                                 ! Apply sponges in u and v, in addition to tracers.
-!SPONGE_UV_STATE_FILE = "arctic6_SODA3_2011_clim.nc" ! default = "Arctic6_idamp.nc"
+!SPONGE_UV_STATE_FILE = "arctic18_SODA3_1980_clim.nc" ! default = "Arctic6_idamp.nc"
                                 ! The name of the file with the state to damp UV toward.
 !SPONGE_U_VAR = "u"              ! default = "UVEL"
                                 ! The name of the zonal velocity variable in SPONGE_UV_STATE_FILE.
@@ -367,11 +372,12 @@ SPONGE_UV = False               !   [Boolean] default = False
 !SPONGE_IDAMP_V_var = "Idamp_v"  ! default = "Idamp"
                                 ! The name of the inverse damping rate variable in SPONGE_UV_DAMPING_FILE for
                                 ! the velocities.
-INTERPOLATE_SPONGE_TIME_SPACE = True
+!INTERPOLATE_SPONGE_TIME_SPACE = True
 
 ! === module MOM_sponge ===
-SPONGE_DATA_ONGRID = True       !   [Boolean] default = False
+!SPONGE_DATA_ONGRID = True       !   [Boolean] default = False
                                 ! When defined, the incoming sponge data are assumed to be on the model grid
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
 OBC_SEGMENT_001_DATA = "U=file:obc/1993/uv_001.nc(u),V=file:obc/1993/uv_001.nc(v),SSH=file:obc/1993/zeta_001.nc(zeta),TEMP=file:obc/1993/temp_001.nc(temp),SALT=file:obc/1993/salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
 OBC_SEGMENT_002_DATA = "U=file:obc/1993/uv_002.nc(u),V=file:obc/1993/uv_002.nc(v),SSH=file:obc/1993/zeta_002.nc(zeta),TEMP=file:obc/1993/temp_002.nc(temp),SALT=file:obc/1993/salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
@@ -379,6 +385,15 @@ OBC_SEGMENT_002_DATA = "U=file:obc/1993/uv_002.nc(u),V=file:obc/1993/uv_002.nc(v
 OBC_SEGMENT_003_DATA = "U=file:obc/1993/uv_003.nc(u),V=file:obc/1993/uv_003.nc(v),SSH=file:obc/1993/zeta_003.nc(zeta),TEMP=file:obc/1993/temp_003.nc(temp),SALT=file:obc/1993/salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
                                 ! OBC segment docs
 OBC_SEGMENT_004_DATA = "U=file:obc/1993/uv_004.nc(u),V=file:obc/1993/uv_004.nc(v),SSH=file:obc/1993/zeta_004.nc(zeta),TEMP=file:obc/1993/temp_004.nc(temp),SALT=file:obc/1993/salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+========
+OBC_SEGMENT_001_DATA = "U=file:uv_001.nc(u),V=file:uv_001.nc(v),SSH=file:zeta_001.nc(zeta),TEMP=file:temp_001.nc(temp),SALT=file:salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
+                                ! OBC segment docs
+OBC_SEGMENT_002_DATA = "U=file:uv_002.nc(u),V=file:uv_002.nc(v),SSH=file:zeta_002.nc(zeta),TEMP=file:temp_002.nc(temp),SALT=file:salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
+                                ! OBC segment docs
+OBC_SEGMENT_003_DATA = "U=file:uv_003.nc(u),V=file:uv_003.nc(v),SSH=file:zeta_003.nc(zeta),TEMP=file:temp_003.nc(temp),SALT=file:salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
+                                ! OBC segment docs
+OBC_SEGMENT_004_DATA = "U=file:uv_004.nc(u),V=file:uv_004.nc(v),SSH=file:zeta_004.nc(zeta),TEMP=file:temp_004.nc(temp),SALT=file:salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
                                 ! OBC segment docs
 
 ! === module MOM_diag_mediator ===
@@ -476,11 +491,17 @@ CORIOLIS_SCHEME = "SADOURNY75_ENERGY" ! default = "SADOURNY75_ENERGY"
                                 !    ARAKAWA_LAMB81    - Arakawa & Lamb, 1981; En. + Enst.
                                 !    ARAKAWA_LAMB_BLEND - A blend of Arakawa & Lamb with
                                 !                         Arakawa & Hsu and Sadourny energy
-BOUND_CORIOLIS = True           !   [Boolean] default = False
+!BOUND_CORIOLIS = True           !   [Boolean] default = False
                                 ! If true, the Coriolis terms at u-points are bounded by the four estimates of
                                 ! (f+rv)v from the four neighboring v-points, and similarly at v-points.  This
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
                                 ! option is always effectively false with CORIOLIS_EN_DIS defined and
                                 ! CORIOLIS_SCHEME set to SADOURNY75_ENERGY.
+========
+                                ! option would have no effect on the SADOURNY Coriolis scheme if it were
+                                ! possible to use centered difference thickness fluxes.
+SADOURNY = False
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
 
 ! === module MOM_tidal_forcing ===
 TIDE_M2 = True                  !   [Boolean] default = False
@@ -533,7 +554,7 @@ MASS_WEIGHT_IN_PRESSURE_GRADIENT = True !   [Boolean] default = False
 ! === module MOM_Zanna_Bolton ===
 
 ! === module MOM_hor_visc ===
-AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
+!AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
                                 ! The velocity scale which is multiplied by the cube of the grid spacing to
                                 ! calculate the biharmonic viscosity. The final viscosity is the largest of this
                                 ! scaled viscosity, the Smagorinsky and Leith viscosities, and AH.
@@ -543,14 +564,33 @@ SMAGORINSKY_KH = False          !   [Boolean] default = False
                                 ! If true, use a Smagorinsky nonlinear eddy viscosity.
 SMAG_LAP_CONST = 2.0            !   [nondim] default = 0.0
 SMAGORINSKY_AH = True           !   [Boolean] default = False
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
                                 ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
 SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
                                 ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
+========
+                                ! If true, use a biharmonic Smagorinsky nonlinear eddy
+                                ! viscosity.
+SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
+                                ! The nondimensional biharmonic Smagorinsky constant,
+                                ! typically 0.015 - 0.06.
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
 BIHARMONIC = True               !   [Boolean] default = True
                                 ! If true, use a biharmonic horizontal viscosity.
                                 ! BIHARMONIC may be used with LAPLACIAN.
 AH = 0.0                        !   [m4 s-1] default = 0.0
                                 ! The background biharmonic horizontal viscosity.
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
+========
+AH_VEL_SCALE = 0.0              !   [m s-1] default = 0.0;  HYCOM: veldf4=0.02
+                                ! The velocity scale which is multiplied by the cube of
+                                ! the grid spacing to calculate the biharmonic viscosity.
+                                ! The final viscosity is the largest of this scaled
+                                ! viscosity, the Smagorinsky and Leith viscosities, and AH.
+                                ! THIS IS WHERE WE WILL NEED TO KEEP AN EYE ON THINGS (11/30/2021)
+!VISC_RES_FN_POWER = 100
+!KH_RES_FN_POWER = 100
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
 USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = False
                                 ! If true, use Use the land mask for the computation of thicknesses
                                 ! at velocity locations. This eliminates the dependence on arbitrary
@@ -562,12 +602,21 @@ USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = False
 HMIX_FIXED = 0.9                !   [m]
                                 ! The prescribed depth over which the near-surface viscosity and diffusivity are
                                 ! elevated when the bulk mixed layer is not used.
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
 KV_ML_INVZ2 = 0.01              !   [m2 s-1] default = 0.0
                                 ! An extra kinematic viscosity in a mixed layer of thickness HMIX_FIXED, with
                                 ! the actual viscosity scaling as 1/(z*HMIX_FIXED)^2, where z is the distance
                                 ! from the surface, to allow for finite wind stresses to be transmitted through
                                 ! infinitesimally thin surface layers.  This is an older option for numerical
                                 ! convenience without a strong physical basis, and its use is now discouraged.
+========
+HMIX_STRESS = 0.9               !   [m]
+                                ! The depth over which the wind stress is applied if
+                                ! DIRECT_STRESS is true.
+KVML = 0.01                     !   [m2 s-1] default = 1.0E-05
+                                ! The kinematic viscosity in the mixed layer.  A typical value is ~1e-2 m2 s-1.
+                                ! KVML is not used if BULKMIXEDLAYER is true.  The default is set by KV.
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
 MAXVEL = 6.0                    !   [m s-1] default = 3.0E+08
                                 ! The maximum velocity allowed before the velocity components are truncated.
 
@@ -630,7 +679,12 @@ MLE%MLD_GROWING_TFILTER = 3600.
                                 ! energy to the large-scale geostrophic kinetic energy or 1 plus the square of
                                 ! the grid spacing over the deformation radius, as detailed by Fox-Kemper et al.
                                 ! (2010)
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
 MLE_FRONT_LENGTH = 200.0        !   [m] default = 0.0
+========
+FOX_KEMPER_ML_RESTRAT_COEF2 = 0.0
+MLE_FRONT_LENGTH = 6000.0       !   [m] default = 0.0
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
                                 ! If non-zero, is the frontal-length scale used to calculate the upscaling of
                                 ! buoyancy gradients that is otherwise represented by the parameter
                                 ! FOX_KEMPER_ML_RESTRAT_COEF. If MLE_FRONT_LENGTH is non-zero, it is recommended
@@ -639,15 +693,24 @@ MLE_USE_PBL_MLD = True          !   [Boolean] default = False
                                 ! If true, the MLE parameterization will use the mixed-layer depth provided by
                                 ! the active PBL parameterization. If false, MLE will estimate a MLD based on a
                                 ! density difference with the surface using the parameter MLE_DENSITY_DIFF.
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
 !MLE_MLD_DECAY_TIME = 86400.0    !   [s] default = 0.0
+========
+MLE_MLD_DECAY_TIME = 86400.0    !   [s] default = 0.0
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
                                 ! The time-scale for a running-mean filter applied to the mixed-layer depth used
                                 ! in the MLE restratification parameterization. When the MLD deepens below the
                                 ! current running-mean the running-mean is instantaneously set to the current
                                 ! MLD.
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
 BBL_EFFIC = 0.01                !   [nondim] default = 0.2
                                 ! The efficiency with which the energy extracted by bottom drag drives BBL
                                 ! diffusion.  This is only used if BOTTOMDRAGLAW is true.
 
+========
+BBL_EFFIC = 0.0
+USE_LEGACY_DIABATIC_DRIVER = False
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
 ! === module MOM_diagnostics ===
 
 ! === module MOM_diabatic_driver ===
@@ -659,8 +722,11 @@ ENERGETICS_SFC_PBL = True       !   [Boolean] default = False
                                 ! If true, use an implied energetics planetary boundary layer scheme to
                                 ! determine the diffusivity and viscosity in the surface boundary layer.
 EPBL_IS_ADDITIVE = False        !   [Boolean] default = True
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
                                 ! If true, the diffusivity from ePBL is added to all other diffusivities.
                                 ! Otherwise, the larger of kappa-shear and ePBL diffusivities are used.
+========
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
 
 ! === module MOM_set_diffusivity ===
 
@@ -699,7 +765,7 @@ TIDEAMP_FILE = "tidal_amplitude_Arctic_12k.nc" ! default = "tideamp.nc"
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with INT_TIDE_DISSIPATION.
-BBL_MIXING_AS_MAX = False       !   [Boolean] default = True
+BBL_MIXING_AS_MAX = True        !   [Boolean] default = True
                                 ! If true, take the maximum of the diffusivity from the BBL mixing and the other
                                 ! diffusivities. Otherwise, diffusivity from the BBL_mixing is simply added.
 
@@ -832,8 +898,14 @@ PEN_SW_SCALE = 10.0             !   [m] default = 0.0
                                 ! radiation.
 PEN_SW_FRAC = 0.42              !   [nondim] default = 0.0
                                 ! The fraction of the shortwave radiation that penetrates below the surface.
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
 !VAR_PEN_SW = True
 !PEN_SW_NBANDS = 3
+========
+VAR_PEN_SW = True
+OPTICS_2018_ANSWERS = False
+PEN_SW_NBANDS = 3
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
 
 ! === module MOM_tracer_advect ===
 TRACER_ADVECTION_SCHEME = "PPM:H3" ! default = "PLM"
@@ -857,7 +929,7 @@ MAXTRUNC = 100000               !   [truncations save_interval-1] default = 0
                                 ! The run will be stopped, and the day set to a very large value if the velocity
                                 ! is truncated more than MAXTRUNC times between energy saves.  Set MAXTRUNC to 0
                                 ! to stop if there is any truncation of velocities.
-ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
+!ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
                                 ! The interval in units of TIMEUNIT between saves of the energies of the run and
                                 ! other globally summed diagnostics.
 
@@ -884,5 +956,14 @@ SEA_ICE_RIGID_MASS = 100.0      !   [kg m-2] default = 1000.0
 ! === module MOM_restart ===
 
 ! Misc
+<<<<<<<< HEAD:mid_12/test_short/MOM_input
 EPBL_MLD_BISECTION = True
 BBL_USE_EOS = True
+========
+DO_GEOTHERMAL = False
+EPBL_MLD_BISECTION = True
+BBL_USE_EOS = True
+GENERIC_TRACER_IC_FILE = "bgc_ics_75z.nc"     ! default = ""
+                                ! The file in which the generic trcer initial values can be found, or an empty
+                                ! string for internal initialization.
+>>>>>>>> origin/gaea_2024:BGC/MOM_input
