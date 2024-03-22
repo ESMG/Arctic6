@@ -107,8 +107,8 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
 
   <!-- Supported compilers and platforms -->
   <setup>
-    <xi:include href="../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='ncrc5.intel22'])"/>
-    <xi:include href="../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='gfdl.ncrc5-intel22'])"/>
+    <xi:include href="../../../../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='ncrc5.intel22'])"/>
+    <xi:include href="../../../../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='gfdl.ncrc5-intel22'])"/>
   </setup>
 
   <!--= COMPILE =-->

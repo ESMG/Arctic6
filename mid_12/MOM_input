@@ -528,7 +528,7 @@ AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
                                 ! scaled viscosity, the Smagorinsky and Leith viscosities, and AH.
 SMAGORINSKY_AH = True           !   [Boolean] default = False
                                 ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
-SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
+SMAG_BI_CONST = 0.01            !   [nondim] default = 0.0
                                 ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
 USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = False
                                 ! If true, use Use the land mask for the computation of thicknesses

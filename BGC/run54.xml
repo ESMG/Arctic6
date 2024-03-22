@@ -71,7 +71,7 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
   <property name="GFDL_GROUP" value="cefi"/>
 
   <!--Production run properties. Users can modify these according to their need and/or performance analysis-->
-  <property name="PROD_SIMTIME" value="25"/>
+  <property name="PROD_SIMTIME" value="27"/>
 
   <!--Post-processing  chunk lengths -->
   <property name="CHUNK_LENGTH_A" value="5yr"/>
