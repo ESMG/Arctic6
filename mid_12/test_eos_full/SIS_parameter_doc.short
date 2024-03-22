@@ -123,6 +123,8 @@ ICE_YIELD_ELLIPTICITY = 1.5     !   [Nondim] default = 2.0
                                 ! The ellipticity coefficient for the plastic yield curve in the sea-ice
                                 ! rheology.  For an infinite ellipticity (i.e., a cavitating fluid rheology),
                                 ! use 0.
+TEARDROP_YIELD_CURVE = True     !   [Boolean] default = False
+                                ! If true, use teardrop yield curve instead of ellipse.
 ITD_LANDFAST = True             !   [Boolean] default = False
                                 ! If true, turn on probabilistic landfast ice parameterization.
 H2_FILE = "ocean_topog.nc"      !
