@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH -t 2:00:00
-#SBATCH --ntasks=302
+#SBATCH -t 1:00:00
+#SBATCH --ntasks=48
 #SBATCH --job-name=ARCTIC
 #SBATCH --account=akwaters
 #SBATCH --output=ARCTIC.%j
 #SBATCH --no-requeue
-#SBATCH -p t1standard
-###SBATCH -p debug
+###SBATCH -p t1standard
+#SBATCH -p debug
 ###SBATCH -t 44:00:00
 
 cd $SLURM_SUBMIT_DIR

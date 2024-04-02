@@ -631,6 +631,7 @@ MIN_WSTAR2 = 1.0E-09            !   [m2 s-2] default = 1.0E-24
                                 ! division-by-zero in the limit when u* and the buoyancy flux are zero.  The
                                 ! default is less than the molecular viscosity of water times the Coriolis
                                 ! parameter a micron away from the equator.
+%MLE
 FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
                                 ! A nondimensional coefficient that is proportional to the ratio of the
                                 ! deformation radius to the dominant lengthscale of the submesoscale mixed layer
