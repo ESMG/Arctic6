@@ -6,3 +6,12 @@ DEBUG_BT = False
 #override RESTART_CHECKSUMS_REQUIRED = False
 TIDAL_SAL_FLATHER = True
 !#override SPLIT_RK2B = True
+
+MLE%
+USE_CR_GRID = True
+USE_MLD_GRID = True
+MLD_TFILT_FILE = "restrat_vars.nc"
+MLD_TFILT_VAR = "MLD_tfilt"
+CR_FILE = "restrat_vars.nc"
+CR_VAR = "Cr"
+%MLE

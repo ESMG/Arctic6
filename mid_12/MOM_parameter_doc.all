@@ -1644,6 +1644,18 @@ TAIL_DH = 0.0                   !   [nondim] default = 0.0
                                 ! smoother stream function at the base of the mixed-layer.
 USE_STANLEY_TVAR = False        !   [Boolean] default = False
                                 ! If true, turn on Stanley SGS T variance parameterization in ML restrat code.
+USE_CR_GRID = True              !   [Boolean] default = False
+                                ! If true, read in a spatially varying Cr field.
+USE_MLD_GRID = True             !   [Boolean] default = False
+                                ! If true, read in a spatially varying MLD_decaying_Tfilt field.
+MLD_TFILT_FILE = "restrat_vars.nc" ! default = ""
+                                ! The path to the file containing the MLD_decaying_Tfilt fields.
+MLD_TFILT_VAR = "MLD_tfilt"     ! default = "MLD_tfilt"
+                                ! The variable name for MLD_decaying_Tfilt field.
+CR_FILE = "restrat_vars.nc"     ! default = ""
+                                ! The path to the file containing the Cr fields.
+CR_VAR = "Cr"                   ! default = "Cr"
+                                ! The variable name for Cr field.
 %MLE
 MLE_USE_PBL_MLD = True          !   [Boolean] default = False
                                 ! If true, the MLE parameterization will use the mixed-layer depth provided by

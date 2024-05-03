@@ -3,6 +3,7 @@ Arctic 50 vertical levels
 #"ocean_secs",           100, "seconds",  1, "hours", "time"
 "ocean_hourly",              1, "hours",   1, "hours", "time"
 "ocean_daily",               5, "days",   1, "hours", "time"
+"boem_hourly",               1, "hours",  1, "hours", "time"
 "ice_daily",                 1, "days",   1, "hours", "time"
 "ocean_daily_uv",            5, "days",   1, "hours", "time"
 "ocean_daily_ts",            5, "days",   1, "hours", "time"
@@ -121,6 +122,19 @@ Arctic 50 vertical levels
 #"ocean_model_z", "so",   "so",           "ocean_Robeson",  "all", "mean", "385 385  819 823 -1 -1",2
 #"ocean_model_z", "umo",  "umo",          "ocean_Robeson",  "all", "mean", "385 385  819 823 -1 -1",2
 #"ocean_model_z", "uo",   "uo",           "ocean_Robeson",  "all", "mean", "385 385  819 823 -1 -1",2
+#
+"ocean_model", "ssu_east",     "ssu_east",         "boem_hourly", "all", .false., "none",2
+"ocean_model", "ssv_north",    "ssv_north",        "boem_hourly", "all", .false., "none",2
+#"ocean_model", "ssu",          "ssu",              "boem_hourly", "all", .false., "none",2
+#"ocean_model", "ssv",          "ssv",              "boem_hourly", "all", .false., "none",2
+#"ice_model",   "UI",           "UI",               "boem_hourly", "all", .false., "none",2
+#"ice_model",   "VI",           "VI",               "boem_hourly", "all", .false., "none",2
+"ice_model",   "ui_east",      "ui_east",          "boem_hourly", "all", .false., "none",2
+"ice_model",   "vi_north",     "vi_north",         "boem_hourly", "all", .false., "none",2
+"flux",        "u_atm",        "u_atm",            "boem_hourly", "all", .false., "none",2
+"flux",        "v_atm",        "v_atm",            "boem_hourly", "all", .false., "none",2
+#"flux",        "lwflx",        "lw_flux",          "boem_hourly", "all", .false., "none",2
+#"flux",        "shflx",        "shflx",            "boem_hourly", "all", .false., "none",2
 
 #"ocean_model", "eta_hifreq",          "eta",              "ocean_bt", "all", "mean", "none",2
 #"ocean_model", "SSU",          "ssu",              "ocean_daily", "all", "mean", "none",2

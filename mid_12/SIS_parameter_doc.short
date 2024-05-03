@@ -128,7 +128,7 @@ ITD_LANDFAST = True             !   [Boolean] default = False
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with ITD_LANDFAST.
-BATHY_ROUGHNESS_MIN = 0.0       !   [m] default = 2.5
+BATHY_ROUGHNESS_MIN = 0.01      !   [m] default = 2.5
                                 ! Minimum bathymetric roughness.
 BATHY_ROUGHNESS_MAX = 50.0      !   [m] default = 2.5
                                 ! Maximum bathymetric roughness.

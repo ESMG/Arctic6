@@ -1,12 +1,13 @@
 #!/bin/bash
 #SBATCH -t 48:00:00
-#SBATCH --ntasks=309
+#SBATCH --ntasks=400
 #SBATCH --job-name=ARCTIC
 #SBATCH --account=akwaters
 #SBATCH --output=ARCTIC.%j
 #SBATCH --no-requeue
 #SBATCH -p t1standard
 ###SBATCH -p debug
+###SBATCH --ntasks=309
 ###SBATCH -t 44:00:00
 
 cd $SLURM_SUBMIT_DIR
@@ -29,9 +30,7 @@ echo " "
 TBEGIN=`echo "print time();" | perl`
 
 mpirun -np $SLURM_NTASKS --mca mpi_paffinity_alone 1 /import/c1/AKWATERS/kshedstrom/MOM6_22/build/gnu/SYM_ice_ocean_SIS2/repro/MOM6
-#mpirun -np $SLURM_NTASKS --mca mpi_paffinity_alone 1 /import/c1/AKWATERS/kshedstrom/MOM6_3/build/gnu/SYM_ice_ocean_SIS2/repro/MOM6
-#mpirun -np $SLURM_NTASKS --mca mpi_paffinity_alone 1 /import/c1/AKWATERS/kshedstrom/MOM6_4/build/gnu/SYM_ice_ocean_SIS2/repro/MOM6
-#mpirun -np $SLURM_NTASKS --mca mpi_paffinity_alone 1 /import/c1/AKWATERS/kshedstrom/MOM6_4/build/gnu/SYM_ice_ocean_SIS2/debug/MOM6
+#mpirun -np $SLURM_NTASKS --mca mpi_paffinity_alone 1 /import/c1/AKWATERS/kshedstrom/MOM6_22/build/gnu/SYM_ice_ocean_SIS2/debug/MOM6
 
 #
 #  Epilog

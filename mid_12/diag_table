@@ -2,11 +2,12 @@ Arctic 50 vertical levels
 1900 1 1 0 0 0
 #"ocean_secs",           100, "seconds",  1, "hours", "time"
 "ocean_hourly",              1, "hours",   1, "hours", "time"
-"ocean_daily",               5, "days",   1, "hours", "time"
-"ice_daily",                 1, "days",   1, "hours", "time"
-"ocean_daily_uv",            5, "days",   1, "hours", "time"
-"ocean_daily_ts",            5, "days",   1, "hours", "time"
-"ocean_month",               1, "months", 1, "hours", "time"
+"ocean_daily",               5, "days",    1, "hours", "time"
+"boem_hourly",               1, "hours",   1, "hours", "time"
+"ice_daily",                 1, "days",    1, "hours", "time"
+"ocean_daily_uv",            5, "days",    1, "hours", "time"
+"ocean_daily_ts",            5, "days",    1, "hours", "time"
+"ocean_month",               1, "months",  1, "hours", "time"
 #"ocean_Bering_Strait",       1, "hours",  1, "days", "time"
 #"ocean_Fram_Strait",         1, "hours",   1, "days", "time"
 #"ocean_Beaufort",            1, "hours",   1, "days", "time"
@@ -49,6 +50,17 @@ Arctic 50 vertical levels
  "ocean_model", "areacello_cu","areacello_cu","ocean_static", "all", "none", "none", 2
  "ocean_model", "areacello_cv","areacello_cv","ocean_static", "all", "none", "none", 2
  "ocean_model", "areacello_bu","areacello_bu","ocean_static", "all", "none", "none", 2
+
+"ocean_model", "ssu_east",     "ssu_east",         "boem_hourly", "all", .false., "none",2
+"ocean_model", "ssv_north",    "ssv_north",        "boem_hourly", "all", .false., "none",2
+"ocean_model", "ssu",          "ssu",              "boem_hourly", "all", .false., "none",2
+"ocean_model", "ssv",          "ssv",              "boem_hourly", "all", .false., "none",2
+"ocean_model", "taux",         "taux",             "boem_hourly", "all", .false., "none",2
+"ocean_model", "tauy",         "tauy",             "boem_hourly", "all", .false., "none",2
+"ice_model",   "ui_east",      "ui_east",          "boem_hourly", "all", .false., "none",2
+"ice_model",   "vi_north",     "vi_north",         "boem_hourly", "all", .false., "none",2
+"flux",        "u_atm",        "u_atm",            "boem_hourly", "all", .false., "none",2
+"flux",        "v_atm",        "v_atm",            "boem_hourly", "all", .false., "none",2
 
 "ocean_model", "SSH",          "ssh",              "ocean_hourly", "all", .false., "none",2
 "ocean_model", "ubt",          "ubt",              "ocean_hourly", "all", .false., "none",2
@@ -218,6 +230,7 @@ Arctic 50 vertical levels
 "ocean_model", "MLD_003",      "MLD",           "ocean_month", "all", "mean", "none",2
 "ocean_model", "ePBL_h_ML",    "ePBL_h_ML",     "ocean_month", "all", "mean", "none",2
 "ocean_model", "net_heat_surface",    "net_heat_surface",    "ocean_month", "all", "mean", "none",2
+"ocean_model", "lf_bodner",    "lf_bodner",     "ocean_month", "all", "mean", "none",2
 "ice_model",  "siconc",        "aice",          "ocean_month", "all", "mean", "none",2
 "ice_model",  "HI",            "hice",          "ocean_month", "all", "mean", "none",2
 "ice_model",  "HS",            "hsnow",         "ocean_month", "all", "mean", "none",2

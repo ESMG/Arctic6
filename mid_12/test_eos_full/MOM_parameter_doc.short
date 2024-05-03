@@ -333,6 +333,19 @@ SURFACE_HEIGHT_IC_FILE = "glorys_ic_75z_1993.nc" !
                                 ! The initial condition file for the surface height.
 SURFACE_HEIGHT_IC_VAR = "ssh"   ! default = "SSH"
                                 ! The initial condition variable for the surface height.
+VELOCITY_CONFIG = "file"        ! default = "zero"
+                                ! A string that determines how the initial velocities are specified for a new
+                                ! run:
+                                !     file - read velocities from the file specified
+                                !       by (VELOCITY_FILE).
+                                !     zero - the fluid is initially at rest.
+                                !     uniform - the flow is uniform (determined by
+                                !       parameters INITIAL_U_CONST and INITIAL_V_CONST).
+                                !     rossby_front - a mixed layer front in thermal wind balance.
+                                !     soliton - Equatorial Rossby soliton.
+                                !     USER - call a user modified routine.
+VELOCITY_FILE = "glorys_ic_75z_1993.nc" !
+                                ! The name of the velocity initial condition file.
 OBC_SEGMENT_001_DATA = "U=file:uv_001.nc(u),V=file:uv_001.nc(v),SSH=file:zeta_001.nc(zeta),TEMP=file:temp_001.nc(temp),SALT=file:salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
 OBC_SEGMENT_002_DATA = "U=file:uv_002.nc(u),V=file:uv_002.nc(v),SSH=file:zeta_002.nc(zeta),TEMP=file:temp_002.nc(temp),SALT=file:salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
@@ -540,13 +553,13 @@ MLE%
 USE_BODNER23 = True             !   [Boolean] default = False
                                 ! If true, use the Bodner et al., 2023, formulation of the re-stratifying
                                 ! mixed-layer restratification parameterization. This only works in ALE mode.
-CR = 0.03                       !   [nondim] default = 0.0
+CR = 0.3                        !   [nondim] default = 0.0
                                 ! The efficiency coefficient in eq 27 of Bodner et al., 2023.
 BLD_DECAYING_TFILTER = 8.64E+04 !   [s] default = 0.0
                                 ! The time-scale for a running-mean filter applied to the boundary layer depth
                                 ! (BLD) when the BLD is shallower than the running mean. A value of 0
                                 ! instantaneously sets the running mean to the current value of BLD.
-MLD_DECAYING_TFILTER = 2.592E+06 !   [s] default = 0.0
+MLD_DECAYING_TFILTER = 2.16E+05 !   [s] default = 0.0
                                 ! The time-scale for a running-mean filter applied to the time-filtered BLD,
                                 ! when the latter is shallower than the running mean. A value of 0
                                 ! instantaneously sets the running mean to the current value filtered BLD.
@@ -618,9 +631,6 @@ KD = 1.0E-06                    !   [m2 s-1] default = 0.0
                                 ! molecular value, ~1e-7 m2 s-1, may be used.
 KD_MIN = 2.0E-07                !   [m2 s-1] default = 1.0E-08
                                 ! The minimum diapycnal diffusivity.
-KD_MAX = 0.1                    !   [m2 s-1] default = -1.0
-                                ! The maximum permitted increment for the diapycnal diffusivity from TKE-based
-                                ! parameterizations, or a negative value for no limit.
 DOUBLE_DIFFUSION = True         !   [Boolean] default = False
                                 ! If true, increase diffusivites for temperature or salinity based on the
                                 ! double-diffusive parameterization described in Large et al. (1994).

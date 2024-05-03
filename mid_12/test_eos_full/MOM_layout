@@ -1,5 +1,5 @@
-LAYOUT = 20,20
-MASKTABLE = "mask_table.91.20x20"
+!LAYOUT = 20,20
+!MASKTABLE = "mask_table.91.20x20"
 !LAYOUT = 17,23
 !MASKTABLE = "mask_table.89.17x23"
 !LAYOUT = 3,7

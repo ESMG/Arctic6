@@ -4,9 +4,6 @@
 
 ! === module MOM_unit_scaling ===
 ! Parameters for doing unit scaling of variables.
-CGRID_ICE_DYNAMICS = True       !   [Boolean] default = False
-                                ! If true, use a C-grid discretization of the sea-ice dynamics; if false use a
-                                ! B-grid discretization.
 DO_RIDGING = True               !   [Boolean] default = False
                                 ! If true, call the ridging routines.
 
@@ -185,7 +182,7 @@ TRACER_ADV_REFILL_MASSLESS=True
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with INT_TIDE_DISSIPATION.
-BATHY_ROUGHNESS_MIN = 0.0       !   [m] default = 2.5
+BATHY_ROUGHNESS_MIN = 0.001     !   [m] default = 2.5
                                 ! Minimum bathymetric roughness.
 BATHY_ROUGHNESS_MAX = 50.0      !   [m] default = 2.5
                                 ! Maximum bathymetric roughness.
