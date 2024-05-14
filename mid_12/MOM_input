@@ -531,8 +531,7 @@ AH_VEL_SCALE = 0.01             !   [m s-1] default = 0.0
 SMAGORINSKY_AH = True           !   [Boolean] default = False
                                 ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
 SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
-                                ! The nondimensional biharmonic Smagorinsky constant,
-                                ! typically 0.015 - 0.06.
+                                ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
 USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = False
                                 ! If true, use Use the land mask for the computation of thicknesses
                                 ! at velocity locations. This eliminates the dependence on arbitrary
@@ -628,7 +627,7 @@ FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
                                 ! energy to the large-scale geostrophic kinetic energy or 1 plus the square of
                                 ! the grid spacing over the deformation radius, as detailed by Fox-Kemper et al.
                                 ! (2010)
-MLE_FRONT_LENGTH = 500.0        !   [m] default = 0.0
+MLE_FRONT_LENGTH = 100.0        !   [m] default = 0.0
                                 ! If non-zero, is the frontal-length scale used to calculate the upscaling of
                                 ! buoyancy gradients that is otherwise represented by the parameter
                                 ! FOX_KEMPER_ML_RESTRAT_COEF. If MLE_FRONT_LENGTH is non-zero, it is recommended

@@ -1,0 +1,760 @@
+<?xml version="1.0"?>
+<!-- FRE Usage documentation: http://www.gfdl.noaa.gov/fms/fre -->
+<!--
+Quick start guide
+module load fre/bronx-22
+
+fremake -x run61.xml -p ncrc5.intel22 -t repro,hdf5 MOM6_SIS2_compile_symm
+fremake -f -x run61.xml -p ncrc5.intel22 -t repro,hdf5 MOM6_SIS2_compile_symm
+
+Compile: sleep 1; sbatch /lustre/f2/dev/Katherine.Hedstrom/fre/Arc_12/2024_01//MOM6_SIS2_compile_symm/ncrc5.intel22-repro-hdf5/exec/compile_MOM6_SIS2_compile_symm.csh
+
+frerun -x run61.xml -p ncrc5.intel22 -t repro,hdf5 run61 -r test (basic)
+sleep 1; sbatch /lustre/f2/dev/Katherine.Hedstrom/fre/NWA/2023_12/Arctic_12k/ncrc5.intel22-repro-hdf5/scripts/run/Arctic_12k_1x0m2d_632x1o
+
+To postprocess later:
+frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_COBALT_2023_10_spinup/gfdl.ncrc5-intel22-prod-hdf5/history/ -x NWA12_cobalt_2023_04.xml -p gfdl.ncrc5-intel22-T repro NWA12_COBALT_2023_10_spinup
+-->
+
+<experimentSuite rtsVersion="4" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <!-- git tag for general component source code-->
+  <property name="RELEASE" value="2023.02"/>
+
+  <!-- git tag for FMS source code -->
+  <property name="FMS_GIT_TAG" value="$(RELEASE)"/>
+
+  <!-- git tag for shared source code -->
+  <property name="CPL_GIT_TAG" value="$(RELEASE)"/>
+
+  <!-- git tag for shared source code -->
+  <property name="NULL_TAG" value="2021.03"/>
+
+  <!-- git tag for ocean_shared source code -->
+  <property name="OCEAN_BGC_GIT_TAG" value="feature/4P-2023-10-diags"/>
+
+  <!-- git tag date for MOM6 source code -->
+  <property name="MOM6_DATE" value="20230201"/>
+
+  <!-- git tag for MOM6 source code -->
+  <property name="MOM6_GIT_TAG" value="dev/gfdl"/>
+
+  <!-- git tag for MOM6 source code -->
+  <property name="MOM6_GIT_FIX" value="esmg_work"/> <!-- Kate's melting pot of versions -->
+
+  <!-- SIS2 commit to check out -->
+  <property name="SIS2_GIT_FIX" value="esmg_oldicepack"/>
+
+  <!-- Icepack commit to check out -->
+  <property name="Icepack_GIT_FIX" value="Icepack1.3.3"/>
+
+  <!-- Updated Icepack commit to check out -->
+  <property name="ICEPACK_GIT_TAG" value="Icepack1.3"/>
+
+  <!-- Updated Icepack commit to check out -->
+  <property name="ICEPACK_GIT_FIX" value="Icepack1.3.3"/>
+
+  <!-- customize as needed -->
+  <property name="FRE_STEM" value="fre/Arc_12/"/>
+
+  <!-- Please make sure to change "YOURGROUPLETTER" to your group, such as b, f, g, m, o... -->
+  <property name="NCRC_GROUP" value="cefi"/>
+  <property name="GFDL_GROUP" value="cefi"/>
+
+  <!--Production run properties. Users can modify these according to their need and/or performance analysis-->
+  <property name="PROD_SIMTIME" value="25"/>
+
+  <!--Post-processing  chunk lengths -->
+  <property name="CHUNK_LENGTH_A" value="5yr"/>
+  <property name="CHUNK_LENGTH_B" value="27yr"/>
+  <property name="CHUNK_LENGTH_SHORT" value="1yr"/>
+
+  <!--Start year of PP -->
+  <property name="PP_START_YEAR" value="1993"/>
+
+  <!-- fre version to be used -->
+  <property name="FRE_VERSION" value="bronx-21"/>
+
+  <!-- on/off switch for MDBI database -->
+  <property name="MDBIswitch" value="off"/>
+
+  <!-- on/off switch for physics analysis -->
+  <property name="PHY_ANALYSIS_SWITCH" value="on"/>
+
+  <!--Users need not change the following properties -->
+  <!-- Reference release tag for existing files in the archives for answer comparison. Used in "REFERENCE" property. -->
+  <property name="reference_tag" value="none"/>
+
+  <!-- The following properties are for testing/debugging purposes and should normally be empty-->
+  <property name="MODIFIER" value=""/>
+  <property name="DEBUGLEVEL" value=""/>
+  <property name="BUILD_DATE" value=""/>
+
+  <!-- name for source/exec directory -->
+  <property name="STATIC" value=""/>
+
+  <!-- Shortcut: -->
+  <property name="ESMG_H" value="/autofs/ncrc-svm1_home2/Katherine.Hedstrom/ESMG"/>
+  <property name="cefi_WS" value="/gpfs/f5/cefi/world-shared"/>
+
+  <!--This is necessary only if you want to run exact same experiment on multiple platforms-->
+  <property name="PLATINFO" value=""/>
+  <property name="AWG_INPUT_HOME_GAEA" value="$(cefi_WS)/nwa-xml/xml_include"/>
+  <property name="AWG_INPUT_HOME_GFDL" value="/home/Andrew.C.Ross/git/nwa-xml/xml_include"/>
+  <property name="cefi_SHR" value="/gpfs/f5/cefi/proj-shared/ARC12"/>
+
+  <!--The start year of forcing dataset-->
+  <property name="append_to_setup_csh" value="set fyear=`echo $baseDate | cut -c1-4`"/>
+
+  <!-- Supported compilers and platforms -->
+  <setup>
+    <xi:include href="../../../../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='ncrc5.intel22'])"/>
+    <xi:include href="../../../../xml_include/xml_building_blocks/platforms.xml" xpointer="xpointer(//freInclude/platform[@name='gfdl.ncrc5-intel22'])"/>
+  </setup>
+
+  <!--= COMPILE =-->
+  <!--===========-->
+  <!--The property MOM6_EXAMPLES should point to the mom6 directory that is checked out. It is needed by MOM6 to access its input data files-->
+  <property name="PROG_MAIN" value="coupler/coupler_main.o"/>
+  <property name="LIBS_ROOT" value="MOM6_SIS2_COBALT_compile_ciod"/>
+  <property name="FMS_LIB_DIR" value="./$(LIBS_ROOT)/$(platform)-$(target)/exec"/>
+
+  <property name="MOM6_EXAMPLES" value="$root/$(LIBS_ROOT)/src/mom6"/>
+  <property name="MY_LIBS" value="$(EXEC_ROOT)/$(FMS_LIB_DIR)"/>
+
+  <experiment name="MOM6_SIS2_COBALT_compile_ciod">
+    <description>
+      Make the executable for ocean-ice experiments.
+    </description>
+    <component name="fms" paths="FMS">
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(FMS_GIT_TAG)"> FMS.git </codeBase>
+      </source>
+      <compile>
+        <cppDefs>-Duse_libMPI -Duse_netCDF $(F2003_FLAGS) -DMAXFIELDMETHODS_=400</cppDefs>
+      </compile>
+    </component>
+
+    <component name="mom6_symmetric" requires="fms" paths="mom6/src/MOM6/config_src/memory/dynamic_symmetric mom6/src/MOM6/config_src/drivers/FMS_cap mom6/src/MOM6/src/*/ mom6/src/MOM6/src/*/*/ mom6/src/MOM6/config_src/external/*/ mom6/src/Icepack/columnphysics mom6/src/MOM6/pkg/GSW-Fortran/*/ mom6/src/MOM6/config_src/infra/FMS2">
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="master"> ocean_BGC.git </codeBase>
+        <csh><![CDATA[
+          git clone -b dev/gfdl https://github.com/NOAA-GFDL/MOM6-examples.git mom6
+          pushd mom6
+          git checkout $(MOM6_GIT_TAG)
+          git submodule update --recursive --init src/MOM6 src/SIS2 src/icebergs
+          if ("$(MOM6_GIT_FIX)" != "") then
+            (cd src/MOM6 && git remote add esmg https://github.com/ESMG/MOM6.git && git fetch esmg && git checkout esmg/$(MOM6_GIT_FIX))
+            #(cd src/MOM6 && git checkout $(MOM6_GIT_FIX))
+          endif
+          if ("$(SIS2_GIT_FIX)" != "") then
+            (cd src/SIS2 && git remote add esmg https://github.com/ESMG/SIS2.git && git fetch esmg && git checkout esmg/$(SIS2_GIT_FIX))
+            #(cd src/SIS2 && git checkout $(SIS2_GIT_FIX))
+          endif
+          popd
+        ]]></csh>
+      </source>
+      <compile>
+        <cppDefs><![CDATA[ $(F2003_FLAGS) -DMAX_FIELDS_=100 -DNOT_SET_AFFINITY -D_USE_MOM6_DIAG -D_USE_GENERIC_TRACER  -DUSE_PRECISION=2 -D_USE_LEGACY_LAND_ -D_FILE_VERSION="'"`git-version-string $<`"'" ]]></cppDefs>
+        <!--makeOverrides>OPENMP=""</makeOverrides>  openmp switch for MOM6 may cause crash -->
+      </compile>
+    </component>
+
+    <component name="Icepack" paths="icepack/columnphysics" requires="fms mom6_symmetric" includeDir="$root/$(LIBS_ROOT)/src/mom6/src/MOM6/src/framework" >
+      <source versionControl="git" root="https://github.com/CICE-Consortium/">
+        <codeBase version="$(ICEPACK_GIT_TAG)"> icepack.git </codeBase>
+	<csh><![CDATA[
+          pushd icepack
+            (git checkout $(ICEPACK_GIT_FIX))
+          popd
+        ]]></csh>
+      </source>
+      <compile>
+         <cppDefs><![CDATA[]]></cppDefs>
+      </compile>
+    </component>
+
+    <component name="sis2" paths="mom6/src/SIS2/config_src/dynamic_symmetric mom6/src/SIS2/src mom6/src/icebergs/src ice_param icepack/columnphysics" requires="fms mom6_symmetric Icepack" includeDir="$root/$(LIBS_ROOT)/src/mom6/src/MOM6/src/framework" >
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(NULL_TAG)"> ice_param.git </codeBase>
+      </source>
+      <compile>
+         <cppDefs><![CDATA[$(F2003_FLAGS) -DUSE_FMS2_IO -D_FILE_VERSION="'"`git-version-string $<`"'"]]></cppDefs>
+      </compile>
+    </component>
+
+    <component name="land_null" paths="land_null" requires="fms">
+      <description domainName="NA" communityName="NA" communityVersion="NA" communityGrid="NA"/>
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(NULL_TAG)"> land_null.git </codeBase>
+      </source>
+    </component>
+
+    <component name="atmos_null" paths="atmos_null" requires="fms">
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(NULL_TAG)"> atmos_null.git </codeBase>
+      </source>
+      <compile>
+        <cppDefs>$(F2003_FLAGS) </cppDefs>
+      </compile>
+    </component>
+
+    <component name="coupler" paths="coupler/full coupler/shared" requires="fms land_null atmos_null sis2 mom6_symmetric">
+      <description domainName="FMS Coupler" communityName="coupler" communityVersion="$(RELEASE)" communityGrid=""/>
+      <source versionControl="git" root="https://github.com/NOAA-GFDL">
+        <codeBase version="$(CPL_GIT_TAG)"> coupler.git </codeBase>
+      </source>
+      <compile>
+        <cppDefs><![CDATA[$(F2003_FLAGS) -D_USE_LEGACY_LAND_ -Duse_AM3_physics -D_FILE_VERSION="'"`git-version-string $<`"'"]]></cppDefs>
+      </compile>
+    </component>
+  </experiment>
+
+  <experiment name="run61" inherit="MOM6_SIS2_COBALT_compile_ciod">
+    <description>
+    </description>
+    <input>
+      <namelist name="coupler_nml">
+        months = $months
+        days = $days
+        current_date = 1993,1,1,0,0,0
+        hours = 0
+        minutes = 0
+        seconds = 0
+        calendar = 'gregorian'
+        dt_cpld  = 1800
+        dt_atmos = 1800
+        do_atmos = .false.
+        do_land = .false.
+        do_ice = .true.
+        do_ocean = .true.
+        atmos_npes = 0,
+        ocean_npes = 0,
+        concurrent = .false.
+        use_lag_fluxes = .false.
+        atmos_nthreads = $atm_threads
+        ocean_nthreads = $ocn_threads
+        do_chksum = .false.
+      </namelist>
+      <namelist name="time_interp_external_nml">
+        max_fields = 400
+      </namelist>
+      <namelist name="diag_manager_nml">
+        max_files = 400
+        flush_nc_files=.false.
+        max_axes = 400
+        max_num_axis_sets = 400,
+        max_input_fields = 1200
+        max_output_fields = 1800
+        mix_snapshot_average_fields=.false.
+      </namelist>
+      <namelist name="xgrid_nml">
+        make_exchange_reproduce = .true.
+        interp_method = 'second_order'
+      </namelist>
+      <namelist name="fms_nml">
+        clock_grain = 'ROUTINE'
+        clock_flags = 'NONE'
+        domains_stack_size = 8000000
+        stack_size = 0
+      </namelist>
+      <namelist name="fms_io_nml" >
+        fms_netcdf_restart = .true.
+        threading_read = 'multi'
+        max_files_r = 800
+        max_files_w = 800
+      </namelist>
+      <namelist name="atmos_model_nml">
+        layout = 1,1
+      </namelist>
+      <!--verona-->
+      <namelist name="sat_vapor_pres_nml">
+        construct_table_wrt_liq = .true.
+        construct_table_wrt_liq_and_ice = .true.
+      </namelist>
+      <namelist name="ice_albedo_nml">
+        t_range = 10.
+      </namelist>
+      <namelist name="icebergs_nml">
+        verbose = .false.
+        verbose_hrs = 24
+        traj_sample_hrs = 24
+        debug = .false.
+        really_debug = .false.
+        use_slow_find = .true.
+        add_weight_to_ocean = .true.
+        passive_mode = .false.
+        generate_test_icebergs = .false.
+        speed_limit = 0.
+        use_roundoff_fix = .true.
+        make_calving_reproduce = .true.
+      </namelist>
+      <namelist name="monin_obukhov_nml">
+        neutral = .true.
+      </namelist>
+      <namelist name="ocean_albedo_nml">
+        ocean_albedo_option = 2
+      </namelist>
+      <namelist name="ocean_rough_nml">
+        rough_scheme = 'beljaars'
+      </namelist>
+      <namelist name="surface_flux_nml">
+        ncar_ocean_flux_multilevel = .true.
+        bulk_zu = 10.0
+        bulk_zt = 10.0
+        bulk_zq = 10.0
+        raoult_sat_vap = .true.
+      </namelist>
+
+      <!--common setup-->
+      <xi:include xpointer="xpointer(//freInclude[@name='choose_restart']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='OM4_common']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='arctic_grid']/input/node())"/>
+      <xi:include xpointer="xpointer(//freInclude[@name='arctic_data']/input/node())"/>
+      <!--SIS2 Input datasets-->
+      <xi:include xpointer="xpointer(//freInclude[@name='SIS2_data']/input/node())"/>
+
+      <dataTable>
+"ATM", "p_surf",             "psl",    "INPUT/JRA_psl.nc",           "bilinear",  1.0
+"ATM", "p_bot",              "psl",    "INPUT/JRA_psl.nc",           "bilinear",  1.0
+"ATM", "t_bot",              "tas",    "INPUT/JRA_tas.nc",           "bilinear",  1.0
+"ATM", "sphum_bot",          "huss",   "INPUT/JRA_huss.nc",          "bilinear",  1.0
+"ATM", "u_bot",              "uas",    "INPUT/JRA_uas.nc",           "bicubic",   1.0
+"ATM", "v_bot",              "vas",    "INPUT/JRA_vas.nc",           "bicubic",   1.0
+"ATM", "z_bot",              "",       "",                           "bilinear", 10.0
+"ATM", "gust",               "",       "",                           "bilinear",  1.0e-4
+#
+"ICE", "lw_flux_dn",         "rlds",   "INPUT/JRA_rlds.nc",          "bilinear",  1.0
+"ICE", "sw_flux_vis_dir_dn", "rsds",   "INPUT/JRA_rsds.nc",          "bilinear",  0.285
+"ICE", "sw_flux_vis_dif_dn", "rsds",   "INPUT/JRA_rsds.nc",          "bilinear",  0.285
+"ICE", "sw_flux_nir_dir_dn", "rsds",   "INPUT/JRA_rsds.nc",          "bilinear",  0.215
+"ICE", "sw_flux_nir_dif_dn", "rsds",   "INPUT/JRA_rsds.nc",          "bilinear",  0.215
+"ICE", "lprec",              "prra",   "INPUT/JRA_prra.nc",          "bilinear",  1.0
+"ICE", "fprec",              "prsn",   "INPUT/JRA_prsn.nc",          "bilinear",  1.0
+"ICE", "runoff",             "runoff", "INPUT/glofas_runoff.nc",     "none",      1.0
+"ICE", "calving",            "",       "",                           "none",      0.0
+"ICE", "dhdt",               "",       "",                           "none",     80.0
+"ICE", "dedt",               "",       "",                           "none",      2.0e-6
+"ICE", "drdt",               "",       "",                           "none",     10.0
+#
+"LND", "t_surf",             "",       "",                           "none",    273.0
+"LND", "t_ca",               "",       "",                           "none",    273.0
+"LND", "q_ca",               "",       "",                           "none",     0.0
+"LND", "rough_mom",          "",       "",                           "none",     0.01
+"LND", "rough_heat",         "",       "",                           "none",     0.1
+"LND", "albedo",             "",       "",                           "none",     0.1
+"LND", "sphum_surf",         "",       "",                           "none",     0.0
+"LND", "sphum_ca",           "",       "",                           "none",     0.0
+"LND", "t_flux",             "",       "",                           "none",     0.0
+"LND", "sphum_flux",         "",       "",                           "none",     0.0
+"LND", "lw_flux",            "",       "",                           "none",     0.0
+"LND", "sw_flux",            "",       "",                           "none",     0.0
+"LND", "lprec",              "",       "",                           "none",     0.0
+"LND", "fprec",              "",       "",                           "none",     0.0
+"LND", "dhdt",               "",       "",                           "none",     5.0
+"LND", "dedt",               "",       "",                           "none",     2.0e-6
+"LND", "dedq",               "",       "",                           "none",     0.0
+"LND", "drdt",               "",       "",                           "none",     5.0
+"LND", "drag_q",             "",       "",                           "none",     0.0
+"LND", "p_surf",             "",       "",                           "none",     1.0e5
+#
+      </dataTable>
+
+      <fieldTable>
+# specific humidity for moist runs
+"TRACER", "atmos_mod", "sphum"
+        "longname",     "specific humidity"
+        "units",        "kg/kg" /
+# prognostic cloud scheme tracers
+"TRACER", "atmos_mod", "liq_wat"
+        "longname",     "cloud liquid specific humidity"
+        "units",        "kg/kg" /
+"TRACER", "atmos_mod", "ice_wat"
+        "longname",     "cloud ice water specific humidity"
+        "units",        "kg/kg" /
+"TRACER", "atmos_mod", "cld_amt"
+        "longname",     "cloud fraction"
+        "units",        "none" /
+# sphum must be present on land as well
+"TRACER", "land_mod",     "sphum"
+        "longname",     "specific humidity"
+        "units",        "kg/kg" /
+###.................................................
+
+     </fieldTable>
+     <diagTable>
+$name
+$baseDate
+      </diagTable>
+      <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">/ncrc/home2/Katherine.Hedstrom/ESMG/diag_tables/diag_table_MOM6_2024-03</dataSource>
+        <dataSource site="ncrc">/ncrc/home2/Katherine.Hedstrom/ESMG/diag_tables/diag_table.SIS</dataSource>
+        <dataSource site="gfdl">/home/Andrew.C.Ross/git/nwa-xml/diag_tables/diag_table_MOM6_2023-03</dataSource>
+        <dataSource site="gfdl">/home/Andrew.C.Ross/git/nwa-xml/diag_tables/diag_table.SIS</dataSource>
+      </dataFile>
+      <csh type='always'>
+        <![CDATA[
+truncate -s 0 $work/INPUT/MOM_override
+cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
+#override OBC_TIDE_NODAL_REF_DATE = ${fyear},7,2
+#override KV = 0.0
+#override DT = 450.0
+!#override SAL_SCALAR_VALUE = 0.0
+#override KD_MAX = -1.0
+#override MLE%CR = 0.2
+!SPLIT_RK2B = True
+#override BBL_EFFIC = 0.0
+#override LAPLACIAN = True
+#override RESOLN_SCALED_KH = False
+#override KH = 0
+#override SMAGORINSKY_KH = True
+#override SMAG_LAP_CONST = 0.15
+#override LEITH_KH = True
+#override LEITH_LAP_CONST = 1.0
+#override KH_VEL_SCALE = 0.0
+MOM_OVERRIDE_EOF
+
+cat > $work/INPUT/SIS_override << SIS_OVERRIDE_EOF
+#override ICE_YIELD_ELLIPTICITY = 1.5
+#override ITD_LANDFAST = True
+!DEBUG = True
+#override NCAT_ICE = 10
+BASAL_STRESS_NCAT_B = 10        ! default = 100
+                                ! Number of bathymetric depth categories in landfast ice computation.
+BASAL_STRESS_NCAT_I = 100       ! default = 100
+                                ! Number of ice thickness categories in landfast ice computation.
+SIS_OVERRIDE_EOF
+        ]]>
+      </csh>
+    </input>
+    <runtime>
+      <!-- Main experiment: -->
+      <production simTime="$(PROD_SIMTIME)" units="years">
+        <segment simTime="12" units="months"/>
+          <resources jobWallclock="06:00:00"  segRuntime="06:00:00">
+            <ice                            layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+            <ocn ranks="1648" threads="1"   layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+          </resources>
+      </production>
+      <regression name="one_month">
+        <run months="1" >
+          <resources jobWallclock="01:00:00">
+            <ice                            layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+            <ocn ranks="1648" threads="1"   layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+          </resources>
+        </run>
+      </regression>
+      <regression name="one_year">
+        <run months="12" >
+          <resources jobWallclock="06:00:00">
+            <ice                            layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+            <ocn ranks="1648" threads="1"   layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+          </resources>
+        </run>
+      </regression>
+      <regression name="one_day">
+        <run days="1" >
+          <resources jobWallclock="01:00:00">
+            <ice                            layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+            <ocn ranks="1648" threads="1"   layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+          </resources>
+        </run>
+      </regression>
+      <regression name="layout">
+        <run days="2" >
+          <resources jobWallclock="01:00:00">
+           <ice                            layout = "51,41"   io_layout = "1,1" mask_table="mask_table.590.51x41"/>
+           <ocn ranks="1501" threads="1"   layout = "51,41"   io_layout = "1,1" mask_table="mask_table.590.51x41"/>
+          </resources>
+        </run>
+      </regression>
+      <regression name="restart">
+        <run days="2" >
+          <resources jobWallclock="01:00:00">
+           <ice                            layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+           <ocn ranks="1648" threads="1"   layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+          </resources>
+        </run>
+        <run days="1 1" >
+          <resources jobWallclock="01:00:00">
+           <ice                            layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+           <ocn ranks="1648" threads="1"   layout = "55,42"   io_layout = "1,1" mask_table="mask_table.662.55x42"/>
+          </resources>
+        </run>
+      </regression>
+    </runtime>
+
+    <postProcess>
+      <csh><![CDATA[
+         cd $work
+         #Make a directory to trick FRE to pick up and archive in ascii
+         mkdir extra.results
+         mv *velocity_truncations MOM_parameter_doc* SIS_parameter_doc* seaice.stats* ocean.stats* extra.results/
+         cp diag_table extra.results/.
+         cp $scriptName extra.results/runscript.csh
+         #When the ocean uses a mask_table the ocean_static.nc file produced by the model run has holes in coordinates (geolon,geolat)
+         #This causes problems for ferret and python tools for analysis.
+         #Copy a non-masked version of ocean_static.nc to be saved as a history file to be used by the analysis scipts .
+         #cp $work/INPUT/ocean_static_no_mask_table.nc $work/
+      ]]></csh>
+      <xi:include xpointer="xpointer(//freInclude[@name='MOM6_postprocess']/postProcess/node())"/>
+    </postProcess>
+
+  </experiment>
+
+  <!-- For a new run starting from non-restart initial conditions, this starts the first year as a new run and then restarts for subsequent years -->
+  <freInclude name="choose_restart">
+    <input>
+      <csh type="always">
+        <![CDATA[
+#------------------------------------------
+## Find out whether to restart.
+
+if ( $currentSeg == 1 ) then
+    set restart_flag = 'n'
+    if(-e $work/INPUT/coupler.res ) then
+        rm -rf $work/INPUT/coupler.res
+        rm -rf $work/INPUT/ice_model.res.nc
+        rm -rf $work/INPUT/MOM.res*.nc
+    endif
+else
+    set restart_flag = 'r'
+    #Because of a technical issue FRE does not delete old uncombined restarts before copying the new ones for the next segment
+    #The INPUT/ ends up with inconsistent restart files which at best cause the model to crash right away.
+    if(-e $work/INPUT/MOM.res.nc.0000 ) \rm -rf $work/INPUT/MOM.res*.nc
+endif
+        ]]>
+      </csh>
+    </input>
+  </freInclude>
+
+  <!-- For a new run starting from a restart file (e.g. from the end of a spinup simulation), this always sets the restart flag -->
+  <freInclude name="always_restart">
+    <input>
+      <csh type="always">
+        <![CDATA[
+set restart_flag = 'r'
+#Because of a technical issue FRE does not delete old uncombined restarts before copying the new ones for the next segment
+#The INPUT/ ends up with inconsistent restart files which at best cause the model to crash right away.
+if(-e $work/INPUT/MOM.res.nc.0000 ) \rm -rf $work/INPUT/MOM.res*.nc
+        ]]>
+      </csh>
+    </input>
+  </freInclude>
+
+  <freInclude name="OM4_common">
+    <input>
+      <csh type="always">
+        <![CDATA[
+#------------------------------------------
+## Find out whether to restart.
+if ( $currentSeg == 1 ) then
+   set restart_flag = 'n'
+else
+   set restart_flag = 'r'
+   #Because of a technical issue FRE does not delete old uncombined restarts before copying the new ones for the next segment
+   #The INPUT/ ends up with inconsistent restart files which at best cause the model to crash right away.
+   if(-e $work/INPUT/MOM.res.nc.0000 ) \rm -rf $work/INPUT/MOM.res*.nc
+endif
+ln -s $work/INPUT/ocean_topog.nc $work/INPUT/topog.nc
+touch $work/INPUT/MOM_override
+touch $work/INPUT/SIS_override
+touch $work/INPUT/MOM_layout
+touch $work/INPUT/SIS_layout
+
+# Record the job stdout location for later use timings database
+cat >> $HOME/frejobs_stdout <<EOF_frejobs
+$stdoutDir/$FRE_JOBID
+EOF_frejobs
+
+cat > $work/INPUT/MOM_layout << MOM_LAYOUT_EOF
+#override IO_LAYOUT = $ocn_io_layout
+#override LAYOUT    = $ocn_layout
+#override MASKTABLE = $ocn_mask_table
+#override OCEAN_OMP_THREADS = $ocn_threads
+MOM_LAYOUT_EOF
+
+cat > $work/INPUT/SIS_layout << SIS_LAYOUT_EOF
+#override IO_LAYOUT = $ice_io_layout
+#override LAYOUT    = $ice_layout
+#override MASKTABLE = $ice_mask_table
+SIS_LAYOUT_EOF
+
+#cat > $work/INPUT/SIS_override << SIS_OVERRIDE_EOF
+##override ICE_STATS_INTERVAL = 10.
+##override DO_ICEBERGS = False
+##override ICE_OCEAN_STRESS_STAGGER = "C"
+#SIS_OVERRIDE_EOF
+
+cat > $work/INPUT/SIS_diurnal << SIS_diurnal_EOF
+SIS_diurnal_EOF
+
+# Copy relevant mom6-examples to GFDL for use in postprocessing
+#if ( $?flagOutputXferOn && $?flagOutputPostProcessOn && $currentSeg == 1 ) then
+#  #gcp --batch does not understand some variations of home filesystem like /autofs/mnt/ncrc-svm1_home1 so we need to massage rtsxml to comply
+#  set xmldirlocal = `dirname $rtsxml | sed -r "s/^\/(autofs|ncrc)\/.+\/$USER\//\~$USER\//"`
+#  set xmldirRemote = `echo $xmldirlocal | sed -r "$patternSedHome"`
+#  set platform_domain = `perl -T -e "use Net::Domain(hostdomain) ; print hostdomain"`
+#  if ("${platform_domain}" == "ncrc.gov") then
+#    set xmldirRemote = `echo $xmldirlocal | sed -r "$patternSedHome;$patternSedCTMP;$patternSedCPERM"`
+#    gcp --batch -cd -r --sync $xmldirlocal/awg_include gfdl:$(NB_ROOT)/mdt_xml/
+#    gcp --batch -cd -r --sync $xmldirlocal/awg_include gfdl:$xmldirRemote/
+#  endif
+#  #trick to copy MOM6 directory but avoid traversing the .datasets links
+#  tar cvf mom6.tar --exclude='.datasets' -C $(MOM6_EXAMPLES) . > /dev/null
+#  mkdir mom6
+#  tar xvf mom6.tar -C ./mom6 > /dev/null
+#  if ("${platform_domain}" == "ncrc.gov") then
+#    gcp --batch -cd -r --sync mom6 gfdl:$(NB_ROOT)/
+#  else if ("${platform_domain}" =~ *"fairmont.rdhpcs.noaa.gov"* ) then
+#    gcp -cd -r --sync mom6 gfdl:$(NB_ROOT)/
+#  endif
+#endif
+
+# IAF cycle mechanism
+echo "Model year = $fyear"
+cd $work/INPUT
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/psl_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_psl.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/tas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_tas.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/huss_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_huss.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/uas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_uas.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/vas_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010000-${fyear}12312100.padded.nc JRA_vas.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/rlds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_rlds.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/rsds_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_rsds.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/prra_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_prra.nc
+ln -sf /gpfs/f5/gfdl_o/world-shared/datasets/reanalysis/JRA55-do/v1.5.0/padded/prsn_input4MIPs_atmosphericState_OMIP_MRI-JRA55-do-1-5-0_gr_${fyear}01010130-${fyear}12312230.padded.nc JRA_prsn.nc
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/salt_001.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/salt_002.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/salt_003.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/salt_004.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/temp_001.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/temp_002.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/temp_003.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/temp_004.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/zeta_001.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/zeta_002.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/zeta_003.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/zeta_004.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/uv_001.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/uv_002.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/uv_003.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/obc/${fyear}/uv_004.nc .
+ln -sf /gpfs/f5/cefi/proj-shared/ARC12/ESMG/INPUT/Runoff/glofas_hill_${fyear}.nc glofas_runoff.nc
+cd $work
+
+        ]]>
+      </csh>
+    </input>
+  </freInclude>
+
+  <freInclude name="arctic_grid">
+    <input>
+      <dataFile label="gridSpec" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(cefi_SHR)/GRID/arctic_grid.tar</dataSource>
+	<dataSource site="gfdl">/archive/Katherine.Hedstrom/Arctic_12k/arctic_grid.tar</dataSource>
+      </dataFile>
+    </input>
+  </freInclude>
+
+  <freInclude name="arctic_data">
+    <input>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <!-- Main settings: -->
+        <dataSource platform="$(platform)">$(cefi_SHR)/GRID/mask_table.662.55x42</dataSource>
+        <dataSource platform="$(platform)">$(cefi_SHR)/GRID/mask_table.590.51x41</dataSource>
+        <dataSource site="ncrc">$(ESMG_H)/ESMG-configs/Arctic6/mid_12/MOM_input</dataSource>
+        <dataSource site="ncrc">$(ESMG_H)/ESMG-configs/Arctic6/mid_12/MOM_saltrestore</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/salt_PHC2_Arctic_12k_00.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/seawifs-clim-1997-2010.smoothed.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_amplitude_Arctic_12k.nc</dataSource>
+        <!-- GLORYS initial condition: -->
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/initial/glorys_ic_75z_1993.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/bgc_ics_75z.nc</dataSource>
+        <!-- Boundary conditions for BGC -->
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/bgc_woa.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/bgc_cobalt.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/bgc_glodap.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/bgc_esper.nc</dataSource>
+        <!-- Boundary conditions for physics -->
+        <!-- Tidal boundary conditions: -->
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_bcs/tu1.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_bcs/tu2.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_bcs/tu3.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_bcs/tu4.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_bcs/tz1.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_bcs/tz2.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_bcs/tz3.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/tidal_bcs/tz4.nc</dataSource>
+        <!-- For the ice: -->
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/initial/ice_mass_12k.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/ice_outflow.nc</dataSource>
+      </dataFile>
+      <!-- Extra file for chlorophyll for estimating opacity: -->
+      <namelist name="MOM_input_nml" >
+        output_directory = './',
+        input_filename = '$restart_flag'
+        restart_input_dir = 'INPUT/',
+        restart_output_dir = 'RESTART/',
+        parameter_filename = 'INPUT/MOM_input','INPUT/MOM_layout','INPUT/MOM_override','INPUT/MOM_saltrestore'
+      </namelist>
+    </input>
+  </freInclude>
+
+  <freInclude name="SIS2_data">
+    <input>
+      <dataFile label="input" target="INPUT/" chksum="" size="" timestamp="">
+        <dataSource site="ncrc">$(ESMG_H)/ESMG-configs/Arctic6/mid_12/SIS_input</dataSource>
+      </dataFile>
+      <namelist name="SIS_input_nml">
+        output_directory = './'
+        input_filename = '$restart_flag'
+        restart_input_dir = 'INPUT/'
+        restart_output_dir = 'RESTART/'
+        parameter_filename = 'INPUT/SIS_input','INPUT/SIS_layout','INPUT/SIS_override'
+      </namelist>
+    </input>
+  </freInclude>
+
+  <freInclude name="MOM6_postprocess">
+    <postProcess>
+      <!--PostProcessing component models-->
+      <component type="ocean_daily"   start="$(PP_START_YEAR)" source="ocean_daily">
+        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_A)" source="ocean_daily"/>
+        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_B)" source="ocean_daily">
+          <variables>
+            tos tob ssh sshmin sshmax
+          </variables>
+        </timeSeries>
+      </component>
+      <component type="ocean_monthly" start="$(PP_START_YEAR)"  source="ocean_month">
+        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" source="ocean_month"/>
+        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" source="ocean_month"/>
+        <timeAverage source="monthly" interval="$(CHUNK_LENGTH_B)"/>
+      </component>
+      <component type="ocean_monthly_z" start="$(PP_START_YEAR)"  source="ocean_month_z">
+        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)" source="ocean_month_z"/>
+        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)" source="ocean_month_z"/>
+        <timeAverage source="monthly" interval="$(CHUNK_LENGTH_B)"/>
+      </component>
+      <component type="ocean_annual"  start="$(PP_START_YEAR)" source="ocean_annual">
+        <timeSeries freq="annual"   chunkLength="$(CHUNK_LENGTH_A)" source="ocean_annual"/>
+        <timeSeries freq="annual"   chunkLength="$(CHUNK_LENGTH_B)" source="ocean_annual"/>
+        <timeAverage source="annual" interval="$(CHUNK_LENGTH_B)"/>
+      </component>
+      <component type="ocean_annual_z" start="$(PP_START_YEAR)" source="ocean_annual_z" >
+        <timeSeries freq="annual"  chunkLength="$(CHUNK_LENGTH_A)" source="ocean_annual_z"/>
+        <timeAverage source="annual" interval="$(CHUNK_LENGTH_B)"/>
+        <timeSeries freq="annual"  chunkLength="$(CHUNK_LENGTH_B)" source="ocean_annual_z"/>
+      </component>
+      <!--ICE-->
+      <component type="ice_daily"   start="$(PP_START_YEAR)" source="ice_daily">
+        <timeSeries freq="daily" chunkLength="$(CHUNK_LENGTH_A)" source="ice_daily"/>
+      </component>
+      <component type="ice_monthly"  start="$(PP_START_YEAR)"  source="ice_month" >
+        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_A)"  source="ice_month"/>
+        <timeSeries freq="monthly" chunkLength="$(CHUNK_LENGTH_B)"  source="ice_month"/>
+        <timeAverage source="annual"  interval="$(CHUNK_LENGTH_B)"/>
+      </component>
+    </postProcess>
+  </freInclude>
+</experimentSuite>
+
