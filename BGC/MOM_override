@@ -1,4 +1,0 @@
-!LIQUID_RUNOFF_FROM_DATA = True
-!VERBOSITY = 9
-!#override LINEARIZED_BT_CORIOLIS = False
-#override ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
