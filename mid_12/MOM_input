@@ -385,7 +385,7 @@ OBC_SEGMENT_004_DATA = "U=file:uv_004.nc(u),V=file:uv_004.nc(v),SSH=file:zeta_00
                                 ! OBC segment docs
 
 ! === module MOM_diag_mediator ===
-USE_GRID_SPACE_DIAGNOSTIC_AXES = False !   [Boolean] default = False
+USE_INDEX_DIAGNOSTIC_AXIS = False !   [Boolean] default = False
                                 ! If true, use a grid index coordinate convention for diagnostic axes.
 
 ! === module MOM_MEKE ===

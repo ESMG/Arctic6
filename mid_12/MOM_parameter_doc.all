@@ -647,6 +647,9 @@ REMAP_BOUND_INTERMEDIATE_VALUES = False !   [Boolean] default = False
 REMAP_BOUNDARY_EXTRAP = False   !   [Boolean] default = False
                                 ! If true, values at the interfaces of boundary cells are extrapolated instead
                                 ! of piecewise constant
+INIT_BOUNDARY_EXTRAP = False    !   [Boolean] default = False
+                                ! If true, values at the interfaces of boundary cells are extrapolated instead
+                                ! of piecewise constant during initialization.Defaults to REMAP_BOUNDARY_EXTRAP.
 PARTIAL_CELL_VELOCITY_REMAP = False !   [Boolean] default = False
                                 ! If true, use partial cell thicknesses at velocity points that are masked out
                                 ! where they extend below the shallower of the neighboring bathymetry for
@@ -800,7 +803,7 @@ OBC_USER_CONFIG = "none"        ! default = "none"
 NUM_DIAG_COORDS = 1             ! default = 1
                                 ! The number of diagnostic vertical coordinates to use. For each coordinate, an
                                 ! entry in DIAG_COORDS must be provided.
-USE_GRID_SPACE_DIAGNOSTIC_AXES = False !   [Boolean] default = False
+USE_INDEX_DIAGNOSTIC_AXES = False !   [Boolean] default = False
                                 ! If true, use a grid index coordinate convention for diagnostic axes.
 DIAG_COORDS = "z Z ZSTAR"       ! default = "z Z ZSTAR"
                                 ! A list of string tuples associating diag_table modules to a coordinate
@@ -962,7 +965,7 @@ KV_TBL_MIN = 0.0                !   [m2 s-1] default = 0.0
 CORRECT_BBL_BOUNDS = False      !   [Boolean] default = False
                                 ! If true, uses the correct bounds on the BBL thickness and viscosity so that
                                 ! the bottom layer feels the intended drag.
-SMAG_CONST_CHANNEL = 0.05       !   [nondim] default = 0.05
+SMAG_CONST_CHANNEL = 0.15       !   [nondim] default = 0.15
                                 ! The nondimensional Laplacian Smagorinsky constant used in calculating the
                                 ! channel drag if it is enabled.  The default is to use the same value as
                                 ! SMAG_LAP_CONST if it is defined, or 0.15 if it is not. The value used is also
@@ -1318,35 +1321,8 @@ HOR_VISC_ANSWER_DATE = 99991231 ! default = 99991231
 USE_CONT_THICKNESS = False      !   [Boolean] default = False
                                 ! If true, use thickness at velocity points from continuity solver. This
                                 ! optioncurrently only works with split mode.
-LAPLACIAN = True                !   [Boolean] default = False
+LAPLACIAN = False               !   [Boolean] default = False
                                 ! If true, use a Laplacian horizontal viscosity.
-KH = 0.0                        !   [m2 s-1] default = 0.0
-                                ! The background Laplacian horizontal viscosity.
-KH_BG_MIN = 0.0                 !   [m2 s-1] default = 0.0
-                                ! The minimum value allowed for Laplacian horizontal viscosity, KH.
-KH_VEL_SCALE = 0.0              !   [m s-1] default = 0.0
-                                ! The velocity scale which is multiplied by the grid spacing to calculate the
-                                ! Laplacian viscosity. The final viscosity is the largest of this scaled
-                                ! viscosity, the Smagorinsky and Leith viscosities, and KH.
-KH_SIN_LAT = 0.0                !   [m2 s-1] default = 0.0
-                                ! The amplitude of a latitudinally-dependent background viscosity of the form
-                                ! KH_SIN_LAT*(SIN(LAT)**KH_PWR_OF_SINE).
-SMAGORINSKY_KH = True           !   [Boolean] default = False
-                                ! If true, use a Smagorinsky nonlinear eddy viscosity.
-SMAG_LAP_CONST = 0.05           !   [nondim] default = 0.0
-                                ! The nondimensional Laplacian Smagorinsky constant, often 0.15.
-LEITH_KH = False                !   [Boolean] default = False
-                                ! If true, use a Leith nonlinear eddy viscosity.
-BOUND_KH = True                 !   [Boolean] default = True
-                                ! If true, the Laplacian coefficient is locally limited to be stable.
-BETTER_BOUND_KH = True          !   [Boolean] default = True
-                                ! If true, the Laplacian coefficient is locally limited to be stable with a
-                                ! better bounding than just BOUND_KH.
-ANISOTROPIC_VISCOSITY = False   !   [Boolean] default = False
-                                ! If true, allow anistropic viscosity in the Laplacian horizontal viscosity.
-ADD_LES_VISCOSITY = False       !   [Boolean] default = False
-                                ! If true, adds the viscosity from Smagorinsky and Leith to the background
-                                ! viscosity instead of taking the maximum.
 BIHARMONIC = True               !   [Boolean] default = True
                                 ! If true, use a biharmonic horizontal viscosity. BIHARMONIC may be used with
                                 ! LAPLACIAN.
@@ -1375,7 +1351,7 @@ BETTER_BOUND_AH = True          !   [Boolean] default = True
 RE_AH = 0.0                     !   [nondim] default = 0.0
                                 ! If nonzero, the biharmonic coefficient is scaled so that the biharmonic
                                 ! Reynolds number is equal to this.
-SMAG_BI_CONST = 0.01            !   [nondim] default = 0.0
+SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
                                 ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
 BOUND_CORIOLIS_BIHARM = True    !   [Boolean] default = True
                                 ! If true use a viscosity that increases with the square of the velocity shears,
@@ -1394,9 +1370,6 @@ USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = True
 HORVISC_BOUND_COEF = 0.8        !   [nondim] default = 0.8
                                 ! The nondimensional coefficient of the ratio of the viscosity bounds to the
                                 ! theoretical maximum for stability without considering other terms.
-USE_KH_BG_2D = False            !   [Boolean] default = False
-                                ! If true, read a file containing 2-d background harmonic viscosities. The final
-                                ! viscosity is the maximum of the other terms and this background value.
 
 ! === module MOM_vert_friction ===
 VERT_FRICTION_ANSWER_DATE = 99991231 ! default = 99991231
@@ -1602,7 +1575,7 @@ MLE%
 USE_BODNER23 = True             !   [Boolean] default = False
                                 ! If true, use the Bodner et al., 2023, formulation of the re-stratifying
                                 ! mixed-layer restratification parameterization. This only works in ALE mode.
-CR = 0.03                       !   [nondim] default = 0.0
+CR = 0.3                        !   [nondim] default = 0.0
                                 ! The efficiency coefficient in eq 27 of Bodner et al., 2023.
 BODNER_NSTAR = 0.066            !   [nondim] default = 0.066
                                 ! The n* value used to estimate the turbulent vertical momentum flux in Bodner
@@ -1624,7 +1597,7 @@ MLD_GROWING_TFILTER = 0.0       !   [s] default = 0.0
                                 ! The time-scale for a running-mean filter applied to the time-filtered BLD,
                                 ! when the latter is deeper than the running mean. A value of 0 instantaneously
                                 ! sets the running mean to the current value filtered BLD.
-MLD_DECAYING_TFILTER = 2.592E+06 !   [s] default = 0.0
+MLD_DECAYING_TFILTER = 2.16E+05 !   [s] default = 0.0
                                 ! The time-scale for a running-mean filter applied to the time-filtered BLD,
                                 ! when the latter is shallower than the running mean. A value of 0
                                 ! instantaneously sets the running mean to the current value filtered BLD.
@@ -1890,7 +1863,7 @@ KD_TANH_LAT_FN = False          !   [Boolean] default = False
                                 ! If true, use a tanh dependence of Kd_sfc on latitude, like CM2.1/CM2M.  There
                                 ! is no physical justification for this form, and it can not be used with
                                 ! HENYEY_IGW_BACKGROUND.
-KD_MAX = 0.1                    !   [m2 s-1] default = -1.0
+KD_MAX = -1.0                   !   [m2 s-1] default = -1.0
                                 ! The maximum permitted increment for the diapycnal diffusivity from TKE-based
                                 ! parameterizations, or a negative value for no limit.
 KD_ADD = 0.0                    !   [m2 s-1] default = 0.0
