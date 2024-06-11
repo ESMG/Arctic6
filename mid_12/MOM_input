@@ -606,7 +606,7 @@ DTBT = -0.9                     !   [s or nondim] default = -0.98
                                 ! actually be used is an integer fraction of DT, rounding down.
 
 ! === module MOM_mixed_layer_restrat ===
-!MIXEDLAYER_RESTRAT = True       !   [Boolean] default = False
+MIXEDLAYER_RESTRAT = True       !   [Boolean] default = False
                                 ! If true, a density-gradient dependent re-stratifying flow is imposed in the
                                 ! mixed layer. Can be used in ALE mode without restriction but in layer mode can
                                 ! only be used if BULKMIXEDLAYER is true.
@@ -852,7 +852,7 @@ PEN_SW_SCALE = 10.0             !   [m] default = 0.0
 PEN_SW_FRAC = 0.42              !   [nondim] default = 0.0
                                 ! The fraction of the shortwave radiation that penetrates below the surface.
 !VAR_PEN_SW = True
-OPTICS_2018_ANSWERS = False
+OPTICS_ANSWER_DATE = 99991231
 !PEN_SW_NBANDS = 3
 
 ! === module MOM_tracer_advect ===
