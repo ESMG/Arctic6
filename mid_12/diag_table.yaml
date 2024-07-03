@@ -401,7 +401,7 @@ diag_files:
   is_ocean: true
   sub_region:
   - grid_type: index
-    tile: 7
+    tile: 6
     corner1: 51 69
     corner2: 51 69
     corner3: 61 69

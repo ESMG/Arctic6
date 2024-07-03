@@ -852,7 +852,10 @@ PEN_SW_SCALE = 10.0             !   [m] default = 0.0
 PEN_SW_FRAC = 0.42              !   [nondim] default = 0.0
                                 ! The fraction of the shortwave radiation that penetrates below the surface.
 !VAR_PEN_SW = True
-OPTICS_ANSWER_DATE = 99991231
+OPTICS_ANSWER_DATE = 99991231   ! default = 99991231
+                                ! The vintage of the order of arithmetic and expressions in the optics
+                                ! calculations.  Values below 20190101 recover the answers from the end of 2018,
+                                ! while higher values use updated and more robust forms of the same expressions.
 !PEN_SW_NBANDS = 3
 
 ! === module MOM_tracer_advect ===

@@ -381,7 +381,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 2000, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 1993, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 TIDE_M2_FREQ = 1.405189E-04     !   [s-1] default = 1.405189E-04
                                 ! Frequency of the M2 tidal constituent. This is only used if TIDES and TIDE_M2
