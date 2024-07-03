@@ -26,7 +26,7 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
 
 <experimentSuite rtsVersion="4" xmlns:xi="http://www.w3.org/2001/XInclude">
   <!-- git tag for general component source code-->
-  <property name="RELEASE" value="2024.01.01"/>
+  <property name="RELEASE" value="2023.04"/>
 
   <!-- git tag for FMS source code -->
   <property name="FMS_GIT_TAG" value="$(RELEASE)"/>
@@ -385,7 +385,7 @@ $name
 $baseDate
       </diagTable>
       <dataFile label="diagTable" target="INPUT/" chksum="" size="" timestamp="">
-        <dataSource site="ncrc">/ncrc/home2/Katherine.Hedstrom/ESMG/diag_tables/diag_table_MOM6_2024-03</dataSource>
+        <dataSource site="ncrc">/ncrc/home2/Katherine.Hedstrom/ESMG/diag_tables/diag_table_MOM6_2024-05</dataSource>
         <dataSource site="ncrc">/ncrc/home2/Katherine.Hedstrom/ESMG/diag_tables/diag_table.SIS</dataSource>
         <dataSource site="gfdl">/home/Andrew.C.Ross/git/nwa-xml/diag_tables/diag_table_MOM6_2023-03</dataSource>
         <dataSource site="gfdl">/home/Andrew.C.Ross/git/nwa-xml/diag_tables/diag_table.SIS</dataSource>

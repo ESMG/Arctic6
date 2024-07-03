@@ -171,7 +171,7 @@ Arctic 75 vertical levels
 "ocean_model", "SST",          "sst",              "ocean_daily", "all", "mean", "none",2
 #"ocean_model", "SSS",          "sss",              "ocean_daily", "all", "mean", "none",2
 "ocean_model", "SSH",          "ssh",               "ocean_daily", "all", "mean", "none",2
-"ocean_model", "MLD_300",      "MLD",               "ocean_daily", "all", "mean", "none",2
+"ocean_model", "MLD_003",      "MLD",               "ocean_daily", "all", "mean", "none",2
 "ocean_model", "thetao",       "thetao",            "ocean_daily_ts", "all", "mean", "none",2
 "ocean_model", "so",           "so",                "ocean_daily_ts", "all", "mean", "none",2
 "ocean_model", "uo",           "uo",                "ocean_daily_uv", "all", "mean", "none",2

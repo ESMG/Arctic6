@@ -783,13 +783,6 @@ cat > $work/INPUT/SIS_layout << SIS_LAYOUT_EOF
 #override LAYOUT    = $ice_layout
 #override MASKTABLE = $ice_mask_table
 SIS_LAYOUT_EOF
-
-#cat > $work/INPUT/SIS_override << SIS_OVERRIDE_EOF
-##override ICE_STATS_INTERVAL = 10.
-##override DO_ICEBERGS = False
-##override ICE_OCEAN_STRESS_STAGGER = "C"
-#SIS_OVERRIDE_EOF
-
 cat > $work/INPUT/SIS_diurnal << SIS_diurnal_EOF
 SIS_diurnal_EOF
 

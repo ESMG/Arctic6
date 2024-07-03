@@ -19,3 +19,4 @@ SRESTORE_AS_SFLUX = True        !   [Boolean] default = False
 MAX_DELTA_SRESTORE = 5.0        !   [PSU or g kg-1] default = 999.0
                                 ! The maximum salinity difference used in restoring terms.
 MASK_SRESTORE_UNDER_ICE = True  !   [Boolean] default = False
+ADJUST_NET_SRESTORE_TO_ZERO = False
