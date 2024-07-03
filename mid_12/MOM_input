@@ -199,15 +199,16 @@ EQN_OF_STATE = "WRIGHT_FULL"    ! default = "WRIGHT"
                                 ! Currently, the valid choices are "LINEAR", "UNESCO", "JACKETT_MCD", "WRIGHT",
                                 ! "WRIGHT_REDUCED", "WRIGHT_FULL", "NEMO", "ROQUET_RHO", "ROQUET_SPV" and
                                 ! "TEOS10".  This is only used if USE_EOS is true.
-DTFREEZE_DP = -7.75E-08         !   [deg C Pa-1] default = 0.0
+DTFREEZE_DP = -7.75E-08         !   [degC Pa-1] default = 0.0
                                 ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
                                 ! temperature with pressure.
 
 ! === module MOM_restart ===
-PARALLEL_RESTARTFILES = False   !   [Boolean] default = False
-                                ! If true, the IO layout is used to group processors that write to the same
-                                ! restart file or each processor writes its own (numbered) restart file. If
-                                ! false, a single restart file is generated combining output from all PEs.
+RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
+                                ! If true, require the restart checksums to match and error out otherwise. Users
+                                ! may want to avoid this comparison if for example the restarts are made from a
+                                ! run with a different mask_table than the current run, in which case the
+                                ! checksums will not match and cause crash.
 
 ! === module MOM_tracer_flow_control ===
 
@@ -343,8 +344,19 @@ SURFACE_HEIGHT_IC_FILE = "glorys_ic_75z_1993.nc" !
                                 ! The initial condition file for the surface height.
 SURFACE_HEIGHT_IC_VAR = "ssh"   ! default = "SSH"
                                 ! The initial condition variable for the surface height.
-VELOCITY_CONFIG = "file"
-VELOCITY_FILE = "glorys_ic_75z_1993.nc"
+VELOCITY_CONFIG = "file"        ! default = "zero"
+                                ! A string that determines how the initial velocities are specified for a new
+                                ! run:
+                                !     file - read velocities from the file specified
+                                !       by (VELOCITY_FILE).
+                                !     zero - the fluid is initially at rest.
+                                !     uniform - the flow is uniform (determined by
+                                !       parameters INITIAL_U_CONST and INITIAL_V_CONST).
+                                !     rossby_front - a mixed layer front in thermal wind balance.
+                                !     soliton - Equatorial Rossby soliton.
+                                !     USER - call a user modified routine.
+VELOCITY_FILE = "glorys_ic_75z_1993.nc" !
+                                ! The name of the velocity initial condition file.
 SPONGE = False                  !   [Boolean] default = False
                                 ! If true, sponges may be applied anywhere in the domain. The exact location and
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
@@ -385,10 +397,6 @@ OBC_SEGMENT_004_DATA = "U=file:uv_004.nc(u),V=file:uv_004.nc(v),SSH=file:zeta_00
                                 ! OBC segment docs
 
 ! === module MOM_diag_mediator ===
-USE_INDEX_DIAGNOSTIC_AXIS = False !   [Boolean] default = False
-                                ! If true, use a grid index coordinate convention for diagnostic axes.
-
-! === module MOM_MEKE ===
 
 ! === module MOM_lateral_mixing_coeffs ===
 USE_VARIABLE_MIXING = True      !   [Boolean] default = False
@@ -447,8 +455,6 @@ VISC_REM_BUG = False            !   [Boolean] default = True
                                 ! VISC_REM_BT_WEIGHT_FIX in MOM_barotropic, and VISC_REM_CONT_HVEL_FIX in
                                 ! MOM_continuity_PPM. Eventually, the three individual flags should be removed
                                 ! after tests and the default of VISC_REM_BUG should be to False.
-
-! === module MOM_continuity ===
 
 ! === module MOM_continuity_PPM ===
 ETA_TOLERANCE = 1.0E-06         !   [m] default = 3.75E-09
@@ -539,12 +545,10 @@ SMAGORINSKY_AH = True           !   [Boolean] default = False
                                 ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
 SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
                                 ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
-USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = False
-                                ! If true, use Use the land mask for the computation of thicknesses
-                                ! at velocity locations. This eliminates the dependence on arbitrary
-                                ! values over land or outside of the domain. Default is False in order to
-                                ! maintain answers with legacy experiments but should be changed to True
-                                ! for new experiments.
+FRICTWORK_BUG = False           !   [Boolean] default = True
+                                ! If true, retain an answer-changing bug in calculating the FrictWork, which
+                                ! cancels the h in thickness flux and the h at velocity point. This isnot
+                                ! recommended.
 
 ! === module MOM_vert_friction ===
 HMIX_FIXED = 0.9                !   [m]
@@ -626,6 +630,14 @@ MIN_WSTAR2 = 1.0E-09            !   [m2 s-2] default = 1.0E-24
                                 ! division-by-zero in the limit when u* and the buoyancy flux are zero.  The
                                 ! default is less than the molecular viscosity of water times the Coriolis
                                 ! parameter a micron away from the equator.
+USE_CR_GRID = True              !   [Boolean] default = False
+                                ! If true, read in a spatially varying Cr field.
+USE_MLD_GRID = True             !   [Boolean] default = False
+                                ! If true, read in a spatially varying MLD_decaying_Tfilt field.
+MLD_TFILT_FILE = "restrat_vars.nc" ! default = ""
+                                ! The path to the file containing the MLD_decaying_Tfilt fields.
+CR_FILE = "restrat_vars.nc"     ! default = ""
+                                ! The path to the file containing the Cr fields.
 %MLE
 FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
                                 ! A nondimensional coefficient that is proportional to the ratio of the
@@ -661,8 +673,6 @@ ENERGETICS_SFC_PBL = True       !   [Boolean] default = False
 EPBL_IS_ADDITIVE = False        !   [Boolean] default = True
                                 ! If true, the diffusivity from ePBL is added to all other diffusivities.
                                 ! Otherwise, the larger of kappa-shear and ePBL diffusivities are used.
-
-! === module MOM_geothermal ===
 
 ! === module MOM_set_diffusivity ===
 
@@ -704,7 +714,7 @@ BBL_EFFIC = 0.0                 !   [nondim] default = 0.2
 KD = 1.0E-06                    !   [m2 s-1] default = 0.0
                                 ! The background diapycnal diffusivity of density in the interior. Zero or the
                                 ! molecular value, ~1e-7 m2 s-1, may be used.
-KD_MIN = 2.0E-07                !   [m2 s-1] default = 1.5E-07
+KD_MIN = 2.0E-07                !   [m2 s-1] default = 1.0E-08
                                 ! The minimum diapycnal diffusivity.
 DOUBLE_DIFFUSION = True         !   [Boolean] default = False
                                 ! If true, increase diffusivites for temperature or salinity based on the
@@ -900,3 +910,4 @@ BBL_USE_EOS = True
 GENERIC_TRACER_IC_FILE = "bgc_ics_75z.nc"     ! default = ""
                                 ! The file in which the generic trcer initial values can be found, or an empty
                                 ! string for internal initialization.
+FRICTWORK_BUG = False

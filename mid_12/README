@@ -7,3 +7,8 @@ Rob's files:
 /import/AKWATERS/jrcermakiii/configs/Arctic12/IC/glorys_ic_75z_1993.nc
 
  flux_exchange_nml: partition_fprec_from_lprec=.true.
+
+
+conda activate snowy
+rm diag_table.yaml
+diag-table-to-yaml -f diag_table

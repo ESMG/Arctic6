@@ -2,7 +2,7 @@ Arctic 50 vertical levels
 1900 1 1 0 0 0
 #"ocean_secs",           100, "seconds",  1, "hours", "time"
 "ocean_hourly",              1, "hours",   1, "hours", "time"
-"ocean_hourly_ts",           1, "hours",   1, "hours", "time"
+"boem_hourly",               1, "hours",   1, "hours", "time"
 "ocean_daily",               1, "days",   1, "hours", "time"
 "ice_daily",                 1, "days",   1, "hours", "time"
 "ocean_daily_uv",            1, "days",   1, "hours", "time"
@@ -23,23 +23,59 @@ Arctic 50 vertical levels
 #"ocean_Cardigan",            1, "hours",   1, "days", "time"
 #"ocean_Robeson",             1, "hours",   1, "days", "time"
 
-#"ocean_model","eta_hifreq","eta_hifreq","ocean_secs","all",.false.,"none",2
-#"ocean_model","ubt_hifreq","ubt_hifreq","ocean_secs","all",.false.,"none",2
-#"ocean_model","vbt_hifreq","vbt_hifreq","ocean_secs","all",.false.,"none",2
+"ocean_static",          -1, "months", 1, "days", "time" # ocean_static is a protected name. Do not change this line.
+# -----------------------------------------------------------------------------------------
+# CMIP6/OMIP Table G1: static information
+ "ocean_model", "areacello",   "areacello",   "ocean_static", "all", "none", "none", 2
+ "ocean_model", "deptho",      "deptho",      "ocean_static", "all", "none", "none", 2
+ "ocean_model", "sftof",       "sftof",       "ocean_static", "all", "none", "none", 2
+# Extra static geometry data beyond CMIP6/OMIP Table 2.1
+ "ocean_model", "Coriolis",    "Coriolis",    "ocean_static", "all", "none", "none", 2
+ "ocean_model", "geolon",      "geolon",      "ocean_static", "all", "none", "none", 2
+ "ocean_model", "geolat",      "geolat",      "ocean_static", "all", "none", "none", 2
+ "ocean_model", "geolon_c",    "geolon_c",    "ocean_static", "all", "none", "none", 2
+ "ocean_model", "geolat_c",    "geolat_c",    "ocean_static", "all", "none", "none", 2
+ "ocean_model", "geolon_u",    "geolon_u",    "ocean_static", "all", "none", "none", 2
+ "ocean_model", "geolat_u",    "geolat_u",    "ocean_static", "all", "none", "none", 2
+ "ocean_model", "geolon_v",    "geolon_v",    "ocean_static", "all", "none", "none", 2
+ "ocean_model", "geolat_v",    "geolat_v",    "ocean_static", "all", "none", "none", 2
+ "ocean_model", "wet",         "wet",         "ocean_static", "all", "none", "none", 2
+ "ocean_model", "wet_c",       "wet_c",       "ocean_static", "all", "none", "none", 2
+ "ocean_model", "wet_u",       "wet_u",       "ocean_static", "all", "none", "none", 2
+ "ocean_model", "wet_v",       "wet_v",       "ocean_static", "all", "none", "none", 2
+ "ocean_model", "dxt",         "dxt",         "ocean_static", "all", "none", "none", 2
+ "ocean_model", "dyt",         "dyt",         "ocean_static", "all", "none", "none", 2
+ "ocean_model", "dxCu",        "dxCu",        "ocean_static", "all", "none", "none", 2
+ "ocean_model", "dyCu",        "dyCu",        "ocean_static", "all", "none", "none", 2
+ "ocean_model", "dxCv",        "dxCv",        "ocean_static", "all", "none", "none", 2
+ "ocean_model", "dyCv",        "dyCv",        "ocean_static", "all", "none", "none", 2
+ "ocean_model", "areacello_cu","areacello_cu","ocean_static", "all", "none", "none", 2
+ "ocean_model", "areacello_cv","areacello_cv","ocean_static", "all", "none", "none", 2
+ "ocean_model", "areacello_bu","areacello_bu","ocean_static", "all", "none", "none", 2
+
+"ocean_model", "ssu_east",     "ssu_east",         "boem_hourly", "all", .false., "none",2
+"ocean_model", "ssv_north",    "ssv_north",        "boem_hourly", "all", .false., "none",2
+"ice_model",   "siconc",       "siconc",           "boem_hourly", "all", .false., "none",2
+"ice_model",   "ui_east",      "ui_east",          "boem_hourly", "all", .false., "none",2
+"ice_model",   "vi_north",     "vi_north",         "boem_hourly", "all", .false., "none",2
+"flux",        "u_atm",        "u_atm",            "boem_hourly", "all", .false., "none",2
+"flux",        "v_atm",        "v_atm",            "boem_hourly", "all", .false., "none",2
 
 "ocean_model", "SSH",          "ssh",              "ocean_hourly", "all", .false., "none",2
 "ocean_model", "ubt",          "ubt",              "ocean_hourly", "all", .false., "none",2
 "ocean_model", "vbt",          "vbt",              "ocean_hourly", "all", .false., "none",2
+"ocean_model", "thetao",       "temp",             "ocean_hourly", "all", .false., "none",2
+##"ocean_model", "uo",           "uo",               "ocean_hourly", "all", .false., "none",2
+##"ocean_model", "vo",           "vo",               "ocean_hourly", "all", .false., "none",2
+"ocean_model", "ustar",        "ustar",            "ocean_hourly", "all", .false., "none",2
+"ocean_model", "tau_mag",      "tau_mag",          "ocean_hourly", "all", .false., "none",2
+"ocean_model", "lf_bodner",    "lf_bodner",        "ocean_hourly", "all", .false., "none",2
 "ice_model",   "siconc",       "aice",             "ocean_hourly", "all", .false., "none",2
 "ice_model",   "hi",           "hice",             "ocean_hourly", "all", .false., "none",2
+"ice_model",   "itheta",       "itheta",           "ocean_hourly", "all", .false., "none",2
+"ice_model",   "del_sh",       "del_sh",           "ocean_hourly", "all", .false., "none",2
 #"ice_model",   "UI",           "uice",             "ocean_hourly", "all", .false., "none",2
 #"ice_model",   "VI",           "vice",             "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "uo",           "uo",               "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "vo",           "vo",               "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "so",           "so",               "ocean_hourly_ts", "all", .false., "none",2
-#"ocean_model", "thetao",       "thetao",           "ocean_hourly_ts", "all", .false., "none",2
-#"ocean_model", "Kd_itides",    "Kd_itides",        "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "Kd_interface", "Kd_interface",     "ocean_hourly_ts", "all", .false., "none",2
 #"ice_model",  "SWDN",       "swdn",      "ocean_hourly", "all", ".false.", "none",2
 
 # Bering Strait (east-west section)
@@ -131,7 +167,7 @@ Arctic 50 vertical levels
 #"ocean_model", "SSV",          "ssv",              "ocean_daily", "all", "mean", "none",2
 "ocean_model", "SST",          "sst",              "ocean_daily", "all", "mean", "none",2
 #"ocean_model", "SSS",          "sss",              "ocean_daily", "all", "mean", "none",2
-"ocean_model", "SSH",          "ssh",               "ocean_daily_uv", "all", "mean", "none",2
+"ocean_model", "SSH",          "ssh",               "ocean_daily", "all", "mean", "none",2
 "ocean_model", "thetao",       "thetao",            "ocean_daily_ts", "all", "mean", "none",2
 "ocean_model", "so",           "so",                "ocean_daily_ts", "all", "mean", "none",2
 "ocean_model", "uo",           "uo",                "ocean_daily_uv", "all", "mean", "none",2
@@ -150,7 +186,7 @@ Arctic 50 vertical levels
 "ocean_model",  "taux",       "taux",              "ocean_daily", "all", "mean", "none",2
 "ocean_model",  "tauy",       "tauy",              "ocean_daily", "all", "mean", "none",2
 "ocean_model",  "ustar",      "ustar",             "ocean_daily", "all", "mean", "none",2  # friction vel
-#"ocean_model",  "Kd_interface",  "Kd_interface",  "ocean_daily", "all", "mean", "none",2  # friction vel
+"ocean_model",  "dzRegrid",   "dzRegrid",          "ocean_daily", "all", "mean", "none",2
 "ice_model",  "siconc",   "aice",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "UI",       "uice",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "VI",       "vice",      "ice_daily", "all", "mean", "none",2
@@ -161,25 +197,18 @@ Arctic 50 vertical levels
 "ice_model",  "str_d",    "str_d",     "ice_daily", "all", "mean", "none",2
 "ice_model",  "str_t",    "str_t",     "ice_daily", "all", "mean", "none",2
 "ice_model",  "str_s",    "str_s",     "ice_daily", "all", "mean", "none",2
-#"ice_model",  "str_d_hf", "str_d_hf",  "ice_daily", "all", "mean", "none",2
-#"ice_model",  "str_t_hf", "str_t_hf",  "ice_daily", "all", "mean", "none",2
-#"ice_model",  "str_s_hf", "str_s_hf",  "ice_daily", "all", "mean", "none",2
+"ice_model",  "del_sh",   "del_sh",    "ice_daily", "all", "mean", "none",2
 "ice_model",  "sh_d",     "sh_d",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "sh_t",     "sh_t",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "sh_s",     "sh_s",      "ice_daily", "all", "mean", "none",2
-#"ice_model",  "sh_d_hf",  "sh_d_hf",   "ice_daily", "all", "mean", "none",2
-#"ice_model",  "sh_t_hf",  "sh_t_hf",   "ice_daily", "all", "mean", "none",2
-#"ice_model",  "sh_s_hf",  "sh_s_hf",   "ice_daily", "all", "mean", "none",2
 "ice_model",  "SWDN",     "swdn",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "SIGI",     "SIGI",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "SIGII",    "SIGII",     "ice_daily", "all", "mean", "none",2
 "ice_model",  "STRENGTH", "STRENGTH",  "ice_daily", "all", "mean", "none",2
 "ice_model",  "RDG_RATE", "RDG_RATE",  "ice_daily", "all", "mean", "none",2
 #"ice_model",  "RDG_FRAC", "RDG_FRAC",  "ice_daily", "all", "mean", "none",2
-"ice_model",  "del_sh",   "del_sh",    "ice_daily", "all", "mean", "none",2
 "ice_model",  "cn",       "cn",        "ice_daily", "all", "mean", "none",2
-"ice_model",  "FLF_X",    "FLF_X",     "ice_daily", "all", "mean", "none",2
-"ice_model",  "FLF_Y",    "FLF_Y",     "ice_daily", "all", "mean", "none",2
+"ice_model",  "simass_n", "simass_n",  "ice_daily", "all", "mean", "none",2
 "ice_model",  "EVAP",     "evap",      "ice_daily", "all", "mean", "none",2
 "ice_model",  "SALTF",    "saltf",     "ice_daily", "all", "mean", "none",2
 "ice_model",  "TMELT",    "tmelt",     "ice_daily", "all", "mean", "none",2
@@ -197,3 +226,34 @@ Arctic 50 vertical levels
 "ice_model",  "UI",            "uice",         "ocean_monthly", "all", "mean", "none",2
 "ice_model",  "VI",            "vice",         "ocean_monthly", "all", "mean", "none",2
 "ice_model",  "sispeed",       "sispeed",      "ocean_monthly", "all", "mean", "none",2
+"ocean_model", "net_heat_surface",    "net_heat_surface",    "ocean_month", "all", "mean", "none",2
+"ocean_model", "lf_bodner",    "lf_bodner",     "ocean_month", "all", "mean", "none",2
+"ice_model",  "siconc",        "aice",          "ocean_month", "all", "mean", "none",2
+"ice_model",  "HI",            "hice",          "ocean_month", "all", "mean", "none",2
+"ice_model",  "HS",            "hsnow",         "ocean_month", "all", "mean", "none",2
+"ice_model",  "UI",            "uice",          "ocean_month", "all", "mean", "none",2
+"ice_model",  "VI",            "vice",          "ocean_month", "all", "mean", "none",2
+"ice_model",  "sispeed",       "sispeed",       "ocean_month", "all", "mean", "none",2
+"ocean_model",  "umo",         "umo",           "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "vmo",         "vmo",           "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "T_adx",       "T_adx",         "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "T_ady",       "T_ady",         "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "S_adx",       "S_adx",         "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "S_ady",       "S_ady",         "ocean_month",        "all", "mean", "none",2
+#"ocean_model",  "volcello",     "volcello",    "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "T_adx_2d",     "T_adx_2d",     "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "T_ady_2d",     "T_ady_2d",     "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "s_adx_2d",     "s_adx_2d",     "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "s_ady_2d",     "s_ady_2d",     "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "Kd_interface", "Kd_interface", "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "Kd_ePBL",      "Kd_ePBL",      "ocean_month",        "all", "mean", "none",2
+#"ocean_model",  "Kd_itides",    "Kd_itides",    "ocean_month",        "all", "mean", "none",2
+#"ocean_model",  "Kd_lowmode",   "Kd_lowmode",   "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "Kd_BBL",       "Kd_BBL",       "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "Kd_bkgnd",     "Kd_bkgnd",     "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "Kd_shear",     "Kd_shear",     "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "Kd_salt",      "Kd_salt",      "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "Kd_heat",      "Kd_heat",      "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "KT_extra",     "KT_extra",     "ocean_month",        "all", "mean", "none",2
+"ocean_model",  "KS_extra",     "KS_extra",     "ocean_month",        "all", "mean", "none",2
+
