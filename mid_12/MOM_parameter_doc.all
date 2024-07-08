@@ -373,6 +373,10 @@ REMAPPING_ANSWER_DATE = 99991231 ! default = 99991231
                                 ! Values below 20190101 result in the use of older, less accurate expressions
                                 ! that were in use at the end of 2018.  Higher values result in the use of more
                                 ! robust and accurate forms of mathematically equivalent expressions.
+OBC_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
+                                ! If true, use the OM4 remapping-via-subcells algorithm for neutral diffusion.
+                                ! See REMAPPING_USE_OM4_SUBCELLS for more details. We recommend setting this
+                                ! option to false.
 OBC_TIDE_CONSTITUENTS = "M2,S2,N2,K2,K1,O1,P1,Q1,MM,MF" !
                                 ! Names of tidal constituents being added to the open boundaries.
 OBC_TIDE_ADD_EQ_PHASE = True    !   [Boolean] default = False
@@ -650,6 +654,11 @@ REMAP_BOUNDARY_EXTRAP = False   !   [Boolean] default = False
 INIT_BOUNDARY_EXTRAP = False    !   [Boolean] default = False
                                 ! If true, values at the interfaces of boundary cells are extrapolated instead
                                 ! of piecewise constant during initialization.Defaults to REMAP_BOUNDARY_EXTRAP.
+REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
+                                ! This selects the remapping algorithm used in OM4 that does not use the full
+                                ! reconstruction for the top- and lower-most sub-layers, but instead assumes
+                                ! they are always vanished (untrue) and so just uses their edge values. We
+                                ! recommend setting this option to false.
 PARTIAL_CELL_VELOCITY_REMAP = False !   [Boolean] default = False
                                 ! If true, use partial cell thicknesses at velocity points that are masked out
                                 ! where they extend below the shallower of the neighboring bathymetry for
@@ -803,7 +812,11 @@ OBC_USER_CONFIG = "none"        ! default = "none"
 NUM_DIAG_COORDS = 1             ! default = 1
                                 ! The number of diagnostic vertical coordinates to use. For each coordinate, an
                                 ! entry in DIAG_COORDS must be provided.
-USE_INDEX_DIAGNOSTIC_AXES = False !   [Boolean] default = False
+DIAG_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
+                                ! If true, use the OM4 remapping-via-subcells algorithm for diagnostics. See
+                                ! REMAPPING_USE_OM4_SUBCELLS for details. We recommend setting this option to
+                                ! false.
+USE_INDEX_DIAGNOSTIC_AXES = True !   [Boolean] default = False
                                 ! If true, use a grid index coordinate convention for diagnostic axes.
 DIAG_COORDS = "z Z ZSTAR"       ! default = "z Z ZSTAR"
                                 ! A list of string tuples associating diag_table modules to a coordinate
@@ -895,6 +908,10 @@ INTERNAL_WAVE_SPEED_MIN = 0.0   !   [m s-1] default = 0.0
 INTERNAL_WAVE_SPEED_BETTER_EST = True !   [Boolean] default = True
                                 ! If true, use a more robust estimate of the first mode wave speed as the
                                 ! starting point for iterations.
+EBT_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
+                                ! If true, use the OM4 remapping-via-subcells algorithm for calculating EBT
+                                ! structure. See REMAPPING_USE_OM4_SUBCELLS for details. We recommend setting
+                                ! this option to false.
 USE_QG_LEITH_GM = False         !   [Boolean] default = False
                                 ! If true, use the QG Leith viscosity as the GM coefficient.
 
@@ -1664,6 +1681,10 @@ DIAG_EBT_MONO_N2_COLUMN_FRACTION = 0.0 !   [nondim] default = 0.0
 DIAG_EBT_MONO_N2_DEPTH = -1.0   !   [m] default = -1.0
                                 ! The depth below which N2 is limited as monotonic for the purposes of
                                 ! calculating the equivalent barotropic wave speed.
+INTWAVE_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
+                                ! If true, use the OM4 remapping-via-subcells algorithm for calculating EBT
+                                ! structure. See REMAPPING_USE_OM4_SUBCELLS for details. We recommend setting
+                                ! this option to false.
 
 ! === module MOM_diabatic_driver ===
 ! The following parameters are used for diabatic processes.
@@ -2349,7 +2370,7 @@ RESTORE_SALINITY = True         !   [Boolean] default = False
 RESTORE_TEMPERATURE = False     !   [Boolean] default = False
                                 ! If true, the coupled driver will add a  heat flux that drives sea-surface
                                 ! temperature toward specified values.
-ADJUST_NET_SRESTORE_TO_ZERO = True !   [Boolean] default = True
+ADJUST_NET_SRESTORE_TO_ZERO = False !   [Boolean] default = True
                                 ! If true, adjusts the salinity restoring seen to zero whether restoring is via
                                 ! a salt flux or virtual precip.
 ADJUST_NET_SRESTORE_BY_SCALING = False !   [Boolean] default = False
