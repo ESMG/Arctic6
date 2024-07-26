@@ -8,10 +8,10 @@ TIDAL_SAL_FLATHER = True
 !#override SPLIT_RK2B = True
 
 MLE%
-USE_CR_GRID = True
-USE_MLD_GRID = True
-MLD_TFILT_FILE = "restrat_vars.nc"
-MLD_TFILT_VAR = "MLD_tfilt"
-CR_FILE = "restrat_vars.nc"
-CR_VAR = "Cr"
+#override USE_CR_GRID = True
+#override USE_MLD_GRID = True
+#override MLD_TFILT_FILE = "restrat_vars_81.nc"
+#override MLD_TFILT_VAR = "MLD_tfilt"
+#override CR_FILE = "restrat_vars_81.nc"
+#override CR_VAR = "Cr"
 %MLE

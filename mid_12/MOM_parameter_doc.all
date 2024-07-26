@@ -1297,6 +1297,23 @@ TIDE_MM_AMP = 0.022191          !   [m] default = 0.022191
 TIDE_MM_PHASE_T0 = -0.4387224134618923 !   [radians] default = -0.4387224134618923
                                 ! Phase of the MM tidal constituent at time 0. This is only used if TIDES and
                                 ! TIDE_MM are true.
+HA_START_TIME = 0.0             !   [days] default = 0.0
+                                ! Start time of harmonic analysis, in units of days after the start of the
+                                ! current run segment. Must be smaller than HA_END_TIME, otherwise harmonic
+                                ! analysis will not be performed. If negative, |HA_START_TIME| determines the
+                                ! length of harmonic analysis, and harmonic analysis will start |HA_START_TIME|
+                                ! days before HA_END_TIME, or at the beginning of the run segment, whichever
+                                ! occurs later.
+HA_END_TIME = 0.0               !   [days] default = 0.0
+                                ! End time of harmonic analysis, in units of days after the start of the current
+                                ! run segment. Must be positive and smaller than the length of the currnet run
+                                ! segment, otherwise harmonic analysis will not be performed.
+HA_SSH = False                  !   [Boolean] default = False
+                                ! If true, perform harmonic analysis of sea serface height.
+HA_UBT = False                  !   [Boolean] default = False
+                                ! If true, perform harmonic analysis of zonal barotropic velocity.
+HA_VBT = False                  !   [Boolean] default = False
+                                ! If true, perform harmonic analysis of meridional barotropic velocity.
 
 ! === module MOM_PressureForce ===
 ANALYTIC_FV_PGF = True          !   [Boolean] default = True
@@ -1443,7 +1460,7 @@ HMIX_FIXED = 0.9                !   [m]
 USE_GL90_IN_SSW = False         !   [Boolean] default = False
                                 ! If true, use simpler method to calculate 1/N^2 in GL90 vertical viscosity
                                 ! coefficient. This method is valid in stacked shallow water mode.
-KV_ML_INVZ2 = 0.01              !   [m2 s-1] default = 0.0
+KV_ML_INVZ2 = 0.0               !   [m2 s-1] default = 0.0
                                 ! An extra kinematic viscosity in a mixed layer of thickness HMIX_FIXED, with
                                 ! the actual viscosity scaling as 1/(z*HMIX_FIXED)^2, where z is the distance
                                 ! from the surface, to allow for finite wind stresses to be transmitted through
@@ -1660,11 +1677,11 @@ USE_CR_GRID = True              !   [Boolean] default = False
                                 ! If true, read in a spatially varying Cr field.
 USE_MLD_GRID = True             !   [Boolean] default = False
                                 ! If true, read in a spatially varying MLD_decaying_Tfilt field.
-MLD_TFILT_FILE = "restrat_vars.nc" ! default = ""
+MLD_TFILT_FILE = "restrat_vars_81.nc" ! default = ""
                                 ! The path to the file containing the MLD_decaying_Tfilt fields.
 MLD_TFILT_VAR = "MLD_tfilt"     ! default = "MLD_tfilt"
                                 ! The variable name for MLD_decaying_Tfilt field.
-CR_FILE = "restrat_vars.nc"     ! default = ""
+CR_FILE = "restrat_vars_81.nc"  ! default = ""
                                 ! The path to the file containing the Cr fields.
 CR_VAR = "Cr"                   ! default = "Cr"
                                 ! The variable name for Cr field.
@@ -2051,9 +2068,11 @@ IGNORE_FLUXES_OVER_LAND = True  !   [Boolean] default = False
                                 ! points. This is needed when the ocean is coupled with ice shelves and sea ice,
                                 ! since the sea ice mask needs to be different than the ocean mask to avoid sea
                                 ! ice formation under ice shelves. This flag only works when use_ePBL = True.
-DO_RIVERMIX = False             !   [Boolean] default = False
+DO_RIVERMIX = True              !   [Boolean] default = False
                                 ! If true, apply additional mixing wherever there is runoff, so that it is mixed
                                 ! down to RIVERMIX_DEPTH if the ocean is that deep.
+RIVERMIX_DEPTH = 10.0           !   [m] default = 0.0
+                                ! The depth to which rivers are mixed if DO_RIVERMIX is defined.
 USE_RIVER_HEAT_CONTENT = False  !   [Boolean] default = False
                                 ! If true, use the fluxes%runoff_Hflx field to set the heat carried by runoff,
                                 ! instead of using SST*CP*liq_runoff.
