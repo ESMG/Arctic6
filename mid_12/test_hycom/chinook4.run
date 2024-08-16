@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -t 1:00:00
-#SBATCH --ntasks=21
+#SBATCH --ntasks=24
 #SBATCH --job-name=ARCTIC
 #SBATCH --account=akwaters
 #SBATCH --output=ARCTIC.%j

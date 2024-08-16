@@ -1,4 +1,4 @@
-!DEBUG = True
+DEBUG = True
 DEBUG_BT = False
 !VERBOSITY = 9
 !#override ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
