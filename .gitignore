@@ -34,3 +34,4 @@ MOM_override.*
 [0-9].[0-9].[0-9]a
 tmp
 *.tar
+*.yaml
