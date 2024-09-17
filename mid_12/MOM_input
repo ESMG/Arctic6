@@ -203,6 +203,7 @@ EQN_OF_STATE = "WRIGHT_FULL"    ! default = "WRIGHT"
                                 ! Currently, the valid choices are "LINEAR", "UNESCO", "JACKETT_MCD", "WRIGHT",
                                 ! "WRIGHT_REDUCED", "WRIGHT_FULL", "NEMO", "ROQUET_RHO", "ROQUET_SPV" and
                                 ! "TEOS10".  This is only used if USE_EOS is true.
+TFREEZE_FORM = "MILLERO_78"     ! default = "LINEAR"
 DTFREEZE_DP = -7.75E-08         !   [degC Pa-1] default = 0.0
                                 ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
                                 ! temperature with pressure.
@@ -474,6 +475,7 @@ VISC_REM_BUG = False            !   [Boolean] default = True
                                 ! VISC_REM_BT_WEIGHT_FIX in MOM_barotropic, and VISC_REM_CONT_HVEL_FIX in
                                 ! MOM_continuity_PPM. Eventually, the three individual flags should be removed
                                 ! after tests and the default of VISC_REM_BUG should be to False.
+VISC_REM_CONT_HVEL_FIX = False
 
 ! === module MOM_continuity_PPM ===
 ETA_TOLERANCE = 1.0E-06         !   [m] default = 3.75E-09
@@ -809,7 +811,7 @@ NSTAR = 0.06                    !   [nondim] default = 0.2
                                 ! The portion of the buoyant potential energy imparted by surface fluxes that is
                                 ! available to drive entrainment at the base of mixed layer when that energy is
                                 ! positive.
-MSTAR_CONV_ADJ = 0.66           !   [nondim] default = 0.0
+MSTAR_CONV_ADJ = 0.667          !   [nondim] default = 0.0
                                 ! Coefficient used for reducing mstar during convection due to reduction of
                                 ! stable density gradient.
 EPBL_TRANSITION_SCALE = 0.01    !   [nondim] default = 0.1
