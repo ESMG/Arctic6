@@ -1,4 +1,3 @@
-#override CGRID_ICE_DYNAMICS = True
 #override DO_ICEBERGS = False
 #override ICE_OCEAN_STRESS_STAGGER = "C"
 #override CONTINUITY_H_NEGLECT = 1e-28 kg m-2
@@ -6,20 +5,20 @@
 #override ICE_COVER_DISCARD = 1e-30
 #override ADCROFT_ADVECTIVE_CFL = True
 #override ICE_YIELD_ELLIPTICITY = 1.5
-!#override LEMIEUX_LANDFAST = True
 #override ITD_LANDFAST = True
 #override ICE_STATS_INTERVAL = 0.0416666666666667 !   [days] default = 1.0
-DEBUG = False
-#override NEW_RIDGE_PARTICIPATION = False
-#override NEW_RIDGE_REDISTRIBUTION = False
+!DEBUG = True
+!#override NEW_RIDGE_PARTICIPATION = True
+!#override NEW_RIDGE_REDISTRIBUTION = True
 !#override MERGED_CONTINUITY = True
 #override NCAT_ICE = 10
-!#override ADJUST_DEPTH = True
-!#override H_ADJ_FILE = "depth_add.nc"
 #override READ_HLIM_VALS = True
 #override HLIM_VALS = "1.0e-10, 0.1, 0.3, 0.7, 1.1, 1.5, 2.0, 2.5, 3.5, 4.5"
-!#override HLIM_VALS = "0.1, 0.3, 0.7, 1.1, 1.5, 2.0, 2.5, 3.5, 4.5, 8.0"
+#override U_TRUNC_FILE = "U_sis_truncations"
+#override V_TRUNC_FILE = "V_sis_truncations"
+!#override DO_BRINE_PLUME = True
 BASAL_STRESS_NCAT_B = 10        ! default = 100
                                 ! Number of bathymetric depth categories in landfast ice computation.
 BASAL_STRESS_NCAT_I = 100       ! default = 100
                                 ! Number of ice thickness categories in landfast ice computation.
+#override RESTART_CHECKSUMS_REQUIRED = False

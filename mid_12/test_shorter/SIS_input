@@ -1,14 +1,14 @@
 ! This file was written by the model and records the non-default parameters used at run-time.
 
 ! === module ice_model ===
-
-! === module MOM_unit_scaling ===
-! Parameters for doing unit scaling of variables.
-CGRID_ICE_DYNAMICS = True       !   [Boolean] default = False
-                                ! If true, use a C-grid discretization of the sea-ice dynamics; if false use a
-                                ! B-grid discretization.
 DO_RIDGING = True               !   [Boolean] default = False
                                 ! If true, call the ridging routines.
+!REDO_FAST_ICE_UPDATE = True     !   [Boolean] default = False
+                                ! If true, recalculate the thermal updates from the fast dynamics on the slowly
+                                ! evolving ice state, rather than copying over the slow ice state to the fast
+                                ! ice state.
+NCAT_ICE = 10                   !   [nondim] default = 5
+                                ! The number of sea ice thickness categories.
 
 ! === module MOM_domains ===
 REENTRANT_X = False             !   [Boolean] default = True
@@ -19,9 +19,6 @@ NIGLOBAL = 540                  !
 NJGLOBAL = 696                  !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
-
-! === module MOM_hor_index ===
-! Sets the horizontal array index types.
 
 ! === module SIS_initialize_fixed ===
 INPUTDIR = "INPUT"              ! default = "."
@@ -40,27 +37,35 @@ GRID_FILE = "ocean_hgrid.nc"    !
                                 ! Name of the file from which to read horizontal grid data.
 TOPO_FILE = "ocean_topog.nc"    ! default = "topog.nc"
                                 ! The file from which the bathymetry is read.
-USE_TRIPOLAR_GEOLONB_BUG = False !   [Boolean] default = True
-                                ! If true, use older code that incorrectly sets the longitude in some points
-                                ! along the tripolar fold to be off by 360 degrees.
-!MAXIMUM_DEPTH = 7914.32421875  !   [m]
+MINIMUM_DEPTH = 5.0             !   [m] default = 0.0
+                                ! If MASKING_DEPTH is unspecified, then anything shallower than MINIMUM_DEPTH is
+                                ! assumed to be land and all fluxes are masked out. If MASKING_DEPTH is
+                                ! specified, then all depths shallower than MINIMUM_DEPTH but deeper than
+                                ! MASKING_DEPTH are rounded to MINIMUM_DEPTH.
+MASKING_DEPTH = 1.0             !   [m] default = -9999.0
+                                ! The depth below which to mask points as land points, for which all fluxes are
+                                ! zeroed out. MASKING_DEPTH is ignored if it has the special default value.
 MAXIMUM_DEPTH = 6500.0          !   [m]
                                 ! The maximum depth of the ocean.
-MINIMUM_DEPTH = 5.0             !   [m] default = 0.0
-                                ! The (diagnosed) maximum depth of the ocean.
-MASKING_DEPTH = 1.0             !   [m] default = -9999.0
+
+! === module SIS_open_boundary ===
+! Controls where open boundaries are located, what kind of boundary condition to impose, and what data to apply,
+! if any.
+OBC_NUMBER_OF_SEGMENTS = 0      ! default = 0
+                                ! The number of open boundary segments.
+OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
+                                ! Documentation needs to be dynamic?????
+OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
+                                ! Documentation needs to be dynamic?????
+OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
+                                ! Documentation needs to be dynamic?????
+OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
+                                ! Documentation needs to be dynamic?????
 OMEGA = 7.292E-05               !   [s-1] default = 7.2921E-05
                                 ! The rotation rate of the earth.
-GRID_ROTATION_ANGLE_BUGS = False !   [Boolean] default = True
-                                ! If true, use an older algorithm to calculate the sine and cosines needed
-                                ! rotate between grid-oriented directions and true north and east.  Differences
-                                ! arise at the tripolar fold.
 
 ! === module hor_grid ===
 ! Parameters providing information about the lateral grid.
-
-! === module MOM_hor_index ===
-! Sets the horizontal array index types.
 
 ! === module SIS2_ice_thm (thermo) ===
 ! This sub-module calculates ice thermodynamic quantities.
@@ -93,6 +98,9 @@ ICE_THICKNESS_IC_VAR = "hm"     ! default = "mH_ice"
 ICE_SALINITY_IC = 3.0           !   [g kg-1] default = 0.0
                                 ! The uniform sea ice salinity used for the initial condition
 
+! === module SIS2_ice_thm (thermo) ===
+! This sub-module calculates ice thermodynamic quantities.
+
 ! === module SIS_slow_thermo ===
 ! This module calculates the slow evolution of the ice mass, heat, and salt budgets.
 ICE_BULK_SALINITY = 0.0         !   [g/kg] default = 4.0
@@ -102,7 +110,7 @@ ICE_RELATIVE_SALINITY = 0.1     !   [nondim] default = 0.0
                                 ! from which it formed.
 TRANSMUTE_SEA_ICE = True        !   [Boolean] default = False
                                 ! If true, allow ice to be transmuted directly into seawater with a spatially
-                                ! spatially varying rate as a form of outflow open boundary condition.
+                                ! varying rate as a form of outflow open boundary condition.
 TRANSMUTATION_RATE_FILE = "ice_outflow.nc" !
                                 ! The file from which the transmutation rate should be read.
 TRANSMUTATION_RATE_VAR = "rate" ! default = "transmute_rate"
@@ -118,18 +126,35 @@ DT_ICE_DYNAMICS = 900.0         !   [seconds] default = -1.0
                                 ! The time step used for the slow ice dynamics, including stepping the
                                 ! continuity equation and interactions between the ice mass field and
                                 ! velocities.  If 0 or negative the coupling time step will be used.
-DT_RHEOLOGY = -1.0              !   [seconds] default = -1.0
-                                ! The sub-cycling time step for iterating the rheology and ice momentum
-                                ! equations. If DT_RHEOLOGY is negative, the time step is set via NSTEPS_DYN.
-!SIS_THICKNESS_ADVECTION_SCHEME = "PCM" ! default = "UPWIND_2D"
+!MERGED_CONTINUITY = True        !   [Boolean] default = False
+                                ! If true, update the continuity equations for the ice, snow, and melt pond
+                                ! water together summed across categories, with proportionate fluxes for each
+                                ! part. Otherwise the media are updated separately.
+ICE_STATS_INTERVAL = 10.0       !   [days] default = 1.0
+                                ! The interval in units of TIMEUNIT between writes of the globally summed ice
+                                ! statistics and conservation checks.
+ICE_YIELD_ELLIPTICITY = 1.5     !   [Nondim] default = 2.0
+                                ! The ellipticity coefficient for the plastic yield curve in the sea-ice
+                                ! rheology.  For an infinite ellipticity (i.e., a cavitating fluid rheology),
+                                ! use 0.
+ITD_LANDFAST = True             !   [Boolean] default = False
+                                ! If true, turn on probabilistic landfast ice parameterization.
+H2_FILE = "ocean_topog.nc"      !
+                                ! The path to the file containing the sub-grid-scale topographic roughness
+                                ! amplitude with ITD_LANDFAST.
+BATHY_ROUGHNESS_MIN = 0.001     !   [m] default = 2.5
+                                ! Minimum bathymetric roughness.
+BATHY_ROUGHNESS_MAX = 50.0      !   [m] default = 2.5
+                                ! Maximum bathymetric roughness.
+BASAL_STRESS_NCAT_B = 10        ! default = 100
+                                ! Number of bathymetric depth categories in landfast ice computation.
 SIS_THICKNESS_ADVECTION_SCHEME = "PPM:H3" ! default = "UPWIND_2D"
                                 ! The horizontal transport scheme for thickness:
                                 !   UPWIND_2D - Non-directionally split upwind
                                 !   PCM    - Directionally split piecewise constant
                                 !   PLM    - Piecewise Linear Method
                                 !   PPM:H3 - Piecewise Parabolic Method (Huyhn 3rd order)
-!SIS_CONTINUITY_SCHEME = "PCM"   ! default = "UPWIND_2D"
-SIS_CONTINUITY_SCHEME = "PPM:C2PD"   ! default = "UPWIND_2D"
+SIS_CONTINUITY_SCHEME = "PPM:C2PD" ! default = "UPWIND_2D"
                                 ! The horizontal transport scheme used in continuity:
                                 !   UPWIND_2D - Non-directionally split upwind
                                 !   PCM       - Directionally split piecewise constant
@@ -143,10 +168,6 @@ SIS_TRACER_ADVECTION_SCHEME = "PPM:H3" ! default = "UPWIND_2D"
                                 !   PCM    - Directionally split piecewise constant
                                 !   PLM    - Piecewise Linear Method
                                 !   PPM:H3 - Piecewise Parabolic Method (Huyhn 3rd order)
-CFL_MASS_NEGLECT_BUG = False    !   [Boolean] default = True
-                                ! If true use a globally constant negligible volume in the denominator of the
-                                ! tracer advection CFL calculation, reproducing an older incorrect expression,
-                                ! rather than using a proper scaling of this negligible mass with cell area.
 
 ! === module SIS_sum_output ===
 MAXTRUNC = 200                  !   [truncations save_interval-1] default = 0
@@ -177,18 +198,12 @@ ICE_DELTA_EDD_R_POND = 1.0      !   [nondimensional] default = 0.0
                                 ! meltwater ponds on sea ice with the delta-Eddington radiative transfer
                                 ! calculation.
 
-! === module MOM_file_parser ===
-DOCUMENT_FILE = "SIS_parameter_doc" ! default = "MOM_parameter_doc"
-                                ! The basename for files where run-time parameters, their settings, units and
-                                ! defaults are documented. Blank will disable all parameter documentation.
-TRACER_ADV_REFILL_MASSLESS=True
-H2_FILE = "ocean_topog.nc"      !
-                                ! The path to the file containing the sub-grid-scale topographic roughness
-                                ! amplitude with INT_TIDE_DISSIPATION.
-! === module SIS_open_boundary ===
-OBC_NUMBER_OF_SEGMENTS = 4      ! default = 0
-                                ! The number of open boundary segments.
-OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER" !
-OBC_SEGMENT_002 = "I=0,J=N:0,FLATHER" !
-OBC_SEGMENT_003 = "J=0,I=0:N,FLATHER" !
-OBC_SEGMENT_004 = "I=N,J=0:N,FLATHER" !
+! === module SIS_fast_thermo ===
+! This module applies rapidly varying heat fluxes to the ice and does an implicit surface temperature
+! calculation.
+
+! === module SIS2_ice_thm (updates) ===
+! This sub-module does updates of the sea-ice due to thermodynamic changes.
+
+! === module SIS_optics ===
+! This module calculates the albedo and absorption profiles for shortwave radiation.

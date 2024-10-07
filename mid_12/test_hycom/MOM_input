@@ -8,6 +8,11 @@ REPORT_UNUSED_PARAMS = True     !   [Boolean] default = False
 USE_REGRIDDING = True           !   [Boolean] default = False
                                 ! If True, use the ALE algorithm (regridding/remapping). If False, use the
                                 ! layered isopycnal algorithm.
+!THICKNESSDIFFUSE = True         !   [Boolean] default = False
+                                ! If true, interface heights are diffused with a coefficient of KHTH.
+!THICKNESSDIFFUSE_FIRST = True   !   [Boolean] default = False
+                                ! If true, do thickness diffusion before dynamics. This is only used if
+                                ! THICKNESSDIFFUSE is true.
 REMAP_AUXILIARY_VARS = True     !   [Boolean] default = False
                                 ! If true, apply ALE remapping to all of the auxiliary 3-dimensional variables
                                 ! that are needed to reproduce across restarts, similarly to what is already
@@ -22,6 +27,11 @@ DT_THERM = 1800.0               !   [s] default = 600.0
                                 ! an integer multiple of DT and less than the forcing or coupling time-step,
                                 ! unless THERMO_SPANS_COUPLING is true, in which case DT_THERM can be an integer
                                 ! multiple of the coupling timestep.  By default DT_THERM is set to DT.
+!THERMO_SPANS_COUPLING = True    !   [Boolean] default = False
+                                ! If true, the MOM will take thermodynamic and tracer timesteps that can be
+                                ! longer than the coupling timestep. The actual thermodynamic timestep that is
+                                ! used in this case is the largest integer multiple of the coupling timestep
+                                ! that is less than or equal to DT_THERM.
 FRAZIL = True                   !   [Boolean] default = False
                                 ! If true, water freezes if it gets too cold, and the accumulated heat deficit
                                 ! is returned in the surface state.  FRAZIL is only used if
@@ -33,6 +43,10 @@ C_P = 3992.0                    !   [J kg-1 K-1] default = 3991.86795711963
                                 ! The heat capacity of sea water, approximated as a constant. This is only used
                                 ! if ENABLE_THERMODYNAMICS is true. The default value is from the TEOS-10
                                 ! definition of conservative temperature.
+P_REF = 0.0                     !   [Pa] default = 2.0E+07
+                                ! The pressure that is used for calculating the coordinate density.  (1 Pa = 1e4
+                                ! dbar, so 2e7 is commonly used.) This is only used if USE_EOS and
+                                ! ENABLE_THERMODYNAMICS are true.
 CHECK_BAD_SURFACE_VALS = True   !   [Boolean] default = False
                                 ! If true, check the surface state for ridiculous values.
 BAD_VAL_SSH_MAX = 50.0          !   [m] default = 20.0
@@ -141,6 +155,7 @@ OBC_COMPUTED_STRAIN = True      !   [Boolean] default = False
 OBC_ZERO_BIHARMONIC = True      !   [Boolean] default = False
                                 ! If true, zeros the Laplacian of flow on open boundaries in the biharmonic
                                 ! viscosity term.
+RAMP_OBCS = False               ! ramp obc
 OBC_RAMP_TIMESCALE = 2.0        !   [days] default = 1.0
                                 ! If RAMP_OBCS is true, this sets the ramping timescale.
 OBC_TIDE_N_CONSTITUENTS = 10    ! default = 0
@@ -189,7 +204,7 @@ OBC_TIDE_ADD_NODAL = True       !   [Boolean] default = False
                                 ! If true, include 18.6 year nodal modulation in the boundary tidal forcing.
 OBC_TIDE_REF_DATE = 2010, 1, 1  !
                                 ! Reference date to use for tidal calculations and equilibrium phase.
-OBC_TIDE_NODAL_REF_DATE = 1997, 7, 2 ! default = 0
+OBC_TIDE_NODAL_REF_DATE = 1993, 7, 2 ! default = 0
                                 ! Fixed reference date to use for nodal modulation of boundary tides.
 
 ! === module MOM_verticalGrid ===
@@ -203,9 +218,10 @@ EQN_OF_STATE = "WRIGHT_FULL"    ! default = "WRIGHT"
                                 ! Currently, the valid choices are "LINEAR", "UNESCO", "JACKETT_MCD", "WRIGHT",
                                 ! "WRIGHT_REDUCED", "WRIGHT_FULL", "NEMO", "ROQUET_RHO", "ROQUET_SPV" and
                                 ! "TEOS10".  This is only used if USE_EOS is true.
-DTFREEZE_DP = -7.75E-08         !   [degC Pa-1] default = 0.0
-                                ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
-                                ! temperature with pressure.
+TFREEZE_FORM = "MILLERO_78"     ! default = "LINEAR"
+                                ! TFREEZE_FORM determines which expression should be used for the freezing
+                                ! point.  Currently, the valid choices are "LINEAR", "MILLERO_78", "TEOS_POLY",
+                                ! "TEOS10"
 
 ! === module MOM_restart ===
 RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
@@ -250,7 +266,8 @@ REGRIDDING_COORDINATE_MODE = "HYCOM1" ! default = "LAYER"
                                 !  HYBGEN - Hybrid coordinate from the Hycom hybgen code
                                 !  ADAPTIVE - optimize for smooth neutral density surfaces
 !ALE_COORDINATE_CONFIG = "FILE:vgrid_75_2m.nc,dz" ! default = "UNIFORM"
-ALE_COORDINATE_CONFIG = "HYBRID:hycom1_75_800m.nc,sigma2,FNC1:2,4000,4.5,.01" ! default = "UNIFORM"
+!ALE_COORDINATE_CONFIG = "HYBRID:hycom1_75_800m.nc,sigma2,FNC1:2,4000,4.5,.01" ! default = "UNIFORM"
+ALE_COORDINATE_CONFIG = "HYBRID:hycom1_75_sigma0.nc,sigma0,FNC1:2,4000,4.5,.01" ! default = "UNIFORM"
                                 ! Determines how to specify the coordinate resolution. Valid options are:
                                 !  PARAM       - use the vector-parameter ALE_RESOLUTION
                                 !  UNIFORM[:N] - uniformly distributed
@@ -259,22 +276,26 @@ ALE_COORDINATE_CONFIG = "HYBRID:hycom1_75_800m.nc,sigma2,FNC1:2,4000,4.5,.01" ! 
                                 !                by a comma or space, e.g. FILE:lev.nc,dz
                                 !                or FILE:lev.nc,interfaces=zw
                                 !  WOA09[:N]   - the WOA09 vertical grid (approximately)
+                                !  WOA09INT[:N] - layers spanned by the WOA09 depths
+                                !  WOA23INT[:N] - layers spanned by the WOA23 depths
                                 !  FNC1:string - FNC1:dz_min,H_total,power,precision
                                 !  HYBRID:string - read from a file. The string specifies
                                 !                the filename and two variable names, separated
                                 !                by a comma or space, for sigma-2 and dz. e.g.
                                 !                HYBRID:vgrid.nc,sigma2,dz
-!ALE_RESOLUTION = 4*2.0, 2*2.01, 2.02, 2.03, 2.05, 2.08, 2.11, 2.15, 2.2, 2.27, 2.34, 2.44, 2.55, 2.69, 2.85, 3.04, 3.27, 3.54, 3.85, 4.22, 4.66, 5.18, 5.79, 6.52, 7.37, 8.37, 9.55, 10.94, 12.57, 14.48, 16.72, 19.33, 22.36, 25.87, 29.91, 34.53, 39.79, 45.72, 52.37, 59.76, 67.89, 76.74, 86.29, 96.47, 107.2, 118.35, 129.81, 141.42, 153.01, 164.41, 175.47, 186.01, 195.9, 205.01, 213.27, 220.6, 226.99, 232.43, 236.96, 240.63, 243.52, 245.72, 247.33, 248.45, 249.18, 249.62, 249.86, 249.96, 249.99, 2*250.0 !   [m]
+!ALE_RESOLUTION = 7*2.0, 2*2.01, 2.02, 2.03, 2.05, 2.08, 2.11, 2.15, 2.21, 2.2800000000000002, 2.37, 2.48, 2.61, 2.77, 2.95, 3.17, 3.4299999999999997, 3.74, 4.09, 4.49, 4.95, 5.48, 6.07, 6.74, 7.5, 8.34, 9.280000000000001, 10.33, 11.49, 12.77, 14.19, 15.74, 17.450000000000003, 19.31, 21.35, 23.56, 25.97, 28.580000000000002, 31.41, 34.47, 37.77, 41.32, 45.14, 49.25, 53.65, 58.370000000000005, 63.42, 68.81, 74.56, 80.68, 87.21000000000001, 94.14, 101.51, 109.33, 117.62, 126.4, 135.68, 145.5, 155.87, 166.81, 178.35, 190.51, 203.31, 216.78, 230.93, 245.8, 261.42, 277.83 !   [m]
                                 ! The distribution of vertical resolution for the target
                                 ! grid used for Eulerian-like coordinates. For example,
                                 ! in z-coordinate mode, the parameter is a list of level
                                 ! thicknesses (in m). In sigma-coordinate mode, the list
                                 ! is of non-dimensional fractions of the water column.
-MIN_THICKNESS = 1.0E-06         !   [m] default = 0.001
-                                ! When regridding, this is the minimum layer thickness allowed.
+!TARGET_DENSITIES = 1010.0, 1014.3034, 1017.8088, 1020.843, 1023.5566, 1025.813, 1027.0275, 1027.9114, 1028.6422, 1029.2795, 1029.852, 1030.3762, 1030.8626, 1031.3183, 1031.7486, 1032.1572, 1032.5471, 1032.9207, 1033.2798, 1033.6261, 1033.9608, 1034.2519, 1034.4817, 1034.6774, 1034.8508, 1035.0082, 1035.1533, 1035.2886, 1035.4159, 1035.5364, 1035.6511, 1035.7608, 1035.8661, 1035.9675, 1036.0645, 1036.1554, 1036.2411, 1036.3223, 1036.3998, 1036.4739, 1036.5451, 1036.6137, 1036.68, 1036.7441, 1036.8062, 1036.8526, 1036.8874, 1036.9164, 1036.9418, 1036.9647, 1036.9857, 1037.0052, 1037.0236, 1037.0409, 1037.0574, 1037.0738, 1037.0902, 1037.1066, 1037.123, 1037.1394, 1037.1558, 1037.1722, 1037.1887, 1037.206, 1037.2241, 1037.2435, 1037.2642, 1037.2866, 1037.3112, 1037.3389, 1037.3713, 1037.4118, 1037.475, 1037.6332, 1037.8104, 1038.0 !   [m]
+                                ! HYBRID target densities for interfaces
 REGRID_COMPRESSIBILITY_FRACTION = 0.01 !   [nondim] default = 0.0
                                 ! When interpolating potential density profiles we can add some artificial
                                 ! compressibility solely to make homogeneous regions appear stratified.
+MIN_THICKNESS = 1.0E-06         !   [m] default = 0.001
+                                ! When regridding, this is the minimum layer thickness allowed.
 MAXIMUM_INT_DEPTH_CONFIG = "FNC1:5,8000.0,1.0,.01" ! default = "NONE"
                                 ! Determines how to specify the maximum interface depths.
                                 ! Valid options are:
@@ -316,8 +337,36 @@ REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
                                 ! recommend setting this option to false.
 
 ! === module MOM_state_initialization ===
-INIT_LAYERS_FROM_Z_FILE = True
-Z_INIT_ALE_REMAPPING = True
+INIT_LAYERS_FROM_Z_FILE = True  !   [Boolean] default = False
+                                ! If true, initialize the layer thicknesses, temperatures, and salinities from a
+                                ! Z-space file on a latitude-longitude grid.
+
+! === module MOM_initialize_layers_from_Z ===
+TEMP_SALT_Z_INIT_FILE = ""      ! default = "temp_salt_z.nc"
+                                ! The name of the z-space input file used to initialize temperatures (T) and
+                                ! salinities (S). If T and S are not in the same file, TEMP_Z_INIT_FILE and
+                                ! SALT_Z_INIT_FILE must be set.
+TEMP_Z_INIT_FILE = "woa13_decav_ptemp_monthly_fulldepth_01.nc" ! default = ""
+                                ! The name of the z-space input file used to initialize temperatures, only.
+SALT_Z_INIT_FILE = "woa13_decav_s_monthly_fulldepth_01.nc" ! default = ""
+                                ! The name of the z-space input file used to initialize temperatures, only.
+Z_INIT_FILE_PTEMP_VAR = "ptemp_an" ! default = "ptemp"
+                                ! The name of the potential temperature variable in TEMP_Z_INIT_FILE.
+Z_INIT_FILE_SALT_VAR = "s_an"   ! default = "salt"
+                                ! The name of the salinity variable in SALT_Z_INIT_FILE.
+Z_INIT_ALE_REMAPPING = True     !   [Boolean] default = False
+                                ! If True, then remap straight to model coordinate from file.
+Z_INIT_REMAP_GENERAL = True     !   [Boolean] default = False
+                                ! If false, only initializes to z* coordinates. If true, allows initialization
+                                ! directly to general coordinates.
+ADJUST_THICKNESS = True         !   [Boolean] default = False
+                                ! If true, all mass below the bottom removed if the
+                                ! topography is shallower than the thickness input file
+                                ! would indicate.
+!Z_INIT_REMAP_OLD_ALG = True     !   [Boolean] default = True
+                                ! If false, uses the preferred remapping algorithm for initialization. If true,
+                                ! use an older, less robust algorithm for remapping.
+!Z_INIT_ALE_REMAPPING = True
 !THICKNESS_CONFIG = "coord"      ! default = "uniform"
                                 ! A string that determines how the initial layer thicknesses are specified for a
                                 ! new run:
@@ -348,7 +397,7 @@ Z_INIT_ALE_REMAPPING = True
                                 !     soliton - Equatorial Rossby soliton.
                                 !     rossby_front - a mixed layer front in thermal wind balance.
                                 !     USER - call a user modified routine.
-TS_CONFIG = "file"              !
+!TS_CONFIG = "file"              !
                                 ! A string that determines how the initial temperatures and salinities are
                                 ! specified for a new run:
                                 !     file - read velocities from the file specified
@@ -370,12 +419,12 @@ TS_CONFIG = "file"              !
                                 !     USER - call a user modified routine.
 !TS_FILE = "glorys_ic_75z_1993.nc" !
                                 ! The initial condition file for temperature.
-TEMP_SALT_Z_INIT_FILE = "glorys_1993-01-01.nc" !
+!TEMP_SALT_Z_INIT_FILE = "glorys_1993-01-01.nc" !
 !TEMP_IC_VAR = "temp"           ! default = "PTEMP"
-Z_INIT_FILE_PTEMP_VAR = "thetao" ! default = "PTEMP"
+!Z_INIT_FILE_PTEMP_VAR = "thetao" ! default = "PTEMP"
                                 ! The initial condition variable for potential temperature.
 !SALT_IC_VAR = "salt"           ! default = "SALT"
-Z_INIT_FILE_SALT_VAR = "so"     ! default = "SALT"
+!Z_INIT_FILE_SALT_VAR = "so"     ! default = "SALT"
                                 ! The initial condition variable for salinity.
 DEPRESS_INITIAL_SURFACE = True  !   [Boolean] default = False
                                 ! If true,  depress the initial surface to avoid huge tsunamis when a large
@@ -430,7 +479,7 @@ DIAG_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
                                 ! false.
 USE_INDEX_DIAGNOSTIC_AXES = True !   [Boolean] default = False
                                 ! If true, use a grid index coordinate convention for diagnostic axes.
-DIAG_COORD_DEF_Z = "FILE:vgrid_75_2m.nc,dz" ! default = "WOA09"
+!DIAG_COORD_DEF_Z = "FILE:vgrid_75_2m.nc,dz" ! default = "WOA09"
                                 ! Determines how to specify the coordinate resolution. Valid options are:
                                 !  PARAM       - use the vector-parameter DIAG_COORD_RES_Z
                                 !  UNIFORM[:N] - uniformly distributed
@@ -455,6 +504,16 @@ USE_STORED_SLOPES = True        !   [Boolean] default = False
                                 ! If true, the isopycnal slopes are calculated once and stored for re-use. This
                                 ! uses more memory but avoids calling the equation of state more times than
                                 ! should be necessary.
+INTERPOLATE_RES_FN = False      !   [Boolean] default = True
+                                ! If true, interpolate the resolution function to the
+                                ! velocity points from the thickness points; otherwise
+                                ! interpolate the wave speed and calculate the resolution
+                                ! function independently at each point.
+GILL_EQUATORIAL_LD = True       !   [Boolean] default = False
+                                ! If true, uses Gill's definition of the baroclinic
+                                ! equatorial deformation radius, otherwise, if false, use
+                                ! Pedlosky's definition. These definitions differ by a factor
+                                ! of 2 infront of the beta term in the denominator. Gill'sis the more appropriate definition.
 EBT_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
                                 ! If true, use the OM4 remapping-via-subcells algorithm for calculating EBT
                                 ! structure. See REMAPPING_USE_OM4_SUBCELLS for details. We recommend setting
@@ -488,12 +547,16 @@ KV = 0.0                        !   [m2 s-1]
                                 ! m2 s-1, may be used.
 
 ! === module MOM_thickness_diffuse ===
+KHTH = 50.0                     !   [m2 s-1] default = 0.0
+                                ! The background horizontal thickness diffusivity.
 KHTH_MAX_CFL = 0.1              !   [nondimensional] default = 0.8
                                 ! The maximum value of the local diffusive CFL ratio that is permitted for the
                                 ! thickness diffusivity. 1.0 is the marginally unstable value in a pure layered
                                 ! model, but much smaller numbers (e.g. 0.1) seem to work better for ALE-based
                                 ! models.
 DETANGLE_INTERFACES = True      !   [Boolean] default = False
+                                ! If defined add 3-d structured enhanced interface height diffusivities to
+                                ! horizontally smooth jagged layers.
 
 ! === module MOM_porous_barriers ===
 
@@ -515,6 +578,9 @@ ETA_TOLERANCE = 1.0E-06         !   [m] default = 3.75E-09
                                 ! total tolerance for SSH is 4 times this value.  The default is
                                 ! 0.5*NK*ANGSTROM, and this should not be set less than about
                                 ! 10^-15*MAXIMUM_DEPTH.
+VISC_REM_CONT_HVEL_FIX = False  !   [Boolean] default = True
+                                ! If true, velocity cell thickness h_[uv] from the continuity solver is not
+                                ! multiplied by visc_rem_[uv]. Default of this flag is set by VISC_REM_BUG.
 
 ! === module MOM_CoriolisAdv ===
 CORIOLIS_EN_DIS = True          !   [Boolean] default = False
@@ -609,6 +675,9 @@ USE_LAND_MASK_FOR_HVISC = True  !   [Boolean] default = False
                                 ! for new experiments.
 
 ! === module MOM_vert_friction ===
+HMIX_FIXED = 0.9                !   [m]
+                                ! The prescribed depth over which the near-surface viscosity and diffusivity are
+                                ! elevated when the bulk mixed layer is not used.
 !KV_ML_INVZ2 = 0.01              !   [m2 s-1] default = 0.0
                                 ! An extra kinematic viscosity in a mixed layer of thickness HMIX_FIXED, with
                                 ! the actual viscosity scaling as 1/(z*HMIX_FIXED)^2, where z is the distance
@@ -628,7 +697,7 @@ BT_PROJECT_VELOCITY = True      !   [Boolean] default = False
                                 ! use a predictor continuity step to find the pressure field, and then to do a
                                 ! corrector continuity step using a weighted average of the old and new
                                 ! velocities, with weights of (1-BEBT) and BEBT.
-BT_NONLIN_STRESS = True         !   [Boolean] default = False
+!BT_NONLIN_STRESS = True         !   [Boolean] default = False
                                 ! If true, use the full depth of the ocean at the start of the barotropic step
                                 ! when calculating the surface stress contribution to the barotropic
                                 ! acclerations.  Otherwise use the depth based on bathyT.
@@ -640,11 +709,11 @@ TIDAL_SAL_FLATHER = True        !   [Boolean] default = False
                                 ! cases with  tidal forcing using the scalar self-attraction approximation. The
                                 ! default is currently False in order to retain previous answers but should be
                                 ! set to True for new experiments
-BT_STRONG_DRAG = True           !   [Boolean] default = False
+!BT_STRONG_DRAG = True           !   [Boolean] default = False
                                 ! If true, use a stronger estimate of the retarding effects of strong bottom
                                 ! drag, by making it implicit with the barotropic time-step instead of implicit
                                 ! with the baroclinic time-step and dividing by the number of barotropic steps.
-LINEARIZED_BT_CORIOLIS = False  !   [Boolean] default = True
+!LINEARIZED_BT_CORIOLIS = False  !   [Boolean] default = True
                                 ! If true use the bottom depth instead of the total water column thickness in
                                 ! the barotropic Coriolis term calculations.
 BEBT = 0.2                      !   [nondim] default = 0.1
@@ -689,9 +758,9 @@ USE_CR_GRID = True              !   [Boolean] default = False
                                 ! If true, read in a spatially varying Cr field.
 USE_MLD_GRID = True             !   [Boolean] default = False
                                 ! If true, read in a spatially varying MLD_decaying_Tfilt field.
-MLD_TFILT_FILE = "restrat_vars.nc" ! default = ""
+MLD_TFILT_FILE = "restrat_vars_81.nc" ! default = ""
                                 ! The path to the file containing the MLD_decaying_Tfilt fields.
-CR_FILE = "restrat_vars.nc"     ! default = ""
+CR_FILE = "restrat_vars_81.nc"  ! default = ""
                                 ! The path to the file containing the Cr fields.
 %MLE
 FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
@@ -820,7 +889,7 @@ ML_OMEGA_FRAC = 0.001           !   [nondim] default = 0.0
                                 ! When setting the decay scale for turbulence, use this fraction of the absolute
                                 ! rotation rate blended with the local value of f, as sqrt((1-of)*f^2 +
                                 ! of*4*omega^2).
-TKE_DECAY = 0.001               !   [nondim] default = 2.5
+TKE_DECAY = 0.01                !   [nondim] default = 2.5
                                 ! TKE_DECAY relates the vertical rate of decay of the TKE available for
                                 ! mechanical entrainment to the natural Ekman depth.
 EPBL_MSTAR_SCHEME = "REICHL_H18" ! default = "CONSTANT"
@@ -839,9 +908,12 @@ NSTAR = 0.06                    !   [nondim] default = 0.2
                                 ! The portion of the buoyant potential energy imparted by surface fluxes that is
                                 ! available to drive entrainment at the base of mixed layer when that energy is
                                 ! positive.
-MSTAR_CONV_ADJ = 0.66           !   [nondim] default = 0.0
+MSTAR_CONV_ADJ = 0.667          !   [nondim] default = 0.0
                                 ! Coefficient used for reducing mstar during convection due to reduction of
                                 ! stable density gradient.
+USE_MLD_ITERATION = True        !   [Boolean] default = False
+                                ! A logical that specifies whether or not to use the distance to the bottom of
+                                ! the actively turbulent boundary layer to help set the EPBL length scale.
 EPBL_TRANSITION_SCALE = 0.01    !   [nondim] default = 0.1
                                 ! A scale for the mixing length in the transition layer at the edge of the
                                 ! boundary layer as a fraction of the boundary layer thickness.
@@ -900,7 +972,7 @@ PEN_SW_SCALE = 10.0             !   [m] default = 0.0
                                 ! radiation.
 PEN_SW_FRAC = 0.42              !   [nondim] default = 0.0
                                 ! The fraction of the shortwave radiation that penetrates below the surface.
-!VAR_PEN_SW = True
+VAR_PEN_SW = True
 OPTICS_ANSWER_DATE = 99991231   ! default = 99991231
                                 ! The vintage of the order of arithmetic and expressions in the optics
                                 ! calculations.  Values below 20190101 recover the answers from the end of 2018,

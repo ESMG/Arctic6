@@ -68,6 +68,7 @@ Arctic 75 vertical levels
 "ocean_model", "tau_mag",      "tau_mag",          "ocean_hourly", "all", .false., "none",2
 "ocean_model", "lf_bodner",    "lf_bodner",        "ocean_hourly", "all", .false., "none",2
 "ice_model",   "siconc",       "aice",             "ocean_hourly", "all", .false., "none",2
+"ice_model",   "sithick",      "hice",             "ocean_hourly", "all", .false., "none",2
 "ice_model",   "itheta",       "itheta",           "ocean_hourly", "all", .false., "none",2
 "ice_model",   "del_sh",       "del_sh",           "ocean_hourly", "all", .false., "none",2
 #"ocean_model", "MLD_003",      "MLD",          "ocean_hourly", "all", .false., "none",2

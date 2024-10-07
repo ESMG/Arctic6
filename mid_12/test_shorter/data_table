@@ -1,41 +1,43 @@
-"ATM" , "p_surf"        , "Pair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Pair_1993.nc"     , "bilinear" ,  1.0
-"ATM" , "p_bot"         , "Pair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Pair_1993.nc"     , "bilinear" ,  1.0
-"ATM" , "t_bot"         , "Tair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Tair_1993.nc"              , "bilinear" ,  1.0
-"ATM" , "sphum_bot"     , "Qair"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Qair_1993.nc"        , "bilinear" ,  1.0
-"ATM" , "u_bot"         , "Uwind"       , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Uwind_1993.nc"     , "bicubic",   1.0
-"ATM" , "v_bot"         , "Vwind"       , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_Vwind_1993.nc"     , "bicubic",   1.0
-"ATM" , "z_bot"         , ""            , ""                             , "bilinear" , 10.0
-"ATM" , "gust"          , ""            , ""                             , "bilinear" ,  1.0e-4
-"ICE" , "runoff"        , "runoff"      , "./INPUT/runoff/glofas_hill_1993.nc"     , "none",   1.0
-#"ICE" , "runoff"        , "runoff"      , "./INPUT/runoff/glofas_runoff_1993.nc"     , "none",   1.0
-"ICE" , "lw_flux_dn"    , "lwrad_down"  , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_lwrad_down_1993.nc"   , "bilinear" ,  1.0
-"ICE" , "sw_flux_vis_dir_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_1993.nc"        , "bilinear" ,  0.285
-"ICE" , "sw_flux_vis_dif_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_1993.nc"        , "bilinear" ,  0.285
-"ICE" , "sw_flux_nir_dir_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_1993.nc"        , "bilinear" ,  0.215
-"ICE" , "sw_flux_nir_dif_dn", "swrad"   , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_swrad_1993.nc"        , "bilinear" ,  0.215
-"ICE" , "lprec"         , "rain"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_rain_1993.nc"         , "bilinear" ,  1.0
-"ICE" , "fprec"         , "snow"        , "/center1/AKWATERS/kshedstrom/JRA_padded/JRA55DO_1.5_snow_1993.nc"         , "bilinear" ,  1.0
-"ICE" , "calving"       , ""            , ""                             , "none"  ,  0.0
-"ICE" , "dhdt"          , ""            , ""                             , "none"  , 80.0
-"ICE" , "dedt"          , ""            , ""                             , "none"  ,  2.0e-6
-"ICE" , "drdt"          , ""            , ""                             , "none"  ,  10.0
-"LND" , "t_surf"        , ""            , ""                             , "none"  ,  273.0
-"LND" , "t_ca"          , ""            , ""                             , "none"  ,  273.0
-"LND" , "q_ca"          , ""            , ""                             , "none"  ,  0.0
-"LND" , "rough_mom"     , ""            , ""                             , "none"  ,  0.01
-"LND" , "rough_heat"    , ""            , ""                             , "none"  ,  0.1
-"LND" , "albedo"        , ""            , ""                             , "none"  ,  0.1
-"LND" , "sphum_surf"    , ""            , ""                             , "none"  ,  0.0
-"LND" , "sphum_ca"      , ""            , ""                             , "none"  ,  0.0
-"LND" , "t_flux"        , ""            , ""                             , "none"  ,  0.0
-"LND" , "sphum_flux"    , ""            , ""                             , "none"  ,  0.0
-"LND" , "lw_flux"       , ""            , ""                             , "none"  ,  0.0
-"LND" , "sw_flux"       , ""            , ""                             , "none"  ,  0.0
-"LND" , "lprec"         , ""            , ""                             , "none"  ,  0.0
-"LND" , "fprec"         , ""            , ""                             , "none"  ,  0.0
-"LND" , "dhdt"          , ""            , ""                             , "none"  ,  5.0
-"LND" , "dedt"          , ""            , ""                             , "none"  ,  2e-6
-"LND" , "dedq"          , ""            , ""                             , "none"  ,  0.0
-"LND" , "drdt"          , ""            , ""                             , "none"  ,  5.0
-"LND" , "drag_q"        , ""            , ""                             , "none"  ,  0.0
-"LND" , "p_surf"        , ""            , ""                             , "none"  ,  1.e5
+"ATM", "p_surf"        , "Pair"        , "INPUT/JRA_psl.nc"     , "bilinear" ,  1.0
+"ATM", "p_bot"         , "Pair"        , "INPUT/JRA_psl.nc"     , "bilinear" ,  1.0
+"ATM", "t_bot"         , "Tair"        , "INPUT/JRA_tas.nc"     , "bilinear" ,  1.0
+"ATM", "sphum_bot"     , "Qair"        , "INPUT/JRA_huss.nc"    , "bilinear" ,  1.0
+"ATM", "u_bot"         , "Uwind"       , "INPUT/JRA_uas.nc"     , "bicubic",   1.0
+"ATM", "v_bot"         , "Vwind"       , "INPUT/JRA_vas.nc"     , "bicubic",   1.0
+"ATM", "z_bot"         , ""            , ""                             , "bilinear" , 10.0
+"ATM", "gust"          , ""            , ""                             , "bilinear" ,  1.0e-4
+#
+"ICE", "lw_flux_dn"    , "lwrad_down"  , "INPUT/JRA_rlds.nc"   , "bilinear" ,  1.0
+"ICE", "sw_flux_vis_dir_dn", "swrad"   , "INPUT/JRA_rsds.nc"        , "bilinear" ,  0.285
+"ICE", "sw_flux_vis_dif_dn", "swrad"   , "INPUT/JRA_rsds.nc"        , "bilinear" ,  0.285
+"ICE", "sw_flux_nir_dir_dn", "swrad"   , "INPUT/JRA_rsds.nc"        , "bilinear" ,  0.215
+"ICE", "sw_flux_nir_dif_dn", "swrad"   , "INPUT/JRA_rsds.nc"        , "bilinear" ,  0.215
+"ICE", "lprec"         , "rain"        , "INPUT/JRA_prra.nc"         , "bilinear" ,  1.0
+"ICE", "fprec"         , "snow"        , "INPUT/JRA_prsn.nc"         , "bilinear" ,  1.0
+#
+"ICE", "runoff"        , "runoff"      , "INPUT/glofas_runoff.nc"       , "none",   1.0
+"ICE", "calving"       , ""            , ""                             , "none"  ,  0.0
+"ICE", "dhdt"          , ""            , ""                             , "none"  , 80.0
+"ICE", "dedt"          , ""            , ""                             , "none"  ,  2.0e-6
+"ICE", "drdt"          , ""            , ""                             , "none"  ,  10.0
+#
+"LND", "t_surf"        , ""            , ""                             , "none"  ,  273.0
+"LND", "t_ca"          , ""            , ""                             , "none"  ,  273.0
+"LND", "q_ca"          , ""            , ""                             , "none"  ,  0.0
+"LND", "rough_mom"     , ""            , ""                             , "none"  ,  0.01
+"LND", "rough_heat"    , ""            , ""                             , "none"  ,  0.1
+"LND", "albedo"        , ""            , ""                             , "none"  ,  0.1
+"LND", "sphum_surf"    , ""            , ""                             , "none"  ,  0.0
+"LND", "sphum_ca"      , ""            , ""                             , "none"  ,  0.0
+"LND", "t_flux"        , ""            , ""                             , "none"  ,  0.0
+"LND", "sphum_flux"    , ""            , ""                             , "none"  ,  0.0
+"LND", "lw_flux"       , ""            , ""                             , "none"  ,  0.0
+"LND", "sw_flux"       , ""            , ""                             , "none"  ,  0.0
+"LND", "lprec"         , ""            , ""                             , "none"  ,  0.0
+"LND", "fprec"         , ""            , ""                             , "none"  ,  0.0
+"LND", "dhdt"          , ""            , ""                             , "none"  ,  5.0
+"LND", "dedt"          , ""            , ""                             , "none"  ,  2.0e-6
+"LND", "dedq"          , ""            , ""                             , "none"  ,  0.0
+"LND", "drdt"          , ""            , ""                             , "none"  ,  5.0
+"LND", "drag_q"        , ""            , ""                             , "none"  ,  0.0
+"LND", "p_surf"        , ""            , ""                             , "none"  ,  1.0e5

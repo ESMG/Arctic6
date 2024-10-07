@@ -20,6 +20,13 @@ NJGLOBAL = 696                  !
                                 ! The total number of thickness grid points in the y-direction in the physical
                                 ! domain. With STATIC_MEMORY_ this is set in SIS2_memory.h at compile time.
 
+! === module SIS_restart ===
+RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
+                                ! If true, require the restart checksums to match and error out otherwise. Users
+                                ! may want to avoid this comparison if for example the restarts are made from a
+                                ! run with a different mask_table than the current run, in which case the
+                                ! checksums will not match.
+
 ! === module SIS_initialize_fixed ===
 INPUTDIR = "INPUT"              ! default = "."
                                 ! The directory in which input files are found.
@@ -121,6 +128,10 @@ ITD_LANDFAST = True             !   [Boolean] default = False
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with ITD_LANDFAST.
+BATHY_ROUGHNESS_MIN = 0.001     !   [m] default = 2.5
+                                ! Minimum bathymetric roughness.
+BATHY_ROUGHNESS_MAX = 50.0      !   [m] default = 2.5
+                                ! Maximum bathymetric roughness.
 BASAL_STRESS_NCAT_B = 10        ! default = 100
                                 ! Number of bathymetric depth categories in landfast ice computation.
 ICE_COVER_DISCARD = 1.0E-30     !   [nondim] default = -1.0
