@@ -481,19 +481,10 @@ EQN_OF_STATE = "WRIGHT_FULL"    ! default = "WRIGHT"
 EOS_QUADRATURE = False          !   [Boolean] default = False
                                 ! If true, always use the generic (quadrature) code code for the integrals of
                                 ! density.
-TFREEZE_FORM = "LINEAR"         ! default = "LINEAR"
+TFREEZE_FORM = "MILLERO_78"     ! default = "LINEAR"
                                 ! TFREEZE_FORM determines which expression should be used for the freezing
                                 ! point.  Currently, the valid choices are "LINEAR", "MILLERO_78", "TEOS_POLY",
                                 ! "TEOS10"
-TFREEZE_S0_P0 = 0.0             !   [degC] default = 0.0
-                                ! When TFREEZE_FORM=LINEAR, this is the freezing potential temperature at S=0,
-                                ! P=0.
-DTFREEZE_DS = -0.054            !   [degC ppt-1] default = -0.054
-                                ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
-                                ! temperature with salinity.
-DTFREEZE_DP = -7.75E-08         !   [degC Pa-1] default = 0.0
-                                ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
-                                ! temperature with pressure.
 
 ! === module MOM_restart ===
 PARALLEL_RESTARTFILES = False   !   [Boolean] default = False
@@ -886,6 +877,9 @@ RESOLN_SCALED_KHTR = False      !   [Boolean] default = False
 RESOLN_USE_EBT = False          !   [Boolean] default = False
                                 ! If true, uses the equivalent barotropic wave speed instead of first baroclinic
                                 ! wave for calculating the resolution fn.
+BACKSCAT_EBT_POWER = 0.0        !   [nondim] default = 0.0
+                                ! Power to raise EBT vertical structure to when backscatter has vertical
+                                ! structure.
 KHTH_USE_EBT_STRUCT = False     !   [Boolean] default = False
                                 ! If true, uses the equivalent barotropic structure as the vertical structure of
                                 ! thickness diffusivity.
@@ -1156,7 +1150,7 @@ CONT_PPM_USE_VISC_REM_MAX = True !   [Boolean] default = True
 CONT_PPM_MARGINAL_FACE_AREAS = True !   [Boolean] default = True
                                 ! If true, use the marginal face areas from the continuity solver for use as the
                                 ! weights in the barotropic solver. Otherwise use the transport averaged areas.
-VISC_REM_CONT_HVEL_FIX = True   !   [Boolean] default = True
+VISC_REM_CONT_HVEL_FIX = False  !   [Boolean] default = False
                                 ! If true, velocity cell thickness h_[uv] from the continuity solver is not
                                 ! multiplied by visc_rem_[uv]. Default of this flag is set by VISC_REM_BUG.
 
@@ -1350,6 +1344,15 @@ SSH_IN_EOS_PRESSURE_FOR_PGF = False !   [Boolean] default = False
 MASS_WEIGHT_IN_PRESSURE_GRADIENT = True !   [Boolean] default = False
                                 ! If true, use mass weighting when interpolating T/S for integrals near the
                                 ! bathymetry in FV pressure gradient calculations.
+MASS_WEIGHT_IN_PRESSURE_GRADIENT_TOP = False !   [Boolean] default = False
+                                ! If true and MASS_WEIGHT_IN_PRESSURE_GRADIENT is true, use mass weighting when
+                                ! interpolating T/S for integrals near the top of the water column in FV
+                                ! pressure gradient calculations.
+CORRECTION_INTXPA = False       !   [Boolean] default = False
+                                ! If true, use a correction for surface pressure curvature in intx_pa.
+RESET_INTXPA_INTEGRAL = False   !   [Boolean] default = False
+                                ! If true, reset INTXPA to match pressures at first nonvanished cell. Includes
+                                ! pressure correction.
 USE_INACCURATE_PGF_RHO_ANOM = False !   [Boolean] default = False
                                 ! If true, use a form of the PGF that uses the reference density in an
                                 ! inaccurate way. This is not recommended.
@@ -2168,7 +2171,7 @@ NSTAR = 0.06                    !   [nondim] default = 0.2
                                 ! The portion of the buoyant potential energy imparted by surface fluxes that is
                                 ! available to drive entrainment at the base of mixed layer when that energy is
                                 ! positive.
-MSTAR_CONV_ADJ = 0.66           !   [nondim] default = 0.0
+MSTAR_CONV_ADJ = 0.667          !   [nondim] default = 0.0
                                 ! Coefficient used for reducing mstar during convection due to reduction of
                                 ! stable density gradient.
 USE_MLD_ITERATION = True        !   [Boolean] default = True

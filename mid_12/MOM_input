@@ -141,6 +141,7 @@ OBC_COMPUTED_STRAIN = True      !   [Boolean] default = False
 OBC_ZERO_BIHARMONIC = True      !   [Boolean] default = False
                                 ! If true, zeros the Laplacian of flow on open boundaries in the biharmonic
                                 ! viscosity term.
+RAMP_OBCS = False               ! ramp obc
 OBC_RAMP_TIMESCALE = 2.0        !   [days] default = 1.0
                                 ! If RAMP_OBCS is true, this sets the ramping timescale.
 OBC_TIDE_N_CONSTITUENTS = 10    ! default = 0
@@ -204,6 +205,9 @@ EQN_OF_STATE = "WRIGHT_FULL"    ! default = "WRIGHT"
                                 ! "WRIGHT_REDUCED", "WRIGHT_FULL", "NEMO", "ROQUET_RHO", "ROQUET_SPV" and
                                 ! "TEOS10".  This is only used if USE_EOS is true.
 TFREEZE_FORM = "MILLERO_78"     ! default = "LINEAR"
+                                ! TFREEZE_FORM determines which expression should be used for the freezing
+                                ! point.  Currently, the valid choices are "LINEAR", "MILLERO_78", "TEOS_POLY",
+                                ! "TEOS10"
 DTFREEZE_DP = -7.75E-08         !   [degC Pa-1] default = 0.0
                                 ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
                                 ! temperature with pressure.
@@ -259,6 +263,8 @@ ALE_COORDINATE_CONFIG = "FILE:vgrid_75_2m.nc,dz" ! default = "UNIFORM"
                                 !                by a comma or space, e.g. FILE:lev.nc,dz
                                 !                or FILE:lev.nc,interfaces=zw
                                 !  WOA09[:N]   - the WOA09 vertical grid (approximately)
+                                !  WOA09INT[:N] - layers spanned by the WOA09 depths
+                                !  WOA23INT[:N] - layers spanned by the WOA23 depths
                                 !  FNC1:string - FNC1:dz_min,H_total,power,precision
                                 !  HYBRID:string - read from a file. The string specifies
                                 !                the filename and two variable names, separated
@@ -475,7 +481,6 @@ VISC_REM_BUG = False            !   [Boolean] default = True
                                 ! VISC_REM_BT_WEIGHT_FIX in MOM_barotropic, and VISC_REM_CONT_HVEL_FIX in
                                 ! MOM_continuity_PPM. Eventually, the three individual flags should be removed
                                 ! after tests and the default of VISC_REM_BUG should be to False.
-VISC_REM_CONT_HVEL_FIX = False
 
 ! === module MOM_continuity_PPM ===
 ETA_TOLERANCE = 1.0E-06         !   [m] default = 3.75E-09
@@ -484,6 +489,9 @@ ETA_TOLERANCE = 1.0E-06         !   [m] default = 3.75E-09
                                 ! total tolerance for SSH is 4 times this value.  The default is
                                 ! 0.5*NK*ANGSTROM, and this should not be set less than about
                                 ! 10^-15*MAXIMUM_DEPTH.
+VISC_REM_CONT_HVEL_FIX = False  !   [Boolean] default = True
+                                ! If true, velocity cell thickness h_[uv] from the continuity solver is not
+                                ! multiplied by visc_rem_[uv]. Default of this flag is set by VISC_REM_BUG.
 
 ! === module MOM_CoriolisAdv ===
 CORIOLIS_EN_DIS = True          !   [Boolean] default = False
@@ -663,7 +671,7 @@ USE_MLD_GRID = True             !   [Boolean] default = False
                                 ! If true, read in a spatially varying MLD_decaying_Tfilt field.
 MLD_TFILT_FILE = "restrat_vars_81.nc" ! default = ""
                                 ! The path to the file containing the MLD_decaying_Tfilt fields.
-CR_FILE = "restrat_vars_81.nc"     ! default = ""
+CR_FILE = "restrat_vars_81.nc"  ! default = ""
                                 ! The path to the file containing the Cr fields.
 %MLE
 FOX_KEMPER_ML_RESTRAT_COEF = 1.0 !   [nondim] default = 0.0
