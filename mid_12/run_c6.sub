@@ -9,13 +9,11 @@
 #SBATCH --error=Arctic_e.%j
 #SBATCH --qos=normal
 #SBATCH --partition=batch
-#SBATCH --clusters=c5
+#SBATCH --clusters=c6
 ## obviously use your group account:
-#SBATCH --account=cefi
+#SBATCH --account=ira-cefi
 
 rm -f *.stats.intel
-module unload darshan-runtime
-module list
 
-srun -n 452 /gpfs/f5/cefi/scratch/Katherine.Hedstrom/ESMG_build//intel/SYM_ice_ocean_SIS2/repro/MOM6
-#srun -n 452 /gpfs/f5/cefi/scratch/Katherine.Hedstrom/ESMG_build//intel/SYM_ice_ocean_SIS2/debug/MOM6
+srun -n 452 /gpfs/f6/ira-cefi/scratch/Katherine.Hedstrom/ESMG_build//intel/SYM_ice_ocean_SIS2/repro/MOM6
+#srun -n 452 /gpfs/f6/ira-cefi/scratch/Katherine.Hedstrom/ESMG_build//intel/SYM_ice_ocean_SIS2/debug/MOM6

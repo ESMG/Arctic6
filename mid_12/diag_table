@@ -1,7 +1,7 @@
 Arctic 75 vertical levels
 1900 1 1 0 0 0
 #"ocean_secs",           100, "seconds",  1, "hours", "time"
-"ocean_hourly",              1, "hours",   1, "hours", "time"
+"ocean_hourly",              15, "minutes",   1, "hours", "time"
 "ocean_daily",               5, "days",    1, "hours", "time"
 "boem_hourly",               1, "hours",   1, "hours", "time"
 "atm_hourly",                1, "hours",   1, "hours", "time"
@@ -71,8 +71,10 @@ Arctic 75 vertical levels
 "ice_model",   "sithick",      "hice",             "ocean_hourly", "all", .false., "none",2
 "ice_model",   "itheta",       "itheta",           "ocean_hourly", "all", .false., "none",2
 "ice_model",   "del_sh",       "del_sh",           "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "MLD_003",      "MLD",          "ocean_hourly", "all", .false., "none",2
-#"ocean_model", "ePBL_h_ML",    "ePBL_h_ML",    "ocean_hourly", "all", .false., "none",2
+"ice_model",  "RDG_RATE", "RDG_RATE",  "ocean_hourly", "all", .false., "none",2
+#"ice_model",  "RDG_HEIGHT", "RDG_HEIGHT",  "ocean_hourly", "all", .false., "none",2
+"ocean_model", "MLD_003",      "MLD",          "ocean_hourly", "all", .false., "none",2
+"ocean_model", "ePBL_h_ML",    "ePBL_h_ML",    "ocean_hourly", "all", .false., "none",2
 #"ice_model",   "UI",           "uice",             "ocean_hourly", "all", .false., "none",2
 #"ice_model",   "VI",           "vice",             "ocean_hourly", "all", .false., "none",2
 ##"ice_model",  "SWDN",       "swdn",      "ocean_hourly", "all", ".false.", "none",2
@@ -239,6 +241,7 @@ Arctic 75 vertical levels
 "ice_model",  "UI",            "uice",          "ocean_month", "all", "mean", "none",2
 "ice_model",  "VI",            "vice",          "ocean_month", "all", "mean", "none",2
 "ice_model",  "sispeed",       "sispeed",       "ocean_month", "all", "mean", "none",2
+"ice_model",  "RDG_HEIGHT",    "RDG_HEIGHT",    "ocean_month", "all", "mean", "none",2
 "ocean_model",  "umo",         "umo",           "ocean_month",        "all", "mean", "none",2
 "ocean_model",  "vmo",         "vmo",           "ocean_month",        "all", "mean", "none",2
 "ocean_model",  "T_adx",       "T_adx",         "ocean_month",        "all", "mean", "none",2
