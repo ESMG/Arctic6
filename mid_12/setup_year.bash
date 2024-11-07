@@ -27,4 +27,4 @@ ln -sf  /import/c1/AKWATERS/kate/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fy
 ln -sf  /import/c1/AKWATERS/kate/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/uv_002.nc .
 ln -sf  /import/c1/AKWATERS/kate/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/uv_003.nc .
 ln -sf  /import/c1/AKWATERS/kate/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/obc/${fyear}/uv_004.nc .
-ln -sf /import/c1/AKWATERS/kate/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/runoff/glofas_hill_${fyear}.nc glofas_runoff.nc
+ln -sf /import/c1/AKWATERS/kate/ESMG/ESMG-configs/Arctic6/mid_12/INPUT/runoff/glofas_hill_${fyear}_v4.1.nc glofas_runoff.nc
