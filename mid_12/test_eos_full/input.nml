@@ -6,7 +6,7 @@
         parameter_filename = 'MOM_input',
                              'MOM_override',
                              'MOM_layout',
-			     'MOM_saltrestore'
+                             'MOM_saltrestore'
 /
 
  &SIS_input_nml
@@ -17,16 +17,16 @@
         parameter_filename = 'SIS_input',
                              'SIS_override',
                              'SIS_layout'
- /
+/
 
  &atmos_model_nml
         layout = 0, 0
 /
 
  &coupler_nml
-        months = 12,
-        days   = 0,
-        hours  = 0,
+        months = 0,
+        days = 0,
+        hours  = 3,
         current_date = 1993,1,1,0,0,0,
         calendar = 'gregorian',
         dt_cpld = 1800,
@@ -51,6 +51,7 @@
         max_output_fields = 699
         mix_snapshot_average_fields = .false.
         flush_nc_files = .true.
+!       use_modern_diag = .true.
 /
 
  &flux_exchange_nml
@@ -114,10 +115,10 @@
 /
 
  &surface_flux_nml
-        ncar_ocean_flux_multilevel = .true.
-        bulk_zu = 10.
-        bulk_zt = 10.
-        bulk_zq = 10.
+        ncar_ocean_flux_multilevel = .true.,
+        bulk_zu = 10.,
+        bulk_zt = 10.,
+        bulk_zq = 10.,
         raoult_sat_vap = .true.
 /
 
@@ -130,3 +131,6 @@
         interp_method = 'second_order'
 /
 
+ &data_override_nml
+        use_center_grid_points = .true.
+/
