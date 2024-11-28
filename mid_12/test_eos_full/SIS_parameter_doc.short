@@ -128,7 +128,7 @@ ITD_LANDFAST = True             !   [Boolean] default = False
 H2_FILE = "ocean_topog.nc"      !
                                 ! The path to the file containing the sub-grid-scale topographic roughness
                                 ! amplitude with ITD_LANDFAST.
-BATHY_ROUGHNESS_MIN = 0.01      !   [m] default = 2.5
+BATHY_ROUGHNESS_MIN = 0.001     !   [m] default = 2.5
                                 ! Minimum bathymetric roughness.
 BATHY_ROUGHNESS_MAX = 50.0      !   [m] default = 2.5
                                 ! Maximum bathymetric roughness.
@@ -172,6 +172,12 @@ ADCROFT_ADVECTIVE_CFL = True    !   [Boolean] default = False
                                 ! If true use the Adcroft reciprocal of the cell mass when calculating the
                                 ! advective CFL numbers used in PPM tracer advection schemes, rather than adding
                                 ! a small mass in the denominator of the advective CFL ratio.
+NEW_RIDGE_PARTICIPATION = True  !   [Boolean] default = False
+                                ! Participation function used in ridging, .false. for Thorndike et al. 1975
+                                ! .true. for Lipscomb et al. 2007
+NEW_RIDGE_REDISTRIBUTION = True !   [Boolean] default = False
+                                ! Redistribution function used in ridging, .false. for Hibler 1980 .true. for
+                                ! Lipscomb et al. 2007
 
 ! === module SIS_sum_output ===
 MAXTRUNC = 200                  !   [truncations save_interval-1] default = 0

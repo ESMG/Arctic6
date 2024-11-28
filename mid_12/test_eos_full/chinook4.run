@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -t 48:00:00
-#SBATCH --ntasks=400
+#SBATCH -t 1:00:00
+#SBATCH --ntasks=24
 #SBATCH --job-name=ARCTIC
 #SBATCH --account=akwaters
 #SBATCH --output=ARCTIC.%j
@@ -9,6 +9,8 @@
 ###SBATCH -p debug
 ###SBATCH --ntasks=309
 ###SBATCH -t 44:00:00
+###SBATCH -t 48:00:00
+###SBATCH --ntasks=400
 
 cd $SLURM_SUBMIT_DIR
 . /usr/share/Modules/init/bash
