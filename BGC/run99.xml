@@ -14,15 +14,15 @@ module use -a /ncrc/home2/fms/local/modulefiles
 module load fre/bronx-22
 
 C5:
-fremake -x run92.xml -p ncrc5.intel22 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
+fremake -x run99.xml -p ncrc5.intel22 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
 C6:
-fremake -x run92.xml -p ncrc6.intel23 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
-fremake -f -x run92.xml -p ncrc6.intel23 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
+fremake -x run99.xml -p ncrc6.intel23 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
+fremake -f -x run99.xml -p ncrc6.intel23 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
 
 C5:
-frerun -x run92.xml -p ncrc5.intel22 -t prod,hdf5 run92
+frerun -x run99.xml -p ncrc5.intel22 -t prod,hdf5 run99
 C6:
-frerun -x run92.xml -p ncrc6.intel23 -t prod,hdf5 run92
+frerun -x run99.xml -p ncrc6.intel23 -t prod,hdf5 run99
 
 To postprocess later:
 frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_COBALT_2023_10_spinup/gfdl.ncrc5-intel22-prod-hdf5/history/ -x NWA12_cobalt_2023_04.xml -p gfdl.ncrc5-intel22-T prod NWA12_COBALT_2023_10_spinup
@@ -215,7 +215,7 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
     </component>
   </experiment>
 
-  <experiment name="run92" inherit="MOM6_SIS2_COBALT_compile_symm">
+  <experiment name="run99" inherit="MOM6_SIS2_COBALT_compile_symm">
     <description>
     </description>
     <input>
@@ -614,7 +614,7 @@ cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
 DT_OBC_SEG_UPDATE_OBGC = 3600
 #override CHL_FROM_FILE = False
 #override PHA_MLD_CALC = True
-#override PHA_MLD_USE_DELTA_ENG = True
+#override PHA_MLD_USE_DELTA_RHO = True
 #override DO_GEOTHERMAL = True
 #override GENERIC_TRACER_IC_FILE = "bgc_ics_75z_woa2023_ready.nc"
 #override KV = 0.0

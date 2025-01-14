@@ -14,15 +14,15 @@ module use -a /ncrc/home2/fms/local/modulefiles
 module load fre/bronx-22
 
 C5:
-fremake -x run92.xml -p ncrc5.intel22 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
+fremake -x run104.xml -p ncrc5.intel22 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
 C6:
-fremake -x run92.xml -p ncrc6.intel23 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
-fremake -f -x run92.xml -p ncrc6.intel23 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
+fremake -x run104.xml -p ncrc6.intel23 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
+fremake -f -x run104.xml -p ncrc6.intel23 -t prod,hdf5 MOM6_SIS2_COBALT_compile_symm
 
 C5:
-frerun -x run92.xml -p ncrc5.intel22 -t prod,hdf5 run92
+frerun -x run104.xml -p ncrc5.intel22 -t prod,hdf5 run104
 C6:
-frerun -x run92.xml -p ncrc6.intel23 -t prod,hdf5 run92
+frerun -x run104.xml -p ncrc6.intel23 -t prod,hdf5 run104
 
 To postprocess later:
 frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_COBALT_2023_10_spinup/gfdl.ncrc5-intel22-prod-hdf5/history/ -x NWA12_cobalt_2023_04.xml -p gfdl.ncrc5-intel22-T prod NWA12_COBALT_2023_10_spinup
@@ -215,7 +215,7 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
     </component>
   </experiment>
 
-  <experiment name="run92" inherit="MOM6_SIS2_COBALT_compile_symm">
+  <experiment name="run104" inherit="MOM6_SIS2_COBALT_compile_symm">
     <description>
     </description>
     <input>
@@ -389,23 +389,23 @@ frepp -t 1997 -c ocean_cobalt_omip_2d -s -d /archive/acr/fre/NWA/2023_04/NWA12_C
 "LND", "drag_q",             "",       "",                           "none",     0.0
 "LND", "p_surf",             "",       "",                           "none",     1.0e5
 #
-"OCN", "runoff_no3_flux_ice_ocn",   "NO3_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_ldon_flux_ice_ocn",  "LDON_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_sldon_flux_ice_ocn", "SLDON_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_srdon_flux_ice_ocn", "SRDON_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_ndet_flux_ice_ocn",  "NDET_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_po4_flux_ice_ocn",   "PO4_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_ldop_flux_ice_ocn",  "LDOP_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_sldop_flux_ice_ocn", "SLDOP_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_srdop_flux_ice_ocn", "SRDOP_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_pdet_flux_ice_ocn",  "PDET_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_fed_flux_ice_ocn",   "FED_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_alk_flux_ice_ocn",   "ALK_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_dic_flux_ice_ocn",   "DIC_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_nh4_flux_ice_ocn",   "NH4_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_fedet_flux_ice_ocn", "FEDET_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_o2_flux_ice_ocn",    "O2_CONC",      "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
-"OCN", "runoff_sio4_flux_ice_ocn",  "SI_CONC",      "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc", "none",      1.0e-3
+"OCN", "runoff_no3_flux_ice_ocn",   "NO3_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_ldon_flux_ice_ocn",  "LDON_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_sldon_flux_ice_ocn", "SLDON_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_srdon_flux_ice_ocn", "SRDON_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_ndet_flux_ice_ocn",  "NDET_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_po4_flux_ice_ocn",   "PO4_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_ldop_flux_ice_ocn",  "LDOP_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_sldop_flux_ice_ocn", "SLDOP_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_srdop_flux_ice_ocn", "SRDOP_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_pdet_flux_ice_ocn",  "PDET_CONC",    "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_fed_flux_ice_ocn",   "FED_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_alk_flux_ice_ocn",   "ALK_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_dic_flux_ice_ocn",   "DIC_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_nh4_flux_ice_ocn",   "NH4_CONC",     "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_fedet_flux_ice_ocn", "FEDET_CONC",   "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_o2_flux_ice_ocn",    "O2_CONC",      "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
+"OCN", "runoff_sio4_flux_ice_ocn",  "SI_CONC",      "./INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc", "none",      1.0e-3
 "OCN", "runoff_lith_flux_ice_ocn",  "",             "",                                                                          "none",     13.0e-3
 "OCN", "dry_dep_fed_flux_ice_ocn",  "dryfe",        "./INPUT/esm4_dryfe_climo_1993-2014.nc",                                 "bilinear",     -1.0
 "OCN", "wet_dep_fed_flux_ice_ocn",  "wetfe",        "./INPUT/esm4_wetfe_climo_1993-2014.nc",                                 "bilinear",     -1.0
@@ -614,7 +614,7 @@ cat > $work/INPUT/MOM_override << MOM_OVERRIDE_EOF
 DT_OBC_SEG_UPDATE_OBGC = 3600
 #override CHL_FROM_FILE = False
 #override PHA_MLD_CALC = True
-#override PHA_MLD_USE_DELTA_ENG = True
+#override PHA_MLD_USE_DELTA_RHO = True
 #override DO_GEOTHERMAL = True
 #override GENERIC_TRACER_IC_FILE = "bgc_ics_75z_woa2023_ready.nc"
 #override KV = 0.0
@@ -878,7 +878,7 @@ ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/obc/${fyear}/uv_001.n
 ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/obc/${fyear}/uv_002.nc .
 ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/obc/${fyear}/uv_003.nc .
 ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/obc/${fyear}/uv_004.nc .
-ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/Runoff/glofas_hill_${fyear}_v4.1.nc glofas_runoff.nc
+ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/Runoff/glofas_hill_${fyear}_v4.2.nc glofas_runoff.nc
 ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/Arctic_nudging/nudging_monthly_${fyear}.nc nudging_salt_theta.nc
 cd $work
 
@@ -935,8 +935,7 @@ endif
         <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/ice_outflow.nc</dataSource>
         <dataSource site="ncrc">$(cefi_SHR)/share/restrat_vars_run80.nc</dataSource>
         <!--River nutrients and DIC and alkalinity -->
-        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/RiverNutrients_Combined_Q100_Arctic12k_updated.nc</dataSource>
-        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/RiverNutrients_Combined_Q100_Arctic12k_plusSi.nc</dataSource>
+        <dataSource site="ncrc">$(cefi_SHR)/ESMG/INPUT/RiverNutrients_Combined_Q100_Arctic12k_REMI.nc</dataSource>
         <!-- For the sponge: -->
 	<dataSource site="ncrc">/gpfs/f6/ira-cefi/world-shared/ARC12_pub/Arctic_nudging/damping_spna_10days.nc</dataSource>
 	<dataSource site="ncrc">/gpfs/f6/ira-cefi/world-shared/ARC12_pub/Arctic_nudging/damping_spna_30days.nc</dataSource>

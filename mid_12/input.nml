@@ -131,3 +131,6 @@
         interp_method = 'second_order'
 /
 
+ &data_override_nml
+        use_center_grid_points = .true.
+/

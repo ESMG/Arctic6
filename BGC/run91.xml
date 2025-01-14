@@ -873,7 +873,7 @@ ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/obc/${fyear}/uv_001.n
 ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/obc/${fyear}/uv_002.nc .
 ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/obc/${fyear}/uv_003.nc .
 ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/obc/${fyear}/uv_004.nc .
-ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/Runoff/glofas_hill_${fyear}_Ob.nc glofas_runoff.nc
+ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/ESMG/INPUT/Runoff/glofas_hill_${fyear}_v4.1.nc glofas_runoff.nc
 ln -sf /gpfs/f6/ira-cefi/world-shared/ARC12_pub/Arctic_nudging/nudging_monthly_${fyear}.nc nudging_salt_theta.nc
 cd $work
 
