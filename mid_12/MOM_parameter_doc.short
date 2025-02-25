@@ -14,10 +14,10 @@ DT = 600.0                      !   [s]
                                 ! be an integer fraction of the forcing time-step (DT_FORCING in ocean-only mode
                                 ! or the coupling timestep in coupled mode.)
 DT_THERM = 1800.0               !   [s] default = 600.0
-                                ! The thermodynamic and tracer advection time step. Ideally DT_THERM should be
-                                ! an integer multiple of DT and less than the forcing or coupling time-step,
-                                ! unless THERMO_SPANS_COUPLING is true, in which case DT_THERM can be an integer
-                                ! multiple of the coupling timestep.  By default DT_THERM is set to DT.
+                                ! The thermodynamic time step. Ideally DT_THERM should be an integer multiple of
+                                ! DT and of DT_TRACER_ADVECT and less than the forcing or coupling time-step.
+                                ! However, if THERMO_SPANS_COUPLING is true, DT_THERM can be an integer multiple
+                                ! of the coupling timestep. By default DT_THERM is set to DT.
 FRAZIL = True                   !   [Boolean] default = False
                                 ! If true, water freezes if it gets too cold, and the accumulated heat deficit
                                 ! is returned in the surface state.  FRAZIL is only used if
@@ -382,8 +382,6 @@ USE_STORED_SLOPES = True        !   [Boolean] default = False
 CHANNEL_DRAG = True             !   [Boolean] default = False
                                 ! If true, the bottom drag is exerted directly on each layer proportional to the
                                 ! fraction of the bottom it overlies.
-PRANDTL_TURB = 1.25             !   [nondim] default = 1.0
-                                ! The turbulent Prandtl number applied to shear instability.
 HBBL = 10.0                     !   [m]
                                 ! The thickness of a bottom boundary layer with a viscosity increased by
                                 ! KV_EXTRA_BBL if BOTTOMDRAGLAW is not defined, or the thickness over which
@@ -442,9 +440,9 @@ BOUND_CORIOLIS = True           !   [Boolean] default = False
 
 ! === module MOM_self_attr_load ===
 SAL_SCALAR_VALUE = 0.094        !   [m m-1] default = 0.0
-                                ! The constant of proportionality between sea surface height (really it should
-                                ! be bottom pressure) anomalies and bottom geopotential anomalies. This is only
-                                ! used if USE_SAL_SCALAR is true or USE_PREVIOUS_TIDES is true.
+                                ! The constant of proportionality between self-attraction and loading (SAL)
+                                ! geopotential anomaly and barotropic geopotential anomaly. This is only used if
+                                ! SAL_SCALAR_APPROX is true or USE_PREVIOUS_TIDES is true.
 
 ! === module MOM_tidal_forcing ===
 TIDE_M2 = True                  !   [Boolean] default = False
@@ -667,6 +665,8 @@ USE_JACKSON_PARAM = True        !   [Boolean] default = False
 MAX_RINO_IT = 25                !   [nondim] default = 50
                                 ! The maximum number of iterations that may be used to estimate the Richardson
                                 ! number driven mixing.
+PRANDTL_TURB = 1.25             !   [nondim] default = 1.0
+                                ! The turbulent Prandtl number applied to shear instability.
 
 ! === module MOM_diabatic_aux ===
 ! The following parameters are used for auxiliary diabatic processes.
