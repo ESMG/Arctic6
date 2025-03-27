@@ -1,4 +1,4 @@
-!#override CONTINUITY_H_NEGLECT = 1e-20 kg m-2
+#override CONTINUITY_H_NEGLECT = 1e-20 kg m-2
 #override CONTINUITY_FRAC_NEGLECT=1e-20
 #override ICE_COVER_DISCARD = 1e-30
 #override ICE_YIELD_ELLIPTICITY = 1.5

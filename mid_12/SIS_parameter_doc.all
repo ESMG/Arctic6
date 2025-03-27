@@ -521,7 +521,7 @@ SIS_CONTINUITY_SCHEME = "PPM:C2PD" ! default = "UPWIND_2D"
 CONT_PPM_VOLUME_BASED_CFL = False !   [Boolean] default = False
                                 ! If true, use the ratio of the open face lengths to the tracer cell areas when
                                 ! estimating CFL numbers.
-CONTINUITY_H_NEGLECT = 1.0E-28  !   [kg m-2] default = 0.0
+CONTINUITY_H_NEGLECT = 1.0E-20  !   [kg m-2] default = 0.0
                                 ! The category ice mass per ocean cell area below which the transport within
                                 ! this thickness category of out of a cell is set to zero.  A suggested
                                 ! non-default value might be of order 3e-32 kg m-2, which is one molecule of ice
