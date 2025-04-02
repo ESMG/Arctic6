@@ -149,7 +149,7 @@ SIS_CONTINUITY_SCHEME = "PPM:C2PD" ! default = "UPWIND_2D"
                                 !   PCM       - Directionally split piecewise constant
                                 !   PPM:C2PD  - Positive definite PPM with 2nd order edge values
                                 !   PPM:C2MO  - Monotonic PPM with 2nd order edge values
-CONTINUITY_H_NEGLECT = 1.0E-20  !   [kg m-2] default = 0.0
+CONTINUITY_H_NEGLECT = 1.0E-28  !   [kg m-2] default = 0.0
                                 ! The category ice mass per ocean cell area below which the transport within
                                 ! this thickness category of out of a cell is set to zero.  A suggested
                                 ! non-default value might be of order 3e-32 kg m-2, which is one molecule of ice
@@ -172,6 +172,12 @@ ADCROFT_ADVECTIVE_CFL = True    !   [Boolean] default = False
                                 ! If true use the Adcroft reciprocal of the cell mass when calculating the
                                 ! advective CFL numbers used in PPM tracer advection schemes, rather than adding
                                 ! a small mass in the denominator of the advective CFL ratio.
+NEW_RIDGE_PARTICIPATION = True  !   [Boolean] default = False
+                                ! Participation function used in ridging, .false. for Thorndike et al. 1975
+                                ! .true. for Lipscomb et al. 2007
+NEW_RIDGE_REDISTRIBUTION = True !   [Boolean] default = False
+                                ! Redistribution function used in ridging, .false. for Hibler 1980 .true. for
+                                ! Lipscomb et al. 2007
 
 ! === module SIS_sum_output ===
 MAXTRUNC = 200                  !   [truncations save_interval-1] default = 0

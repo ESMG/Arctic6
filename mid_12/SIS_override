@@ -1,12 +1,12 @@
-#override CONTINUITY_H_NEGLECT = 1e-20 kg m-2
+!#override CONTINUITY_H_NEGLECT = 1e-20 kg m-2
 #override CONTINUITY_FRAC_NEGLECT=1e-20
 #override ICE_COVER_DISCARD = 1e-30
 #override ICE_YIELD_ELLIPTICITY = 1.5
 #override ITD_LANDFAST = True
 #override ICE_STATS_INTERVAL = 0.0416666666666667 !   [days] default = 1.0
 !DEBUG = True
-!#override NEW_RIDGE_PARTICIPATION = True
-!#override NEW_RIDGE_REDISTRIBUTION = True
+#override NEW_RIDGE_PARTICIPATION = True
+#override NEW_RIDGE_REDISTRIBUTION = True
 !#override MERGED_CONTINUITY = True
 #override NCAT_ICE = 10
 #override U_TRUNC_FILE = "U_sis_truncations"
