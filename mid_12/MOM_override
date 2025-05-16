@@ -6,6 +6,7 @@ DEBUG_BT = False
 #override RESTART_CHECKSUMS_REQUIRED = False
 TIDAL_SAL_FLATHER = True
 !#override SPLIT_RK2B = True
+OBC_HOR_INDEXING_BUG = False
 
 MLE%
 #override USE_CR_GRID = True
