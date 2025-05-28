@@ -141,6 +141,8 @@ OBC_RAMP_TIMESCALE = 2.0        !   [days] default = 1.0
                                 ! If RAMP_OBCS is true, this sets the ramping timescale.
 OBC_TIDE_N_CONSTITUENTS = 10    ! default = 0
                                 ! Number of tidal constituents being added to the open boundary.
+OBC_HOR_INDEXING_BUG = False    !   [Boolean] default = True
+                                ! If true, recover set of a horizontal indexing bugs in the OBC code.
 OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
                                 ! Documentation needs to be dynamic?????
 OBC_SEGMENT_001_VELOCITY_NUDGING_TIMESCALES = 3.0, 360.0 !   [days]
@@ -797,6 +799,9 @@ MAXTRUNC = 100000               !   [truncations save_interval-1] default = 0
                                 ! The run will be stopped, and the day set to a very large value if the velocity
                                 ! is truncated more than MAXTRUNC times between energy saves.  Set MAXTRUNC to 0
                                 ! to stop if there is any truncation of velocities.
+ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
+                                ! The interval in units of TIMEUNIT between saves of the energies of the run and
+                                ! other globally summed diagnostics.
 
 ! === module ocean_stochastics_init ===
 
