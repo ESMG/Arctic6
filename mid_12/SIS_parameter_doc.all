@@ -350,8 +350,9 @@ TRANSMUTATION_RATE_RESCALE = 1.0 !   [nondim] default = 1.0
                                 ! units of [s-1].  If this factor is negative, the field that is being read is a
                                 ! timescale, so the rate is the Adcroft reciprocal of the field that is read
                                 ! times this scaling factor
-DO_BRINE_PLUME = False          !   [Boolean] default = False
-                                ! If true, split heat and salt fluxes to the ocean into brine plumes and other.
+SIS_SPONGE = False              !   [Boolean] default = False
+                                ! If true, SIS sponges may be applied anywhere in the domain. The exact location
+                                ! and properties of those sponges are specified via SIS_SPONGE_CONFIG.
 
 ! === module SIS2_ice_thm (updates) ===
 ! This sub-module does updates of the sea-ice due to thermodynamic changes.
