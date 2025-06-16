@@ -109,6 +109,8 @@ TRANSMUTATION_RATE_VAR = "rate" ! default = "transmute_rate"
 
 ! === module SIS2_ice_thm (updates) ===
 ! This sub-module does updates of the sea-ice due to thermodynamic changes.
+SNOW_CONDUCTIVITY = 0.248       !   [W m-1 K-1] default = 0.31
+                                ! The conductivity of heat in snow.
 
 ! === module SIS_dyn_trans ===
 ! This module updates the ice momentum and does ice transport.
@@ -172,6 +174,14 @@ ADCROFT_ADVECTIVE_CFL = True    !   [Boolean] default = False
                                 ! If true use the Adcroft reciprocal of the cell mass when calculating the
                                 ! advective CFL numbers used in PPM tracer advection schemes, rather than adding
                                 ! a small mass in the denominator of the advective CFL ratio.
+NEW_RIDGE_PARTICIPATION = True  !   [Boolean] default = False
+                                ! Participation function used in ridging, .false. for Thorndike et al. 1975
+                                ! .true. for Lipscomb et al. 2007
+NEW_RIDGE_REDISTRIBUTION = True !   [Boolean] default = False
+                                ! Redistribution function used in ridging, .false. for Hibler 1980 .true. for
+                                ! Lipscomb et al. 2007
+ICEPACK_CLEANUP = True          !   [Boolean] default = False
+                                ! Tell icepack_step_ridge to call itd_cleanup for us.
 
 ! === module SIS_sum_output ===
 MAXTRUNC = 200                  !   [truncations save_interval-1] default = 0
@@ -191,13 +201,13 @@ MAXTRUNC = 200                  !   [truncations save_interval-1] default = 0
 
 ! === module SIS_optics ===
 ! This module calculates the albedo and absorption profiles for shortwave radiation.
-ICE_DELTA_EDD_R_ICE = 1.0       !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_ICE = -1.0      !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of sea
                                 ! ice with the delta-Eddington radiative transfer calculation.
-ICE_DELTA_EDD_R_SNOW = 1.0      !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_SNOW = -1.0     !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of snow
                                 ! on sea ice with the delta-Eddington radiative transfer calculation.
-ICE_DELTA_EDD_R_POND = 1.0      !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_POND = -1.0     !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of
                                 ! meltwater ponds on sea ice with the delta-Eddington radiative transfer
                                 ! calculation.

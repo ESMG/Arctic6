@@ -1,17 +1,12 @@
 !DEBUG = True
 DEBUG_BT = False
 !VERBOSITY = 9
-!#override ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
+#override ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
 !#override DIABATIC_FIRST = True
 #override RESTART_CHECKSUMS_REQUIRED = False
 TIDAL_SAL_FLATHER = True
 !#override SPLIT_RK2B = True
+OBC_HOR_INDEXING_BUG = False
 
-MLE%
-#override USE_CR_GRID = True
-#override USE_MLD_GRID = True
-#override MLD_TFILT_FILE = "restrat_vars_81.nc"
-#override MLD_TFILT_VAR = "MLD_tfilt"
-#override CR_FILE = "restrat_vars_81.nc"
-#override CR_VAR = "Cr"
-%MLE
+OBC_RESERVOIR_INIT_BUG = False
+MIXING_COEFS_OBC_BUG = False

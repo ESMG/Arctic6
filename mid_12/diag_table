@@ -86,11 +86,6 @@ Arctic 75 vertical levels
 "ocean_model_z", "so",      "so",        "ocean_Bering_Strait",    "all", "mean", "321 331  185 185 -1 -1",2
 "ocean_model_z", "vmo",     "vmo",       "ocean_Bering_Strait",    "all", "mean", "321 331  185 185 -1 -1",2
 "ocean_model_z", "vo",      "vo",        "ocean_Bering_Strait",    "all", "mean", "321 331  185 185 -1 -1",2
-#"ocean_model_z", "volcello", "volcello", "ocean_Bering_Strait",    "all", "mean", "176.75 178.106  68.00 68.00 -1 -1",2
-#"ocean_model_z", "thetao",  "thetao",    "ocean_Bering_Strait",    "all", "mean", "176.75 178.106  68.00 68.00 -1 -1",2
-#"ocean_model_z", "so",      "so",        "ocean_Bering_Strait",    "all", "mean", "176.75 178.106  68.00 68.00 -1 -1",2
-#"ocean_model_z", "vmo",     "vmo",       "ocean_Bering_Strait",    "all", "mean", "176.75 178.106  68.00 68.00 -1 -1",2
-#"ocean_model_z", "vo",      "vo",        "ocean_Bering_Strait",    "all", "mean", "176.75 178.106  68.00 68.00 -1 -1",2
 
 ## Fram Strait east-west section for flow moving north/south
 #"ocean_model_z", "volcello", "volcello", "ocean_Fram_Strait",  "all", "mean", "155 198  469 469 -1 -1",2

@@ -36,6 +36,8 @@ DEBUG = False                   !   [Boolean] default = False
                                 ! If true, write out verbose debugging data.
 DEBUG_TRUNCATIONS = False       !   [Boolean] default = False
                                 ! If true, calculate all diagnostics that are useful for debugging truncations.
+DEBUG_OBCS = False              !   [Boolean] default = False
+                                ! If true, write out verbose debugging data about OBCs.
 ROTATE_INDEX = False            !   [Boolean] default = False
                                 ! Enable rotation of the horizontal indices.
 DEBUG_CHKSUMS = False           !   [Boolean] default = False
@@ -43,6 +45,9 @@ DEBUG_CHKSUMS = False           !   [Boolean] default = False
 DEBUG_REDUNDANT = False         !   [Boolean] default = False
                                 ! If true, debug redundant data points during calls to the various vec_chksum
                                 ! routines.
+OBC_DEBUGGING_TESTS = False     !   [Boolean] default = False
+                                ! If true, do additional calls resetting certain values to help verify the
+                                ! correctness of the open boundary condition code.
 
 ! === module MOM_verticalGrid ===
 ! Parameters providing information about the vertical grid.
@@ -72,6 +77,9 @@ DEBUG_CONSERVATION = False      !   [Boolean] default = False
 
 ! === module MOM_kappa_shear ===
 ! Parameterization of shear-driven turbulence following Jackson, Hallberg and Legg, JPO 2008
+WRITE_TRACER_MIN_MAX = False    !   [Boolean] default = False
+                                ! If true, write the maximum and minimum values of temperature, salinity and
+                                ! some tracer concentrations to stdout when the energy files are written.
 
 ! === module MOM_surface_forcing ===
 CHECK_NO_LAND_FLUXES = False    !   [Boolean] default = False

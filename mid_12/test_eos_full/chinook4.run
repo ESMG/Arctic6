@@ -1,21 +1,22 @@
 #!/bin/bash
-#SBATCH -t 1:00:00
-#SBATCH --ntasks=24
+#SBATCH -t 44:00:00
 #SBATCH --job-name=ARCTIC
 #SBATCH --account=akwaters
 #SBATCH --output=ARCTIC.%j
 #SBATCH --no-requeue
 #SBATCH -p t1standard
-###SBATCH -p debug
-###SBATCH --ntasks=309
-###SBATCH -t 44:00:00
-###SBATCH -t 48:00:00
+#SBATCH --ntasks=309
+#SBATCH --tasks-per-node=28
+###SBATCH --ntasks=24
+###SBATCH -t 1:00:00
 ###SBATCH --ntasks=400
+###SBATCH -t 48:00:00
+###SBATCH -p debug
 
 cd $SLURM_SUBMIT_DIR
 . /usr/share/Modules/init/bash
 module purge
-module load slurm/22.05.4
+module load slurm
 module load foss/2022a
 module load netCDF-Fortran/4.5.4
 #module list

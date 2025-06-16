@@ -9,10 +9,10 @@ TIDAL_SAL_FLATHER = True
 OBC_HOR_INDEXING_BUG = False
 
 MLE%
-#override USE_CR_GRID = True
-#override USE_MLD_GRID = True
-#override MLD_TFILT_FILE = "restrat_vars_81.nc"
-#override MLD_TFILT_VAR = "MLD_tfilt"
-#override CR_FILE = "restrat_vars_81.nc"
-#override CR_VAR = "Cr"
+!#override USE_CR_GRID = True
+!#override USE_MLD_GRID = True
+!#override MLD_TFILT_FILE = "restrat_vars_81.nc"
+!#override MLD_TFILT_VAR = "MLD_tfilt"
+!#override CR_FILE = "restrat_vars_81.nc"
+!#override CR_VAR = "Cr"
 %MLE

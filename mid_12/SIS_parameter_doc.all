@@ -350,10 +350,12 @@ TRANSMUTATION_RATE_RESCALE = 1.0 !   [nondim] default = 1.0
                                 ! units of [s-1].  If this factor is negative, the field that is being read is a
                                 ! timescale, so the rate is the Adcroft reciprocal of the field that is read
                                 ! times this scaling factor
+DO_BRINE_PLUME = False          !   [Boolean] default = False
+                                ! If true, split heat and salt fluxes to the ocean into brine plumes and other.
 
 ! === module SIS2_ice_thm (updates) ===
 ! This sub-module does updates of the sea-ice due to thermodynamic changes.
-SNOW_CONDUCTIVITY = 0.31        !   [W m-1 K-1] default = 0.31
+SNOW_CONDUCTIVITY = 0.248       !   [W m-1 K-1] default = 0.31
                                 ! The conductivity of heat in snow.
 ICE_CONDUCTIVITY = 2.03         !   [W m-1 K-1] default = 2.03
                                 ! The conductivity of heat in ice.
@@ -548,13 +550,18 @@ ADCROFT_ADVECTIVE_CFL = True    !   [Boolean] default = False
                                 ! If true use the Adcroft reciprocal of the cell mass when calculating the
                                 ! advective CFL numbers used in PPM tracer advection schemes, rather than adding
                                 ! a small mass in the denominator of the advective CFL ratio.
-NEW_RIDGE_PARTICIPATION = False !   [Boolean] default = False
+NEW_RIDGE_PARTICIPATION = True  !   [Boolean] default = False
                                 ! Participation function used in ridging, .false. for Thorndike et al. 1975
                                 ! .true. for Lipscomb et al. 2007
-NEW_RIDGE_REDISTRIBUTION = False !   [Boolean] default = False
+NEW_RIDGE_REDISTRIBUTION = True !   [Boolean] default = False
                                 ! Redistribution function used in ridging, .false. for Hibler 1980 .true. for
                                 ! Lipscomb et al. 2007
-ICEPACK_CLEANUP = False         !   [Boolean] default = False
+RIDGE_MU = 3.0                  !   [m^0.5] default = 3.0
+                                ! E-folding scale of ridge ice from Lipscomb et al. 2007
+RIDGE_AREA_UNDERFLOW = 0.0      !   [none] default = 0.0
+                                ! A fractional area limit below which ice fraction is set to zero A reasonable
+                                ! default value for a km scale grid cell is 10^-24.
+ICEPACK_CLEANUP = True          !   [Boolean] default = False
                                 ! Tell icepack_step_ridge to call itd_cleanup for us.
 ICEPACK_REBIN = False           !   [Boolean] default = False
                                 ! Tell icepack_step_ridge to call rebin for us.
@@ -596,13 +603,13 @@ MAX_TSKIN_ITT = 10              ! default = 10
 DO_DELTA_EDDINGTON_SW = True    !   [Boolean] default = True
                                 ! If true, a delta-Eddington radiative transfer calculation for the shortwave
                                 ! radiation within the sea-ice.
-ICE_DELTA_EDD_R_ICE = 1.0       !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_ICE = -1.0      !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of sea
                                 ! ice with the delta-Eddington radiative transfer calculation.
-ICE_DELTA_EDD_R_SNOW = 1.0      !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_SNOW = -1.0     !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of snow
                                 ! on sea ice with the delta-Eddington radiative transfer calculation.
-ICE_DELTA_EDD_R_POND = 1.0      !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_POND = -1.0     !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of
                                 ! meltwater ponds on sea ice with the delta-Eddington radiative transfer
                                 ! calculation.

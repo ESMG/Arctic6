@@ -828,6 +828,10 @@ ODA_INCUPD = False              !   [Boolean] default = False
 SPONGE = False                  !   [Boolean] default = False
                                 ! If true, sponges may be applied anywhere in the domain. The exact location and
                                 ! properties of those sponges are specified via SPONGE_CONFIG.
+OBC_RESERVOIR_INIT_BUG = True   !   [Boolean] default = True
+                                ! If true, set the OBC tracer reservoirs at the startup of a new run from the
+                                ! interior tracer concentrations regardless of properties that may be explicitly
+                                ! specified for the reservoir concentrations.
 OBC_SEGMENT_001_DATA = "U=file:uv_001.nc(u),V=file:uv_001.nc(v),SSH=file:zeta_001.nc(zeta),TEMP=file:temp_001.nc(temp),SALT=file:salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
                                 ! OBC segment docs
 OBC_SEGMENT_002_DATA = "U=file:uv_002.nc(u),V=file:uv_002.nc(v),SSH=file:zeta_002.nc(zeta),TEMP=file:temp_002.nc(temp),SALT=file:salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
@@ -960,20 +964,13 @@ VERY_SMALL_FREQUENCY = 1.0E-17  !   [s-1] default = 1.0E-17
 USE_STANLEY_ISO = False         !   [Boolean] default = False
                                 ! If true, turn on Stanley SGS T variance parameterization in isopycnal slope
                                 ! code.
+MIXING_COEFS_OBC_BUG = True     !   [Boolean] default = True
+                                ! If false, use only interior data for thickness weighting in lateral mixing
+                                ! coefficient calculations and to calculate stratification and other fields at
+                                ! open boundary condition faces.
 KD_SMOOTH = 1.0E-06             !   [m2 s-1] default = 1.0E-06
                                 ! A diapycnal diffusivity that is used to interpolate more sensible values of T
                                 ! & S into thin layers.
-INTERNAL_WAVE_SPEED_TOL = 0.001 !   [nondim] default = 0.001
-                                ! The fractional tolerance for finding the wave speeds.
-INTERNAL_WAVE_SPEED_MIN = 0.0   !   [m s-1] default = 0.0
-                                ! A floor in the first mode speed below which 0 used instead.
-INTERNAL_WAVE_SPEED_BETTER_EST = True !   [Boolean] default = True
-                                ! If true, use a more robust estimate of the first mode wave speed as the
-                                ! starting point for iterations.
-EBT_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = False
-                                ! If true, use the OM4 remapping-via-subcells algorithm for calculating EBT
-                                ! structure. See REMAPPING_USE_OM4_SUBCELLS for details. We recommend setting
-                                ! this option to false.
 USE_QG_LEITH_GM = False         !   [Boolean] default = False
                                 ! If true, use the QG Leith viscosity as the GM coefficient.
 
@@ -1711,7 +1708,7 @@ MLE%
 USE_BODNER23 = True             !   [Boolean] default = False
                                 ! If true, use the Bodner et al., 2023, formulation of the re-stratifying
                                 ! mixed-layer restratification parameterization. This only works in ALE mode.
-CR = 0.3                        !   [nondim] default = 0.0
+CR = 0.03                       !   [nondim] default = 0.0
                                 ! The efficiency coefficient in eq 27 of Bodner et al., 2023.
 BODNER_NSTAR = 0.066            !   [nondim] default = 0.066
                                 ! The n* value used to estimate the turbulent vertical momentum flux in Bodner
@@ -1753,18 +1750,10 @@ TAIL_DH = 0.0                   !   [nondim] default = 0.0
                                 ! smoother stream function at the base of the mixed-layer.
 USE_STANLEY_TVAR = False        !   [Boolean] default = False
                                 ! If true, turn on Stanley SGS T variance parameterization in ML restrat code.
-USE_CR_GRID = True              !   [Boolean] default = False
+USE_CR_GRID = False             !   [Boolean] default = False
                                 ! If true, read in a spatially varying Cr field.
-USE_MLD_GRID = True             !   [Boolean] default = False
+USE_MLD_GRID = False            !   [Boolean] default = False
                                 ! If true, read in a spatially varying MLD_decaying_Tfilt field.
-MLD_TFILT_FILE = "restrat_vars_81.nc" ! default = ""
-                                ! The path to the file containing the MLD_decaying_Tfilt fields.
-MLD_TFILT_VAR = "MLD_tfilt"     ! default = "MLD_tfilt"
-                                ! The variable name for MLD_decaying_Tfilt field.
-CR_FILE = "restrat_vars_81.nc"  ! default = ""
-                                ! The path to the file containing the Cr fields.
-CR_VAR = "Cr"                   ! default = "Cr"
-                                ! The variable name for Cr field.
 %MLE
 MLE_USE_PBL_MLD = True          !   [Boolean] default = False
                                 ! If true, the MLE parameterization will use the mixed-layer depth provided by
@@ -1782,6 +1771,13 @@ DIAG_EBT_MONO_N2_COLUMN_FRACTION = 0.0 !   [nondim] default = 0.0
 DIAG_EBT_MONO_N2_DEPTH = -1.0   !   [m] default = -1.0
                                 ! The depth below which N2 is limited as monotonic for the purposes of
                                 ! calculating the equivalent barotropic wave speed.
+INTERNAL_WAVE_SPEED_TOL = 0.001 !   [nondim] default = 0.001
+                                ! The fractional tolerance for finding the wave speeds.
+INTERNAL_WAVE_SPEED_MIN = 0.0   !   [m s-1] default = 0.0
+                                ! A floor in the first mode speed below which 0 used instead.
+INTERNAL_WAVE_SPEED_BETTER_EST = True !   [Boolean] default = True
+                                ! If true, use a more robust estimate of the first mode wave speed as the
+                                ! starting point for iterations.
 INTWAVE_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = False
                                 ! If true, use the OM4 remapping-via-subcells algorithm for calculating EBT
                                 ! structure. See REMAPPING_USE_OM4_SUBCELLS for details. We recommend setting
@@ -2335,6 +2331,14 @@ LT_MOD_LAC4 = 0.8               !   [nondim] default = 0.95
 LT_MOD_LAC5 = 0.8               !   [nondim] default = 0.95
                                 ! Coefficient for modification of Langmuir number due to ratio of Ekman to
                                 ! unstable Obukhov depth.
+EPBL_EQD_DIFFUSIVITY_SHAPE = False !   [nondim] default = False
+                                ! Logical flag for activating ML equation for shape function that uses forcing
+                                ! to change its structure.
+EPBL_EQD_DIFFUSIVITY_VELOCITY = False !   [nondim] default = False
+                                ! Logical flag for activating ML equation discovery for velocity scale
+EPBL_EQD_DIFFUSIVITY_VELOCITY_H = False !   [nondim] default = False
+                                ! Logical flag for activating ML equation discovery for velocity scale with h as
+                                ! input
 EPBL_OPTIONS_DIFF = 0           ! default = 0
                                 ! If positive, this is a coded integer indicating a pair of settings whose
                                 ! differences are diagnosed in a passive diagnostic mode  via extra calls to

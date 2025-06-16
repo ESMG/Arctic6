@@ -569,7 +569,7 @@ MLE%
 USE_BODNER23 = True             !   [Boolean] default = False
                                 ! If true, use the Bodner et al., 2023, formulation of the re-stratifying
                                 ! mixed-layer restratification parameterization. This only works in ALE mode.
-CR = 0.3                        !   [nondim] default = 0.0
+CR = 0.03                       !   [nondim] default = 0.0
                                 ! The efficiency coefficient in eq 27 of Bodner et al., 2023.
 BLD_DECAYING_TFILTER = 8.64E+04 !   [s] default = 0.0
                                 ! The time-scale for a running-mean filter applied to the boundary layer depth
@@ -585,14 +585,6 @@ MIN_WSTAR2 = 1.0E-09            !   [m2 s-2] default = 1.0E-24
                                 ! division-by-zero in the limit when u* and the buoyancy flux are zero.  The
                                 ! default is less than the molecular viscosity of water times the Coriolis
                                 ! parameter a micron away from the equator.
-USE_CR_GRID = True              !   [Boolean] default = False
-                                ! If true, read in a spatially varying Cr field.
-USE_MLD_GRID = True             !   [Boolean] default = False
-                                ! If true, read in a spatially varying MLD_decaying_Tfilt field.
-MLD_TFILT_FILE = "restrat_vars_81.nc" ! default = ""
-                                ! The path to the file containing the MLD_decaying_Tfilt fields.
-CR_FILE = "restrat_vars_81.nc"  ! default = ""
-                                ! The path to the file containing the Cr fields.
 %MLE
 MLE_USE_PBL_MLD = True          !   [Boolean] default = False
                                 ! If true, the MLE parameterization will use the mixed-layer depth provided by

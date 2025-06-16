@@ -261,61 +261,6 @@ USE_ICE_AGE_TRACER = False      !   [Boolean] default = False
 SIS_FAST_AVAILABLE_DIAGS_FILE = "SIS_fast.available_diags" ! default = "SIS_fast.available_diags"
                                 ! A file into which to write a list of all available sea ice diagnostics that
                                 ! can be included in a diag_table.
-CONCENTRATION_INIT_CONFIG = "file" ! default = "data_override"
-                                ! A string that determines how the initial total sea ice concentration is
-                                ! initialized for a new run:
-                                !     file - read sea ice concentrations from a specified file
-                                !     data_override - use the data_override capability or zero everywhere
-                                !     zero - there is no sea ice anywhere
-                                !     latitudes - initial sea ice concentration is a function of latitude.
-ICE_THICKNESS_INIT_CONFIG = "file" ! default = "data_override"
-                                ! A string that determines how the initial sea ice thickness is initialized for
-                                ! a new run:
-                                !     file - read sea ice thickesses from a specified file
-                                !     data_override - use the data_override capability or zero everywhere
-                                !     uniform - sea ice has uniform thickness where the concentration is
-                                !       nonzero.
-SNOW_THICKNESS_INIT_CONFIG = "data_override" ! default = "data_override"
-                                ! A string that determines how the initial total snow thickness is initialized
-                                ! for a new run:
-                                !     file - read sea ice concentrations from a specified file
-                                !     data_override - use the data_override capability or zero everywhere
-                                !     uniform - snow has uniform thickness where the concentration is nonzero.
-ICE_CONCENTRATION_FILE = "ice_mass_12k.nc" !
-                                ! The name of the sea ice concentration file.
-ICE_CONCENTRATION_IC_VAR = "aice" ! default = "conc_ice"
-                                ! The initial condition variable for ice mass per unit area.
-ICE_THICKNESS_FILE = "ice_mass_12k.nc" !
-                                ! The name of the sea ice thickness file.
-ICE_THICKNESS_IC_VAR = "hm"     ! default = "mH_ice"
-                                ! The initial condition variable for ice mass per unit area.
-ICE_SALINITY_INIT_CONFIG = "uniform" ! default = "uniform"
-                                ! A string that determines how the sea ice salinity is initialized for a new
-                                ! run:
-                                !     uniform -  Use a constant ice salinity initial condition
-                                !     file - Read sea ice salinities from a specified file
-                                !     data_override - use the data_override capability or zero everywhere.
-ICE_ENTHALPY_INIT_CONFIG = "uniform_temp" ! default = "uniform_temp"
-                                ! A string that determines how the sea ice enthalpy is initialized for a new
-                                ! run:
-                                !     uniform_temp - Use a constant ice temperature initial condition
-                                !     relative_temp - Use an ice temperature initial condition with a
-                                !       specified depression below the bulk ice freezing point
-                                !     file - Read sea ice temperatures or enthalpies from a specified file
-                                !     data_override - use the data_override capability or freezing enthalpy
-                                !       everywhere.
-SNOW_ENTHALPY_INIT_CONFIG = "uniform_temp" ! default = "uniform_temp"
-                                ! A string that determines how the snow enthalpy is initialized for a new run:
-                                !     uniform_temp - Use a constant ice temperature initial condition
-                                !     relative_temp - Use an ice temperature initial condition with a
-                                !       specified depression below the bulk ice freezing point
-                                !     file - Read sea ice temperatures or enthalpies from a specified file
-                                !     data_override - use the data_override capability or freezing enthalpy
-                                !       everywhere.
-ICE_SALINITY_IC = 3.0           !   [g kg-1] default = 0.0
-                                ! The uniform sea ice salinity used for the initial condition
-ICE_TEMPERATURE_IC = -4.0       !   [degC] default = -4.0
-                                ! The uniform sea ice and snow temperature used for the initial condition
 
 ! === module SIS_slow_thermo ===
 ! This module calculates the slow evolution of the ice mass, heat, and salt budgets.
@@ -355,7 +300,7 @@ DO_BRINE_PLUME = False          !   [Boolean] default = False
 
 ! === module SIS2_ice_thm (updates) ===
 ! This sub-module does updates of the sea-ice due to thermodynamic changes.
-SNOW_CONDUCTIVITY = 0.31        !   [W m-1 K-1] default = 0.31
+SNOW_CONDUCTIVITY = 0.248       !   [W m-1 K-1] default = 0.31
                                 ! The conductivity of heat in snow.
 ICE_CONDUCTIVITY = 2.03         !   [W m-1 K-1] default = 2.03
                                 ! The conductivity of heat in ice.
@@ -550,12 +495,21 @@ ADCROFT_ADVECTIVE_CFL = True    !   [Boolean] default = False
                                 ! If true use the Adcroft reciprocal of the cell mass when calculating the
                                 ! advective CFL numbers used in PPM tracer advection schemes, rather than adding
                                 ! a small mass in the denominator of the advective CFL ratio.
-NEW_RIDGE_PARTICIPATION = False !   [Boolean] default = False
+NEW_RIDGE_PARTICIPATION = True  !   [Boolean] default = False
                                 ! Participation function used in ridging, .false. for Thorndike et al. 1975
                                 ! .true. for Lipscomb et al. 2007
-NEW_RIDGE_REDISTRIBUTION = False !   [Boolean] default = False
+NEW_RIDGE_REDISTRIBUTION = True !   [Boolean] default = False
                                 ! Redistribution function used in ridging, .false. for Hibler 1980 .true. for
                                 ! Lipscomb et al. 2007
+RIDGE_MU = 3.0                  !   [m^0.5] default = 3.0
+                                ! E-folding scale of ridge ice from Lipscomb et al. 2007
+RIDGE_AREA_UNDERFLOW = 0.0      !   [none] default = 0.0
+                                ! A fractional area limit below which ice fraction is set to zero A reasonable
+                                ! default value for a km scale grid cell is 10^-24.
+ICEPACK_CLEANUP = True          !   [Boolean] default = False
+                                ! Tell icepack_step_ridge to call itd_cleanup for us.
+ICEPACK_REBIN = False           !   [Boolean] default = False
+                                ! Tell icepack_step_ridge to call rebin for us.
 
 ! === module SIS_sum_output ===
 WRITE_STOCKS = True             !   [Boolean] default = True
@@ -594,13 +548,13 @@ MAX_TSKIN_ITT = 10              ! default = 10
 DO_DELTA_EDDINGTON_SW = True    !   [Boolean] default = True
                                 ! If true, a delta-Eddington radiative transfer calculation for the shortwave
                                 ! radiation within the sea-ice.
-ICE_DELTA_EDD_R_ICE = 1.0       !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_ICE = -1.0      !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of sea
                                 ! ice with the delta-Eddington radiative transfer calculation.
-ICE_DELTA_EDD_R_SNOW = 1.0      !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_SNOW = -1.0     !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of snow
                                 ! on sea ice with the delta-Eddington radiative transfer calculation.
-ICE_DELTA_EDD_R_POND = 1.0      !   [nondimensional] default = 0.0
+ICE_DELTA_EDD_R_POND = -1.0     !   [nondimensional] default = 0.0
                                 ! A dreadfully documented tuning parameter for the radiative propeties of
                                 ! meltwater ponds on sea ice with the delta-Eddington radiative transfer
                                 ! calculation.
