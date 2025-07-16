@@ -13,6 +13,14 @@ REMAP_AUXILIARY_VARS = True     !   [Boolean] default = False
                                 ! that are needed to reproduce across restarts, similarly to what is already
                                 ! being done with the primary state variables.  The default should be changed to
                                 ! true.
+ENABLE_BUGS_BY_DEFAULT = False  !   [Boolean] default = True
+                                ! If true, the defaults for certain recently added bug-fix flags are set to
+                                ! recreate the bugs so that the code can be moved forward without changing
+                                ! answers for existing configurations.  The defaults for groups of bug-fix flags
+                                ! are periodcially changed to correct the bugs, at which point this parameter
+                                ! will no longer be used to set their default.  Setting this to false means that
+                                ! bugs are only used if they are actively selected, but it also means that
+                                ! answers may change when code is updated due to newly found bugs.
 DT = 600.0                      !   [s]
                                 ! The (baroclinic) dynamics time step.  The time-step that is actually used will
                                 ! be an integer fraction of the forcing time-step (DT_FORCING in ocean-only mode
@@ -145,8 +153,6 @@ OBC_RAMP_TIMESCALE = 2.0        !   [days] default = 1.0
                                 ! If RAMP_OBCS is true, this sets the ramping timescale.
 OBC_TIDE_N_CONSTITUENTS = 10    ! default = 0
                                 ! Number of tidal constituents being added to the open boundary.
-OBC_HOR_INDEXING_BUG = False    !   [Boolean] default = True
-                                ! If true, recover set of a horizontal indexing bugs in the OBC code.
 OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
                                 ! Documentation needs to be dynamic?????
 OBC_SEGMENT_001_VELOCITY_NUDGING_TIMESCALES = 3.0, 360.0 !   [days]
@@ -179,10 +185,6 @@ OBC_TRACER_RESERVOIR_LENGTH_SCALE_IN = 3000.0 !   [m] default = 0.0
                                 ! boundaries to values from the interior when the flow is entering the domain.
 BRUSHCUTTER_MODE = True         !   [Boolean] default = False
                                 ! If true, read external OBC data on the supergrid.
-OBC_REMAPPING_USE_OM4_SUBCELLS = False !   [Boolean] default = True
-                                ! If true, use the OM4 remapping-via-subcells algorithm for neutral diffusion.
-                                ! See REMAPPING_USE_OM4_SUBCELLS for more details. We recommend setting this
-                                ! option to false.
 OBC_TIDE_CONSTITUENTS = "M2,S2,N2,K2,K1,O1,P1,Q1,MM,MF" !
                                 ! Names of tidal constituents being added to the open boundaries.
 
@@ -190,6 +192,14 @@ OBC_TIDE_CONSTITUENTS = "M2,S2,N2,K2,K1,O1,P1,Q1,MM,MF" !
 ! Parameters providing information about the vertical grid.
 NK = 75                         !   [nondim]
                                 ! The number of model layers.
+OBC_SEGMENT_001_DATA = "U=file:uv_001.nc(u),V=file:uv_001.nc(v),SSH=file:zeta_001.nc(zeta),TEMP=file:temp_001.nc(temp),SALT=file:salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
+                                ! OBC segment docs
+OBC_SEGMENT_002_DATA = "U=file:uv_002.nc(u),V=file:uv_002.nc(v),SSH=file:zeta_002.nc(zeta),TEMP=file:temp_002.nc(temp),SALT=file:salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
+                                ! OBC segment docs
+OBC_SEGMENT_003_DATA = "U=file:uv_003.nc(u),V=file:uv_003.nc(v),SSH=file:zeta_003.nc(zeta),TEMP=file:temp_003.nc(temp),SALT=file:salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
+                                ! OBC segment docs
+OBC_SEGMENT_004_DATA = "U=file:uv_004.nc(u),V=file:uv_004.nc(v),SSH=file:zeta_004.nc(zeta),TEMP=file:temp_004.nc(temp),SALT=file:salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
+                                ! OBC segment docs
 
 ! === module MOM_EOS ===
 EQN_OF_STATE = "WRIGHT_FULL"    ! default = "WRIGHT"
@@ -201,9 +211,6 @@ TFREEZE_FORM = "MILLERO_78"     ! default = "LINEAR"
                                 ! TFREEZE_FORM determines which expression should be used for the freezing
                                 ! point.  Currently, the valid choices are "LINEAR", "MILLERO_78", "TEOS_POLY",
                                 ! "TEOS10"
-DTFREEZE_DP = -7.75E-08         !   [degC Pa-1] default = 0.0
-                                ! When TFREEZE_FORM=LINEAR, this is the derivative of the freezing potential
-                                ! temperature with pressure.
 
 ! === module MOM_restart ===
 RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
@@ -397,14 +404,6 @@ SPONGE_UV = False               !   [Boolean] default = False
 ! === module MOM_sponge ===
 !SPONGE_DATA_ONGRID = True       !   [Boolean] default = False
                                 ! When defined, the incoming sponge data are assumed to be on the model grid
-OBC_SEGMENT_001_DATA = "U=file:uv_001.nc(u),V=file:uv_001.nc(v),SSH=file:zeta_001.nc(zeta),TEMP=file:temp_001.nc(temp),SALT=file:salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
-                                ! OBC segment docs
-OBC_SEGMENT_002_DATA = "U=file:uv_002.nc(u),V=file:uv_002.nc(v),SSH=file:zeta_002.nc(zeta),TEMP=file:temp_002.nc(temp),SALT=file:salt_002.nc(salt),Uamp=file:tu2.nc(uamp),Uphase=file:tu2.nc(uphase),Vamp=file:tu2.nc(vamp),Vphase=file:tu2.nc(vphase),SSHamp=file:tz2.nc(zamp),SSHphase=file:tz2.nc(zphase)" !
-                                ! OBC segment docs
-OBC_SEGMENT_003_DATA = "U=file:uv_003.nc(u),V=file:uv_003.nc(v),SSH=file:zeta_003.nc(zeta),TEMP=file:temp_003.nc(temp),SALT=file:salt_003.nc(salt),Uamp=file:tu3.nc(uamp),Uphase=file:tu3.nc(uphase),Vamp=file:tu3.nc(vamp),Vphase=file:tu3.nc(vphase),SSHamp=file:tz3.nc(zamp),SSHphase=file:tz3.nc(zphase)" !
-                                ! OBC segment docs
-OBC_SEGMENT_004_DATA = "U=file:uv_004.nc(u),V=file:uv_004.nc(v),SSH=file:zeta_004.nc(zeta),TEMP=file:temp_004.nc(temp),SALT=file:salt_004.nc(salt),Uamp=file:tu4.nc(uamp),Uphase=file:tu4.nc(uphase),Vamp=file:tu4.nc(vamp),Vphase=file:tu4.nc(vphase),SSHamp=file:tz4.nc(zamp),SSHphase=file:tz4.nc(zphase)" !
-                                ! OBC segment docs
 
 ! === module MOM_diag_mediator ===
 USE_INDEX_DIAGNOSTIC_AXES = True !   [Boolean] default = False
@@ -456,11 +455,6 @@ KHTH_MAX_CFL = 0.1              !   [nondimensional] default = 0.8
 ! === module MOM_dynamics_split_RK2 ===
 TIDES = True                    !   [Boolean] default = False
                                 ! If true, apply tidal momentum forcing.
-VISC_REM_BUG = False            !   [Boolean] default = True
-                                ! If true, visc_rem_[uv] in split mode is incorrectly calculated or accounted
-                                ! for in two places. This parameter controls the defaults of two individual
-                                ! flags, VISC_REM_TIMESTEP_BUG in MOM_dynamics_split_RK2(b) and
-                                ! VISC_REM_BT_WEIGHT_BUG in MOM_barotropic.
 
 ! === module MOM_continuity_PPM ===
 ETA_TOLERANCE = 1.0E-06         !   [m] default = 3.75E-09
@@ -556,10 +550,6 @@ SMAGORINSKY_AH = True           !   [Boolean] default = False
                                 ! If true, use a biharmonic Smagorinsky nonlinear eddy viscosity.
 SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
                                 ! The nondimensional biharmonic Smagorinsky constant, typically 0.015 - 0.06.
-FRICTWORK_BUG = False           !   [Boolean] default = True
-                                ! If true, retain an answer-changing bug in calculating the FrictWork, which
-                                ! cancels the h in thickness flux and the h at velocity point. This isnot
-                                ! recommended.
 
 ! === module MOM_vert_friction ===
 HMIX_FIXED = 0.9                !   [m]
@@ -619,18 +609,16 @@ MLE%
 USE_BODNER23 = True             !   [Boolean] default = False
                                 ! If true, use the Bodner et al., 2023, formulation of the re-stratifying
                                 ! mixed-layer restratification parameterization. This only works in ALE mode.
-CR = 0.03                        !   [nondim] default = 0.0
+CR = 0.03                       !   [nondim] default = 0.0
                                 ! The efficiency coefficient in eq 27 of Bodner et al., 2023.
 BLD_DECAYING_TFILTER = 8.64E+04 !   [s] default = 0.0
                                 ! The time-scale for a running-mean filter applied to the boundary layer depth
                                 ! (BLD) when the BLD is shallower than the running mean. A value of 0
                                 ! instantaneously sets the running mean to the current value of BLD.
-MLD_DECAYING_TFILTER = 216000.0 !   [s] default = 0.0
+MLD_DECAYING_TFILTER = 2.16E+05 !   [s] default = 0.0
                                 ! The time-scale for a running-mean filter applied to the time-filtered BLD,
                                 ! when the latter is shallower than the running mean. A value of 0
                                 ! instantaneously sets the running mean to the current value filtered BLD.
-HREF_FOR_MLD = 10.0
-DIAG_MLD_DENSITY_DIFF = 0.03
 MIN_WSTAR2 = 1.0E-09            !   [m2 s-2] default = 1.0E-24
                                 ! The minimum lower bound to apply to the vertical momentum flux, w'u', in the
                                 ! Bodner et al., restratification parameterization. This avoids a
@@ -649,7 +637,7 @@ MIN_WSTAR2 = 1.0E-09            !   [m2 s-2] default = 1.0E-24
 MLE_USE_PBL_MLD = True          !   [Boolean] default = False
                                 ! If true, the MLE parameterization will use the mixed-layer depth provided by
                                 ! the active PBL parameterization. If false, MLE will estimate a MLD based on a
-                                ! density difference with the surface using the parameter MLE_DENSITY_DIFF.
+                                ! density difference with the surface using the parameter MLE_DENSITY_DIFF,
                                 ! unless BODNER_DETECT_MLD is true.
 
 ! === module MOM_diagnostics ===
@@ -742,8 +730,7 @@ RIVERMIX_DEPTH = 10.0           !   [m] default = 0.0
 VAR_PEN_SW = True               !   [Boolean] default = False
                                 ! If true, use one of the CHL_A schemes specified by OPACITY_SCHEME to determine
                                 ! the e-folding depth of incoming short wave radiation.
-CHL_FROM_FILE = True
-CHL_FILE = "seawifs-clim-1997-2010.smoothed.nc"
+CHL_FILE = "seawifs-clim-1997-2010.smoothed.nc" !
                                 ! CHL_FILE is the file containing chl_a concentrations in the variable CHL_A. It
                                 ! is used when VAR_PEN_SW and CHL_FROM_FILE are true.
 CHL_VARNAME = "chlor_a"         ! default = "CHL_A"
@@ -829,17 +816,6 @@ LT_MOD_LAC5 = 0.8               !   [nondim] default = 0.95
                                 ! unstable Obukhov depth.
 
 ! === module MOM_opacity ===
-PEN_SW_SCALE = 10.0             !   [m] default = 0.0
-                                ! The vertical absorption e-folding depth of the penetrating shortwave
-                                ! radiation.
-PEN_SW_FRAC = 0.42              !   [nondim] default = 0.0
-                                ! The fraction of the shortwave radiation that penetrates below the surface.
-!VAR_PEN_SW = True
-OPTICS_ANSWER_DATE = 99991231   ! default = 99991231
-                                ! The vintage of the order of arithmetic and expressions in the optics
-                                ! calculations.  Values below 20190101 recover the answers from the end of 2018,
-                                ! while higher values use updated and more robust forms of the same expressions.
-!PEN_SW_NBANDS = 3
 
 ! === module MOM_tracer_advect ===
 TRACER_ADVECTION_SCHEME = "PPM:H3" ! default = "PLM"
@@ -894,3 +870,4 @@ LA_DEPTH_RATIO = 0.2            !   [nondim] default = 0.04
 GENERIC_TRACER_IC_FILE = "bgc_ics_75z.nc"     ! default = ""
                                 ! The file in which the generic trcer initial values can be found, or an empty
                                 ! string for internal initialization.
+ENABLE_BUGS_BY_DEFAULT = False
