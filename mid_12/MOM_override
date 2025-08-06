@@ -16,3 +16,7 @@ MLE%
 !#override CR_FILE = "restrat_vars_81.nc"
 !#override CR_VAR = "Cr"
 %MLE
+OBC_REVERSE_SEGMENT_ORDER = True
+#override OBC_PROJECTION_BUG = True
+!#override TIDES_ANSWER_DATE = 20230630
+!#override WAVE_INTERFACE_ANSWER_DATE = 20221231
