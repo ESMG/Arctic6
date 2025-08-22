@@ -870,4 +870,3 @@ LA_DEPTH_RATIO = 0.2            !   [nondim] default = 0.04
 GENERIC_TRACER_IC_FILE = "bgc_ics_75z.nc"     ! default = ""
                                 ! The file in which the generic trcer initial values can be found, or an empty
                                 ! string for internal initialization.
-ENABLE_BUGS_BY_DEFAULT = False

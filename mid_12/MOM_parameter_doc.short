@@ -198,11 +198,6 @@ OBC_SEGMENT_004_DATA = "U=file:uv_004.nc(u),V=file:uv_004.nc(v),SSH=file:zeta_00
                                 ! OBC segment docs
 
 ! === module MOM_EOS ===
-EQN_OF_STATE = "WRIGHT_FULL"    ! default = "WRIGHT"
-                                ! EQN_OF_STATE determines which ocean equation of state should be used.
-                                ! Currently, the valid choices are "LINEAR", "UNESCO", "JACKETT_MCD", "WRIGHT",
-                                ! "WRIGHT_REDUCED", "WRIGHT_FULL", "NEMO", "ROQUET_RHO", "ROQUET_SPV" and
-                                ! "TEOS10".  This is only used if USE_EOS is true.
 TFREEZE_FORM = "MILLERO_78"     ! default = "LINEAR"
                                 ! TFREEZE_FORM determines which expression should be used for the freezing
                                 ! point.  Currently, the valid choices are "LINEAR", "MILLERO_78", "TEOS_POLY",
@@ -492,20 +487,9 @@ TIDE_NODAL_REF_DATE = 2010, 1, 1 ! default = 0, 0, 0
 ! === module MOM_PressureForce ===
 
 ! === module MOM_PressureForce_FV ===
-TIDES_ANSWER_DATE = 99991231    ! default = 20230630
-                                ! The vintage of self-attraction and loading (SAL) and tidal forcing
-                                ! calculations.  Setting dates before 20230701 recovers old answers (Boussinesq
-                                ! and non-Boussinesq modes) when SAL is part of the tidal forcing calculation.
-                                ! The answer difference is only at bit level and due to a reordered summation.
-                                ! Setting dates before 20250201 recovers answers (Boussinesq mode) that
-                                ! interface heights are modified before pressure force integrals are calculated.
 MASS_WEIGHT_IN_PRESSURE_GRADIENT = True !   [Boolean] default = False
                                 ! If true, use mass weighting when interpolating T/S for integrals near the
                                 ! bathymetry in FV pressure gradient calculations.
-MASS_WEIGHT_IN_PRESSURE_GRADIENT_TOP = True !   [Boolean] default = False
-                                ! If true and MASS_WEIGHT_IN_PRESSURE_GRADIENT is true, use mass weighting when
-                                ! interpolating T/S for integrals near the top of the water column in FV
-                                ! pressure gradient calculations.
 
 ! === module MOM_Zanna_Bolton ===
 
@@ -523,10 +507,6 @@ SMAG_BI_CONST = 0.06            !   [nondim] default = 0.0
 HMIX_FIXED = 0.9                !   [m]
                                 ! The prescribed depth over which the near-surface viscosity and diffusivity are
                                 ! elevated when the bulk mixed layer is not used.
-MAXVEL = 6.0                    !   [m s-1] default = 3.0E+08
-                                ! The maximum velocity allowed before the velocity components are truncated.
-CFL_BASED_TRUNCATIONS = False   !   [Boolean] default = True
-                                ! If true, base truncations on the CFL number, and not an absolute speed.
 
 ! === module MOM_barotropic ===
 BOUND_BT_CORRECTION = True      !   [Boolean] default = False
@@ -801,6 +781,8 @@ MAXTRUNC = 100000               !   [truncations save_interval-1] default = 0
                                 ! The run will be stopped, and the day set to a very large value if the velocity
                                 ! is truncated more than MAXTRUNC times between energy saves.  Set MAXTRUNC to 0
                                 ! to stop if there is any truncation of velocities.
+MAXVEL = 6.0                    !   [m s-1] default = 3.0E+08
+                                ! The maximum velocity allowed before the velocity components are truncated.
 ENERGYSAVEDAYS = 0.0416666666666667 !   [days] default = 1.0
                                 ! The interval in units of TIMEUNIT between saves of the energies of the run and
                                 ! other globally summed diagnostics.
@@ -845,14 +827,6 @@ SEA_ICE_RIGID_MASS = 100.0      !   [kg m-2] default = 1000.0
                                 ! rigidity
 
 ! === module MOM_restart ===
-WAVE_INTERFACE_ANSWER_DATE = 99991231 ! default = 20221231
-                                ! The vintage of the order of arithmetic and expressions in the surface wave
-                                ! calculations.  Values below 20230101 recover the answers from the end of 2022,
-                                ! while higher values use updated and more robust forms of the same expressions:
-                                !    <  20230101 - Original answers for wave interface routines
-                                !    >= 20230101 - More robust expressions for Update_Stokes_Drift
-                                !    >= 20230102 - More robust expressions for get_StokesSL_LiFoxKemper
-                                !    >= 20230103 - More robust expressions for ust_2_u10_coare3p5
 LA_DEPTH_RATIO = 0.2            !   [nondim] default = 0.04
                                 ! The depth (normalized by BLD) to average Stokes drift over in Langmuir number
                                 ! calculation, where La = sqrt(ust/Stokes).
