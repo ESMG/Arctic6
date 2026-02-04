@@ -330,7 +330,7 @@ ICE_TEMPERATURE_IC = -4.0       !   [degC] default = -4.0
 
 ! === module SIS_slow_thermo ===
 ! This module calculates the slow evolution of the ice mass, heat, and salt budgets.
-ICE_BULK_SALINITY = 0.0         !   [g/kg] default = 4.0
+ICE_BULK_SALINITY = 0.0         !   [g kg-1] default = 4.0
                                 ! The fixed bulk salinity of sea ice.
 ICE_RELATIVE_SALINITY = 0.1     !   [nondim] default = 0.0
                                 ! The initial salinity of sea ice as a fraction of the salinity of the seawater
@@ -577,7 +577,7 @@ NEW_RIDGE_REDISTRIBUTION = True !   [Boolean] default = False
                                 ! Lipscomb et al. 2007
 RIDGE_MU = 3.0                  !   [m^0.5] default = 3.0
                                 ! E-folding scale of ridge ice from Lipscomb et al. 2007
-RIDGE_AREA_UNDERFLOW = 0.0      !   [none] default = 0.0
+RIDGE_AREA_UNDERFLOW = 0.0      !   [nondim] default = 0.0
                                 ! A fractional area limit below which ice fraction is set to zero A reasonable
                                 ! default value for a km scale grid cell is 10^-24.
 ICEPACK_CLEANUP = True          !   [Boolean] default = False
