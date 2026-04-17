@@ -207,6 +207,9 @@ RESTART_CHECKSUMS_REQUIRED = False !   [Boolean] default = True
 ! === module MOM_tracer_flow_control ===
 
 ! === module MOM_boundary_update ===
+OBC_VALUE_UPDATE_BUG = False    !   [Boolean] default = True
+                                ! If true, recover a bug that OBC segment data does not update if all segments
+                                ! use 'value' and none uses 'file'.
 
 ! === module segment_tracer_registry_init ===
 OBC_SEGMENT_001_DATA = "U=file:uv_001.nc(u),V=file:uv_001.nc(v),SSH=file:zeta_001.nc(zeta),TEMP=file:temp_001.nc(temp),SALT=file:salt_001.nc(salt),Uamp=file:tu1.nc(uamp),Uphase=file:tu1.nc(uphase),Vamp=file:tu1.nc(vamp),Vphase=file:tu1.nc(vphase),SSHamp=file:tz1.nc(zamp),SSHphase=file:tz1.nc(zphase)" !
