@@ -339,7 +339,7 @@ EXTERIOR_OBC_BUG = False        !   [Boolean] default = False
                                 ! contitions interior to the domain are used.
 OBC_HOR_INDEXING_BUG = False    !   [Boolean] default = False
                                 ! If true, recover set of a horizontal indexing bugs in the OBC code.
-OBC_TEMP_SALT_NEEDED_BUG = True !   [Boolean] default = True
+OBC_TEMP_SALT_NEEDED_BUG = False !   [Boolean] default = True
                                 ! If true, recover a bug that OBC temperature and salinity can be ignored even
                                 ! if they are registered tracers in the rest of the model.
 OBC_SEGMENT_001 = "J=N,I=N:0,FLATHER,ORLANSKI,NUDGED,ORLANSKI_TAN,NUDGED_TAN" !
